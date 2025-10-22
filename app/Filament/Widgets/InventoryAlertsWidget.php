@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 class InventoryAlertsWidget extends BaseWidget
 {
     protected static ?string $heading = 'Inventory Alerts';
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = ['full'];
     protected static ?int $sort = 2;
 
     public function table(Table $table): Table
@@ -36,28 +36,16 @@ class InventoryAlertsWidget extends BaseWidget
                 TextColumn::make('alert_type')
                     ->label('Alert Type')
                     ->getStateUsing(function ($record) {
-                        if ($record->isExpired()) {
-                            return 'Expired';
-                        }
-                        if ($record->isNearExpiry()) {
-                            return 'Near Expiry';
-                        }
-                        if ($record->isBelowMinimum()) {
-                            return 'Low Stock';
-                        }
+                        if ($record->isExpired()) return 'Expired';
+                        if ($record->isNearExpiry()) return 'Near Expiry';
+                        if ($record->isBelowMinimum()) return 'Low Stock';
                         return 'Normal';
                     })
                     ->badge()
                     ->color(function ($record) {
-                        if ($record->isExpired()) {
-                            return 'danger';
-                        }
-                        if ($record->isNearExpiry()) {
-                            return 'warning';
-                        }
-                        if ($record->isBelowMinimum()) {
-                            return 'danger';
-                        }
+                        if ($record->isExpired()) return 'danger';
+                        if ($record->isNearExpiry()) return 'warning';
+                        if ($record->isBelowMinimum()) return 'danger';
                         return 'success';
                     }),
 

@@ -63,8 +63,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->widgets([
                 \App\Filament\Widgets\StatsOverviewWidget::class,
+                \App\Filament\Widgets\FinanceStatsWidget::class,
+                \App\Filament\Widgets\WarehouseStatsWidget::class,
                 \App\Filament\Widgets\SalesRevenueChart::class,
                 \App\Filament\Widgets\InvoiceStatusChart::class,
+                \App\Filament\Widgets\AgingAnalysisChart::class,
+                \App\Filament\Widgets\CashFlowChart::class,
                 \App\Filament\Widgets\InventoryAlertsWidget::class,
                 \App\Filament\Widgets\RecentDeliveryNotesWidget::class,
                 \App\Filament\Widgets\PurchasingActivityWidget::class,
