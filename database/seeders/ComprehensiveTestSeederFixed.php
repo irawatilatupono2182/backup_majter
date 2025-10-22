@@ -118,7 +118,7 @@ class ComprehensiveTestSeederFixed extends Seeder
         $this->user = User::firstOrCreate(
             ['email' => 'admin@test.com'],
             [
-                'username' => 'admin',
+                'username' => 'admintest',
                 'name' => 'Admin Test',
                 'password' => Hash::make('password'),
                 'phone' => '081234567890',

@@ -59,11 +59,17 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Resources\NotificationResource::class,
             ])
             ->pages([
-                Pages\Dashboard::class,
+                \App\Filament\Pages\Dashboard::class,
             ])
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                \App\Filament\Widgets\StatsOverviewWidget::class,
+                \App\Filament\Widgets\SalesRevenueChart::class,
+                \App\Filament\Widgets\InvoiceStatusChart::class,
+                \App\Filament\Widgets\InventoryAlertsWidget::class,
+                \App\Filament\Widgets\RecentDeliveryNotesWidget::class,
+                \App\Filament\Widgets\PurchasingActivityWidget::class,
+                \App\Filament\Widgets\TopSellingProductsWidget::class,
+                \App\Filament\Widgets\TopCustomersWidget::class,
             ])
             ->middleware([
                 // MINIMAL MIDDLEWARE - only what's needed

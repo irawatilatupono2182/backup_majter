@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 class InventoryAlertsWidget extends BaseWidget
 {
     protected static ?string $heading = 'Inventory Alerts';
-    protected $columnSpan = 'full';
+    protected int | string | array $columnSpan = 'full';
     protected static ?int $sort = 2;
 
     public function table(Table $table): Table
