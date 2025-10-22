@@ -41,17 +41,33 @@ class RoleResource extends Resource
                             ->label('Permissions')
                             ->relationship('permissions', 'name')
                             ->options(function () {
-                                return \Spatie\Permission\Models\Permission::all()
-                                    ->groupBy(function ($permission) {
-                                        return explode('_', $permission->name)[1] ?? 'general';
-                                    })
-                                    ->map(function ($group) {
-                                        return $group->pluck('name', 'name');
-                                    })
-                                    ->toArray();
+                                $permissions = \Spatie\Permission\Models\Permission::all();
+                                
+                                $grouped = [];
+                                foreach ($permissions as $permission) {
+                                    $parts = explode('_', $permission->name);
+                                    $group = count($parts) > 1 ? ucfirst($parts[1]) : 'General';
+                                    
+                                    if (!isset($grouped[$group])) {
+                                        $grouped[$group] = [];
+                                    }
+                                    
+                                    $grouped[$group][$permission->name] = $permission->name;
+                                }
+                                
+                                // Flatten untuk CheckboxList
+                                $result = [];
+                                foreach ($grouped as $groupName => $perms) {
+                                    foreach ($perms as $key => $value) {
+                                        $result[$key] = $value;
+                                    }
+                                }
+                                
+                                return $result;
                             })
                             ->columns(3)
-                            ->gridDirection('row'),
+                            ->gridDirection('row')
+                            ->searchable(),
                     ]),
             ]);
     }
