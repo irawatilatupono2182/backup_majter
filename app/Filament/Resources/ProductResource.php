@@ -4,11 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
 use App\Models\Product;
+use App\Models\Stock;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 
 class ProductResource extends Resource
 {
@@ -88,7 +90,9 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn($query) => $query->where('company_id', session('selected_company_id')))
+            ->modifyQueryUsing(fn($query) => $query
+                ->where('company_id', session('selected_company_id'))
+                ->with('stock')) // Eager load stock relation
             ->columns([
                 Tables\Columns\TextColumn::make('product_code')
                     ->label('Kode')
@@ -104,6 +108,82 @@ class ProductResource extends Resource
                         'success' => 'STOCK',
                         'warning' => 'CATALOG',
                     ]),
+                
+                // Stock Status Column (NEW!)
+                Tables\Columns\TextColumn::make('stock_status')
+                    ->label('Status Stok')
+                    ->getStateUsing(function ($record) {
+                        // For CATALOG products
+                        if ($record->product_type === 'CATALOG') {
+                            return '📦 Catalog';
+                        }
+                        
+                        // For STOCK products
+                        if ($record->product_type === 'STOCK') {
+                            // Check if stock record exists
+                            if (!$record->stock) {
+                                return '⚠️ Belum ada record';
+                            }
+                            
+                            $qty = $record->stock->quantity;
+                            $available = $record->stock->available_quantity;
+                            
+                            // Check stock quantity
+                            if ($qty == 0 && $available == 0) {
+                                return '❌ Kosong (0)';
+                            } elseif ($available == 0 && $qty > 0) {
+                                return '⚠️ Habis (reserved: ' . $qty . ')';
+                            } elseif ($available > 0 && $available <= $record->min_stock_alert) {
+                                return '🔔 Low Stock (' . $available . ')';
+                            } else {
+                                return '✅ Tersedia (' . $available . ')';
+                            }
+                        }
+                        
+                        return '-';
+                    })
+                    ->badge()
+                    ->color(function ($record) {
+                        if ($record->product_type === 'CATALOG') {
+                            return 'warning';
+                        }
+                        
+                        if ($record->product_type === 'STOCK') {
+                            if (!$record->stock) {
+                                return 'danger'; // No stock record
+                            }
+                            
+                            $available = $record->stock->available_quantity;
+                            
+                            if ($available == 0) {
+                                return 'danger'; // Empty
+                            } elseif ($available <= $record->min_stock_alert) {
+                                return 'warning'; // Low stock
+                            } else {
+                                return 'success'; // Available
+                            }
+                        }
+                        
+                        return 'gray';
+                    })
+                    ->sortable()
+                    ->tooltip(function ($record) {
+                        if ($record->product_type === 'CATALOG') {
+                            return 'Produk catalog tidak memerlukan stock fisik';
+                        }
+                        
+                        if ($record->product_type === 'STOCK') {
+                            if (!$record->stock) {
+                                return 'PERHATIAN: Produk ini belum memiliki record di tabel stocks. Klik Edit → Save untuk auto-create.';
+                            }
+                            
+                            $stock = $record->stock;
+                            return "Total: {$stock->quantity} | Tersedia: {$stock->available_quantity} | Reserved: {$stock->reserved_quantity}";
+                        }
+                        
+                        return null;
+                    }),
+                
                 Tables\Columns\TextColumn::make('unit')
                     ->label('Satuan'),
                 Tables\Columns\TextColumn::make('base_price')
@@ -129,6 +209,56 @@ class ProductResource extends Resource
                         'STOCK' => 'STOCK',
                         'CATALOG' => 'CATALOG',
                     ]),
+                
+                // Filter by stock status (NEW!)
+                Tables\Filters\SelectFilter::make('stock_status')
+                    ->label('Status Stok')
+                    ->options([
+                        'no_record' => '⚠️ Belum ada record',
+                        'empty' => '❌ Kosong (0)',
+                        'low_stock' => '🔔 Low Stock',
+                        'available' => '✅ Tersedia',
+                    ])
+                    ->query(function ($query, array $data) {
+                        if (!isset($data['value'])) {
+                            return $query;
+                        }
+                        
+                        $status = $data['value'];
+                        
+                        // Only apply to STOCK products
+                        $query->where('product_type', 'STOCK');
+                        
+                        switch ($status) {
+                            case 'no_record':
+                                // Products without stock record
+                                return $query->whereDoesntHave('stock');
+                                
+                            case 'empty':
+                                // Products with stock = 0
+                                return $query->whereHas('stock', function ($q) {
+                                    $q->where('available_quantity', 0)
+                                      ->where('quantity', 0);
+                                });
+                                
+                            case 'low_stock':
+                                // Products with stock <= min_stock_alert
+                                return $query->whereHas('stock', function ($q) {
+                                    $q->whereRaw('available_quantity <= (SELECT min_stock_alert FROM products WHERE products.product_id = stocks.product_id)')
+                                      ->where('available_quantity', '>', 0);
+                                });
+                                
+                            case 'available':
+                                // Products with good stock
+                                return $query->whereHas('stock', function ($q) {
+                                    $q->whereRaw('available_quantity > (SELECT min_stock_alert FROM products WHERE products.product_id = stocks.product_id)');
+                                });
+                                
+                            default:
+                                return $query;
+                        }
+                    }),
+                
                 Tables\Filters\TernaryFilter::make('is_active')
                     ->label('Status'),
                 Tables\Filters\Filter::make('category')
@@ -147,12 +277,74 @@ class ProductResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+                
+                // Fix stock record action (NEW!)
+                Tables\Actions\Action::make('fix_stock')
+                    ->label('Fix Stock')
+                    ->icon('heroicon-o-wrench')
+                    ->color('warning')
+                    ->visible(fn($record) => $record->product_type === 'STOCK' && !$record->stock)
+                    ->requiresConfirmation()
+                    ->modalHeading('Create Stock Record')
+                    ->modalDescription('Produk ini belum memiliki record di tabel stocks. Buat record dengan quantity 0?')
+                    ->action(function ($record) {
+                        Stock::create([
+                            'company_id' => $record->company_id,
+                            'product_id' => $record->product_id,
+                            'quantity' => 0,
+                            'available_quantity' => 0,
+                            'reserved_quantity' => 0,
+                        ]);
+                        
+                        Notification::make()
+                            ->success()
+                            ->title('Stock Record Created')
+                            ->body("Stock record untuk {$record->name} telah dibuat.")
+                            ->send();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
+                    
+                    // Bulk fix stock records (NEW!)
+                    Tables\Actions\BulkAction::make('bulk_fix_stock')
+                        ->label('Fix Stock Records')
+                        ->icon('heroicon-o-wrench')
+                        ->color('warning')
+                        ->requiresConfirmation()
+                        ->modalHeading('Create Stock Records')
+                        ->modalDescription(fn($records) => 
+                            'Buat stock records untuk ' . $records->count() . ' produk yang belum memiliki record?'
+                        )
+                        ->action(function ($records) {
+                            $created = 0;
+                            $skipped = 0;
+                            
+                            foreach ($records as $record) {
+                                // Only for STOCK products without stock record
+                                if ($record->product_type === 'STOCK' && !$record->stock) {
+                                    Stock::create([
+                                        'company_id' => $record->company_id,
+                                        'product_id' => $record->product_id,
+                                        'quantity' => 0,
+                                        'available_quantity' => 0,
+                                        'reserved_quantity' => 0,
+                                    ]);
+                                    $created++;
+                                } else {
+                                    $skipped++;
+                                }
+                            }
+                            
+                            Notification::make()
+                                ->success()
+                                ->title('Stock Records Created')
+                                ->body("Created: {$created} records. Skipped: {$skipped}.")
+                                ->send();
+                        }),
                 ]),
             ]);
     }

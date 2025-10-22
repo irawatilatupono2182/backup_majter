@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class PriceQuotation extends Model
 {
@@ -20,6 +21,9 @@ class PriceQuotation extends Model
 
     protected $fillable = [
         'company_id',
+        'entity_type',
+        'entity_id',
+        'customer_id',
         'supplier_id',
         'quotation_number',
         'type',
@@ -41,6 +45,19 @@ class PriceQuotation extends Model
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id', 'company_id');
+    }
+
+    /**
+     * Polymorphic relation to Customer or Supplier
+     */
+    public function entity()
+    {
+        return $this->morphTo('entity', 'entity_type', 'entity_id');
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'customer_id', 'customer_id');
     }
 
     public function supplier(): BelongsTo
@@ -76,5 +93,35 @@ class PriceQuotation extends Model
     public function getGrandTotal(): float
     {
         return $this->getTotalAmount() + $this->getPPNAmount();
+    }
+
+    /**
+     * Get entity name (customer or supplier name)
+     */
+    public function getEntityName(): string
+    {
+        if ($this->entity_type === 'customer' && $this->customer) {
+            return $this->customer->name;
+        }
+        if ($this->entity_type === 'supplier' && $this->supplier) {
+            return $this->supplier->name;
+        }
+        return '-';
+    }
+
+    /**
+     * Check if this quotation is for customer (sales)
+     */
+    public function isForCustomer(): bool
+    {
+        return $this->entity_type === 'customer';
+    }
+
+    /**
+     * Check if this quotation is for supplier (purchasing)
+     */
+    public function isForSupplier(): bool
+    {
+        return $this->entity_type === 'supplier';
     }
 }

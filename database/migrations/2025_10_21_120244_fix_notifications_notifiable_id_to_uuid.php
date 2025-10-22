@@ -11,6 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Drop existing notifications table and recreate with correct UUID type
+        Schema::dropIfExists('notifications');
+        
         Schema::create('notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('type');
@@ -27,5 +30,15 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('notifications');
+        
+        // Recreate with old structure
+        Schema::create('notifications', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
+            $table->timestamps();
+        });
     }
 };

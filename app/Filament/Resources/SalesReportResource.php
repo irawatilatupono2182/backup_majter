@@ -60,7 +60,22 @@ class SalesReportResource extends Resource
                 TextColumn::make('customer.name')
                     ->label('Customer')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->description(function ($record) {
+                        return $record->customer && $record->customer->is_ppn 
+                            ? '✅ PPN' 
+                            : '❌ Non-PPN';
+                    }),
+
+                TextColumn::make('customer.is_ppn')
+                    ->label('PPN Customer')
+                    ->formatStateUsing(function ($state) {
+                        return $state ? '✅ Ya' : '❌ Tidak';
+                    })
+                    ->badge()
+                    ->color(fn ($state) => $state ? 'success' : 'gray')
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('total_amount')
                     ->label('Subtotal')
@@ -124,13 +139,35 @@ class SalesReportResource extends Resource
                         'partial' => 'Sebagian',
                         'paid' => 'Lunas',
                         'overdue' => 'Jatuh Tempo',
-                    ]),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if (isset($data['value']) && $data['value'] !== '') {
+                            // Case-insensitive comparison to handle both 'paid' and 'Paid'
+                            return $query->whereRaw('LOWER(status) = ?', [strtolower($data['value'])]);
+                        }
+                        return $query;
+                    }),
 
                 SelectFilter::make('customer_id')
                     ->label('Customer')
                     ->relationship('customer', 'name')
                     ->searchable()
                     ->preload(),
+
+                SelectFilter::make('is_ppn')
+                    ->label('Jenis Customer')
+                    ->options([
+                        '1' => 'Customer PPN',
+                        '0' => 'Customer Non-PPN',
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        if (isset($data['value'])) {
+                            return $query->whereHas('customer', function ($q) use ($data) {
+                                $q->where('is_ppn', $data['value']);
+                            });
+                        }
+                        return $query;
+                    }),
             ])
             ->headerActions([
                 Action::make('export_excel')

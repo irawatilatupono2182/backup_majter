@@ -1,0 +1,66 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     * 
+     * Mengubah price_quotations agar support 2 arah:
+     * 1. PH untuk Customer (Sales - Penawaran dari kita ke customer)
+     * 2. PH untuk Supplier (Purchasing - Minta penawaran dari supplier)
+     */
+    public function up(): void
+    {
+        Schema::table('price_quotations', function (Blueprint $table) {
+            // Add polymorphic relation fields
+            $table->string('entity_type', 50)->nullable()->after('company_id')
+                ->comment('customer atau supplier');
+            $table->uuid('entity_id')->nullable()->after('entity_type')
+                ->comment('customer_id atau supplier_id');
+            
+            // Add customer_id explicitly for clarity
+            $table->uuid('customer_id')->nullable()->after('entity_id');
+            
+            // Make supplier_id nullable (was required before)
+            $table->uuid('supplier_id')->nullable()->change();
+            
+            // Add foreign key for customer
+            $table->foreign('customer_id')->references('customer_id')->on('customers');
+            
+            // Add index for polymorphic relation
+            $table->index(['entity_type', 'entity_id'], 'idx_entity_polymorphic');
+        });
+        
+        // Migrate existing data: all existing records assume supplier
+        DB::statement("
+            UPDATE price_quotations 
+            SET entity_type = 'supplier',
+                entity_id = supplier_id
+            WHERE supplier_id IS NOT NULL
+        ");
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('price_quotations', function (Blueprint $table) {
+            // Drop foreign keys first
+            $table->dropForeign(['customer_id']);
+            
+            // Drop index
+            $table->dropIndex('idx_entity_polymorphic');
+            
+            // Drop columns
+            $table->dropColumn(['entity_type', 'entity_id', 'customer_id']);
+            
+            // Make supplier_id required again
+            $table->uuid('supplier_id')->nullable(false)->change();
+        });
+    }
+};

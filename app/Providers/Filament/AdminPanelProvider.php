@@ -55,6 +55,7 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Resources\DataImportResource::class,
                 \App\Filament\Resources\InventoryReportResource::class,
                 \App\Filament\Resources\SalesReportResource::class,
+                \App\Filament\Resources\StockAnomalyReportResource::class,
                 \App\Filament\Resources\NotificationResource::class,
             ])
             ->pages([

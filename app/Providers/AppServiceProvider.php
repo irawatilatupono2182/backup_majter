@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\DeliveryNote;
+use App\Observers\DeliveryNoteObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Register DeliveryNote Observer for automatic stock movement integration
+        DeliveryNote::observe(DeliveryNoteObserver::class);
     }
 }
+

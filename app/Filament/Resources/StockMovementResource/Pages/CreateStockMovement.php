@@ -12,6 +12,7 @@ class CreateStockMovement extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        $data['company_id'] = session('selected_company_id');
         $data['created_by'] = auth()->id();
         
         return $data;
@@ -21,14 +22,25 @@ class CreateStockMovement extends CreateRecord
     {
         $record = $this->record;
         
-        // Find or create stock record
-        $stock = Stock::firstOrCreate(
-            [
+        // Find stock record - prioritize matching batch, then null batch, then first available
+        $stock = Stock::where('company_id', $record->company_id)
+            ->where('product_id', $record->product_id)
+            ->where(function ($query) use ($record) {
+                if ($record->batch_number) {
+                    $query->where('batch_number', $record->batch_number)
+                          ->orWhereNull('batch_number');
+                } else {
+                    $query->whereNull('batch_number');
+                }
+            })
+            ->first();
+
+        // If no stock found, create new one
+        if (!$stock) {
+            $stock = Stock::create([
                 'company_id' => $record->company_id,
                 'product_id' => $record->product_id,
                 'batch_number' => $record->batch_number,
-            ],
-            [
                 'quantity' => 0,
                 'reserved_quantity' => 0,
                 'available_quantity' => 0,
@@ -36,8 +48,8 @@ class CreateStockMovement extends CreateRecord
                 'unit_cost' => $record->unit_cost,
                 'expiry_date' => $record->expiry_date,
                 'created_by' => auth()->id(),
-            ]
-        );
+            ]);
+        }
 
         // Update stock based on movement type
         if ($record->movement_type === 'in') {
@@ -53,7 +65,17 @@ class CreateStockMovement extends CreateRecord
             $stock->unit_cost = $record->unit_cost;
         }
 
-        // Update available quantity
+        // Update expiry date if provided
+        if ($record->expiry_date) {
+            $stock->expiry_date = $record->expiry_date;
+        }
+
+        // Update batch number if provided
+        if ($record->batch_number && !$stock->batch_number) {
+            $stock->batch_number = $record->batch_number;
+        }
+
+        // Update available quantity (will be calculated by model's booted method)
         $stock->available_quantity = $stock->quantity - $stock->reserved_quantity;
         $stock->save();
     }

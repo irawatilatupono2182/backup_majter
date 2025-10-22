@@ -11,7 +11,9 @@ class CreateStock extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        $data['company_id'] = session('selected_company_id');
         $data['created_by'] = auth()->id();
+        $data['reserved_quantity'] = 0;
         
         return $data;
     }

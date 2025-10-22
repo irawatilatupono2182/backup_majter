@@ -93,7 +93,7 @@ class Invoice extends Model
 
     public function isOverdue(): bool
     {
-        return $this->due_date < Carbon::now() && $this->status !== 'Paid';
+        return $this->due_date < Carbon::now() && !in_array($this->status, ['paid', 'Paid']);
     }
 
     public function updateStatus(): void
@@ -101,13 +101,13 @@ class Invoice extends Model
         $totalPaid = $this->getTotalPaid();
         
         if ($totalPaid >= $this->grand_total) {
-            $this->status = 'Paid';
+            $this->status = 'paid';
         } elseif ($totalPaid > 0) {
-            $this->status = 'Partial';
+            $this->status = 'partial';
         } elseif ($this->isOverdue()) {
-            $this->status = 'Overdue';
+            $this->status = 'overdue';
         } else {
-            $this->status = 'Unpaid';
+            $this->status = 'unpaid';
         }
         
         $this->save();
@@ -127,21 +127,37 @@ class Invoice extends Model
         $month = date('m');
         $companyId = session('selected_company_id');
         
-        // Get last number from existing records
-        $lastRecord = self::where('company_id', $companyId)
-            ->where('invoice_number', 'like', "INV/{$year}/{$month}/%")
-            ->orderBy('invoice_number', 'desc')
-            ->first();
-        
-        if ($lastRecord) {
-            // Extract number from last record (e.g., "INV/2025/10/001" -> 1)
-            $parts = explode('/', $lastRecord->invoice_number);
-            $lastNumber = isset($parts[3]) ? (int)$parts[3] : 0;
-            $nextNumber = $lastNumber + 1;
-        } else {
-            $nextNumber = 1;
-        }
+        // Use database transaction with lock to prevent race condition
+        return \DB::transaction(function () use ($year, $month, $companyId) {
+            // Get last number from existing records with lock (INCLUDING soft deleted)
+            $lastRecord = self::withTrashed()  // ✅ Include soft deleted records
+                ->where('company_id', $companyId)
+                ->where('invoice_number', 'like', "INV/{$year}/{$month}/%")
+                ->lockForUpdate() // Lock the rows to prevent concurrent reads
+                ->orderBy('invoice_number', 'desc')
+                ->first();
+            
+            if ($lastRecord) {
+                // Extract number from last record (e.g., "INV/2025/10/001" -> 1)
+                $parts = explode('/', $lastRecord->invoice_number);
+                $lastNumber = isset($parts[3]) ? (int)$parts[3] : 0;
+                $nextNumber = $lastNumber + 1;
+            } else {
+                $nextNumber = 1;
+            }
 
-        return sprintf('INV/%s/%s/%03d', $year, $month, $nextNumber);
+            $invoiceNumber = sprintf('INV/%s/%s/%03d', $year, $month, $nextNumber);
+            
+            // Double check if this number already exists (including soft deleted)
+            $maxAttempts = 10;
+            $attempt = 0;
+            while (self::withTrashed()->where('company_id', $companyId)->where('invoice_number', $invoiceNumber)->exists() && $attempt < $maxAttempts) {
+                $nextNumber++;
+                $invoiceNumber = sprintf('INV/%s/%s/%03d', $year, $month, $nextNumber);
+                $attempt++;
+            }
+            
+            return $invoiceNumber;
+        });
     }
 }

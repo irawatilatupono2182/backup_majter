@@ -37,8 +37,10 @@ class PurchaseOrderResource extends Resource
                             ->default(fn() => auth()->id()),
                         Forms\Components\TextInput::make('po_number')
                             ->label('Nomor PO')
-                            ->required()
-                            ->default(fn() => self::generatePONumber())
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->default('(Auto Generated)')
+                            ->helperText('Nomor PO akan di-generate otomatis saat disimpan')
                             ->maxLength(50),
                         Forms\Components\Select::make('ph_id')
                             ->label('Berdasarkan PH (Opsional)')

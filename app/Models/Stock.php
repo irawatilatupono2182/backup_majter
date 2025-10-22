@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Stock extends Model
 {
@@ -59,6 +60,12 @@ class Stock extends Model
         return $this->belongsTo(User::class, 'created_by', 'id');
     }
 
+    public function stockMovements(): HasMany
+    {
+        return $this->hasMany(StockMovement::class, 'product_id', 'product_id')
+            ->where('company_id', $this->company_id);
+    }
+
     // Update available quantity whenever quantity or reserved_quantity changes
     protected static function booted()
     {
@@ -82,6 +89,12 @@ class Stock extends Model
     public function isExpiringSoon(int $days = 30): bool
     {
         return $this->expiry_date && $this->expiry_date->diffInDays(now()) <= $days;
+    }
+
+    // Alias for isExpiringSoon
+    public function isNearExpiry(int $days = 30): bool
+    {
+        return $this->isExpiringSoon($days);
     }
 
     // Add stock (from purchase/adjustment)

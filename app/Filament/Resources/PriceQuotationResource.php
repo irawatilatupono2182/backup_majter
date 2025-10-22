@@ -4,13 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PriceQuotationResource\Pages;
 use App\Models\PriceQuotation;
+use App\Models\Customer;
 use App\Models\Supplier;
 use App\Models\Product;
+use App\Models\Stock;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PriceQuotationResource extends Resource
 {
@@ -39,13 +42,60 @@ class PriceQuotationResource extends Resource
                             ->required()
                             ->default(fn() => self::generateQuotationNumber())
                             ->maxLength(50),
+                        
+                        // Entity Type Selection (Customer or Supplier)
+                        Forms\Components\Select::make('entity_type')
+                            ->label('Tipe Penawaran')
+                            ->options([
+                                'customer' => '📤 Untuk Customer (Sales - Penawaran Jual)',
+                                'supplier' => '📥 Untuk Supplier (Purchasing - Minta Penawaran Beli)',
+                            ])
+                            ->required()
+                            ->default('customer')
+                            ->reactive()
+                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                // Clear both when switching
+                                $set('customer_id', null);
+                                $set('supplier_id', null);
+                                $set('entity_id', null);
+                            })
+                            ->helperText('Pilih apakah PH ini untuk customer (kita menawarkan) atau supplier (kita minta penawaran)'),
+                        
+                        // Dynamic Customer/Supplier Selection
+                        Forms\Components\Select::make('customer_id')
+                            ->label('Customer')
+                            ->options(fn() => Customer::where('company_id', session('selected_company_id'))
+                                ->where('is_active', true)
+                                ->pluck('name', 'customer_id'))
+                            ->searchable()
+                            ->reactive()
+                            ->required(fn(Forms\Get $get) => $get('entity_type') === 'customer')
+                            ->visible(fn(Forms\Get $get) => $get('entity_type') === 'customer')
+                            ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
+                                if ($state && $get('entity_type') === 'customer') {
+                                    $set('entity_id', $state);
+                                    $set('supplier_id', null);
+                                }
+                            }),
+                        
                         Forms\Components\Select::make('supplier_id')
                             ->label('Supplier')
                             ->options(fn() => Supplier::where('company_id', session('selected_company_id'))
                                 ->where('is_active', true)
                                 ->pluck('name', 'supplier_id'))
-                            ->required()
-                            ->searchable(),
+                            ->searchable()
+                            ->reactive()
+                            ->required(fn(Forms\Get $get) => $get('entity_type') === 'supplier')
+                            ->visible(fn(Forms\Get $get) => $get('entity_type') === 'supplier')
+                            ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
+                                if ($state && $get('entity_type') === 'supplier') {
+                                    $set('entity_id', $state);
+                                    $set('customer_id', null);
+                                }
+                            }),
+                        
+                        Forms\Components\Hidden::make('entity_id'),
+                        
                         Forms\Components\Select::make('type')
                             ->label('Jenis')
                             ->options([
@@ -74,7 +124,7 @@ class PriceQuotationResource extends Resource
                         Forms\Components\Textarea::make('notes')
                             ->label('Catatan')
                             ->rows(3),
-                    ]),
+                    ])->columns(2),
                 Forms\Components\Section::make('Items')
                     ->schema([
                         Forms\Components\Repeater::make('items')
@@ -82,27 +132,124 @@ class PriceQuotationResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('product_id')
                                     ->label('Produk')
-                                    ->options(fn() => Product::where('company_id', session('selected_company_id'))
-                                        ->where('is_active', true)
-                                        ->pluck('name', 'product_id'))
+                                    ->options(function (Forms\Get $get) {
+                                        $companyId = session('selected_company_id');
+                                        $entityType = $get('../../entity_type'); // Get from parent form
+                                        
+                                        // For SUPPLIER: Show all active products
+                                        if ($entityType === 'supplier') {
+                                            return Product::where('company_id', $companyId)
+                                                ->where('is_active', true)
+                                                ->orderBy('name')
+                                                ->pluck('name', 'product_id');
+                                        }
+                                        
+                                        // For CUSTOMER: Show only products with available stock > 0
+                                        if ($entityType === 'customer') {
+                                            return Product::where('products.company_id', $companyId)
+                                                ->where('products.is_active', true)
+                                                ->where(function (Builder $query) {
+                                                    // Include CATALOG products (always available)
+                                                    $query->where('products.product_type', 'CATALOG')
+                                                        // Or STOCK products with available quantity
+                                                        ->orWhere(function (Builder $q) {
+                                                            $q->where('products.product_type', 'STOCK')
+                                                                ->whereHas('stock', function (Builder $stockQuery) {
+                                                                    $stockQuery->where('available_quantity', '>', 0);
+                                                                });
+                                                        });
+                                                })
+                                                ->orderBy('products.name')
+                                                ->pluck('products.name', 'products.product_id');
+                                        }
+                                        
+                                        // Default: show all
+                                        return Product::where('company_id', $companyId)
+                                            ->where('is_active', true)
+                                            ->orderBy('name')
+                                            ->pluck('name', 'product_id');
+                                    })
                                     ->required()
                                     ->searchable()
                                     ->reactive()
-                                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                    ->afterStateUpdated(function ($state, Forms\Set $set, Forms\Get $get) {
                                         if ($state) {
-                                            $product = Product::find($state);
+                                            $product = Product::with('stock')->find($state);
                                             $set('unit', $product ? $product->unit : '');
                                             $set('unit_price', $product ? $product->base_price : 0);
+                                            
+                                            // Show available stock for customer quotations
+                                            $entityType = $get('../../entity_type');
+                                            if ($entityType === 'customer' && $product) {
+                                                if ($product->product_type === 'STOCK' && $product->stock) {
+                                                    $availableQty = $product->stock->available_quantity;
+                                                    $set('_stock_info', "Stok tersedia: {$availableQty} {$product->unit}");
+                                                } elseif ($product->product_type === 'CATALOG') {
+                                                    $set('_stock_info', "Produk CATALOG (tidak perlu stok)");
+                                                } else {
+                                                    $set('_stock_info', "Tidak ada stok");
+                                                }
+                                            } else {
+                                                $set('_stock_info', null);
+                                            }
                                         }
-                                    }),
+                                    })
+                                    ->helperText(fn(Forms\Get $get) => 
+                                        $get('../../entity_type') === 'customer' 
+                                            ? '✅ Hanya menampilkan produk dengan stok tersedia' 
+                                            : '📦 Menampilkan semua produk aktif'
+                                    ),
+                                
+                                // Stock info placeholder (visible for customer only)
+                                Forms\Components\Placeholder::make('_stock_info')
+                                    ->label('Info Stok')
+                                    ->content(fn(Forms\Get $get) => $get('_stock_info') ?? '-')
+                                    ->visible(fn(Forms\Get $get) => $get('../../entity_type') === 'customer' && $get('_stock_info')),
+                                
+                                // Hidden field to store stock info (not saved to DB)
+                                Forms\Components\Hidden::make('_stock_info')
+                                    ->dehydrated(false),
+                                
                                 Forms\Components\TextInput::make('qty')
                                     ->label('Qty')
                                     ->numeric()
                                     ->required()
                                     ->default(1)
+                                    ->minValue(1)
                                     ->reactive()
                                     ->afterStateUpdated(fn($state, Forms\Set $set, Forms\Get $get) => 
-                                        $set('subtotal', ((float)$get('qty') * (float)$get('unit_price')) * (1 - (float)$get('discount_percent') / 100))),
+                                        $set('subtotal', ((float)$get('qty') * (float)$get('unit_price')) * (1 - (float)$get('discount_percent') / 100)))
+                                    ->rules([
+                                        function (Forms\Get $get) {
+                                            return function (string $attribute, $value, $fail) use ($get) {
+                                                $entityType = $get('../../entity_type');
+                                                $productId = $get('product_id');
+                                                
+                                                // Validate stock for customer quotations
+                                                if ($entityType === 'customer' && $productId) {
+                                                    $product = Product::with('stock')->find($productId);
+                                                    
+                                                    if ($product && $product->product_type === 'STOCK') {
+                                                        if (!$product->stock) {
+                                                            $fail('Produk ini belum memiliki record stock.');
+                                                            return;
+                                                        }
+                                                        
+                                                        $availableQty = $product->stock->available_quantity;
+                                                        
+                                                        if ($value > $availableQty) {
+                                                            $fail("Qty melebihi stok tersedia ({$availableQty} {$product->unit}).");
+                                                        }
+                                                    }
+                                                }
+                                            };
+                                        },
+                                    ])
+                                    ->helperText(fn(Forms\Get $get) => 
+                                        $get('../../entity_type') === 'customer' 
+                                            ? '⚠️ Qty tidak boleh melebihi stok tersedia' 
+                                            : null
+                                    ),
                                 Forms\Components\TextInput::make('unit')
                                     ->label('Satuan')
                                     ->required(),
@@ -147,9 +294,34 @@ class PriceQuotationResource extends Resource
                     ->label('Nomor PH')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('supplier.name')
-                    ->label('Supplier')
-                    ->searchable(),
+                
+                // Show entity type badge
+                Tables\Columns\BadgeColumn::make('entity_type')
+                    ->label('Tipe')
+                    ->formatStateUsing(function ($state) {
+                        return $state === 'customer' ? '📤 Customer' : ($state === 'supplier' ? '📥 Supplier' : '-');
+                    })
+                    ->colors([
+                        'success' => 'customer',
+                        'primary' => 'supplier',
+                    ])
+                    ->sortable(),
+                
+                // Dynamic entity name column
+                Tables\Columns\TextColumn::make('entity_name')
+                    ->label('Customer / Supplier')
+                    ->getStateUsing(function (PriceQuotation $record): string {
+                        if ($record->entity_type === 'customer' && $record->customer) {
+                            return '👤 ' . $record->customer->name;
+                        }
+                        if ($record->entity_type === 'supplier' && $record->supplier) {
+                            return '🏢 ' . $record->supplier->name;
+                        }
+                        return '-';
+                    })
+                    ->searchable()
+                    ->sortable(),
+                
                 Tables\Columns\BadgeColumn::make('type')
                     ->label('Jenis')
                     ->colors([
@@ -176,6 +348,12 @@ class PriceQuotationResource extends Resource
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('entity_type')
+                    ->label('Tipe Penawaran')
+                    ->options([
+                        'customer' => '📤 Untuk Customer (Sales)',
+                        'supplier' => '📥 Untuk Supplier (Purchasing)',
+                    ]),
                 Tables\Filters\SelectFilter::make('status')
                     ->label('Status')
                     ->options([

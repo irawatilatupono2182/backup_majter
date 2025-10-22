@@ -36,8 +36,10 @@ class DeliveryNoteResource extends Resource
                             ->default(fn() => auth()->id()),
                         Forms\Components\TextInput::make('sj_number')
                             ->label('Nomor SJ')
-                            ->required()
-                            ->default(fn() => self::generateSJNumber())
+                            ->disabled()
+                            ->dehydrated(false)
+                            ->default('(Auto Generated)')
+                            ->helperText('Nomor SJ akan di-generate otomatis saat disimpan')
                             ->maxLength(50),
                         Forms\Components\Select::make('customer_id')
                             ->label('Customer')
@@ -74,7 +76,9 @@ class DeliveryNoteResource extends Resource
                                 'Completed' => 'Completed',
                             ])
                             ->required()
-                            ->default('Draft'),
+                            ->default('Draft')
+                            ->helperText('⚠️ Mengubah status ke Sent/Completed akan otomatis membuat stock movement dan mengurangi stock. Mengubah kembali ke Draft akan mengembalikan stock.')
+                            ->live(),
                         Forms\Components\Textarea::make('notes')
                             ->label('Catatan')
                             ->rows(3),
@@ -86,9 +90,23 @@ class DeliveryNoteResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('product_id')
                                     ->label('Produk')
-                                    ->options(fn() => Product::where('company_id', session('selected_company_id'))
-                                        ->where('is_active', true)
-                                        ->pluck('name', 'product_id'))
+                                    ->options(function () {
+                                        $companyId = session('selected_company_id');
+                                        
+                                        // Get products with available stock or CATALOG products
+                                        return Product::where('company_id', $companyId)
+                                            ->where('is_active', true)
+                                            ->where(function ($query) use ($companyId) {
+                                                // CATALOG products (always available)
+                                                $query->where('product_type', 'CATALOG')
+                                                    // OR STOCK products with available quantity > 0
+                                                    ->orWhereHas('stock', function ($q) use ($companyId) {
+                                                        $q->where('company_id', $companyId)
+                                                          ->where('available_quantity', '>', 0);
+                                                    });
+                                            })
+                                            ->pluck('name', 'product_id');
+                                    })
                                     ->required()
                                     ->searchable()
                                     ->reactive()
@@ -98,7 +116,8 @@ class DeliveryNoteResource extends Resource
                                             $set('unit', $product ? $product->unit : '');
                                             $set('unit_price', $product ? $product->base_price : 0);
                                         }
-                                    }),
+                                    })
+                                    ->helperText('💡 Hanya menampilkan produk CATALOG atau produk STOCK yang tersedia'),
                                 Forms\Components\TextInput::make('qty')
                                     ->label('Qty')
                                     ->numeric()
@@ -106,7 +125,79 @@ class DeliveryNoteResource extends Resource
                                     ->default(1)
                                     ->reactive()
                                     ->afterStateUpdated(fn($state, Forms\Set $set, Forms\Get $get) => 
-                                        $set('subtotal', ((float)$get('qty') * (float)$get('unit_price')) * (1 - (float)$get('discount_percent') / 100))),
+                                        $set('subtotal', ((float)$get('qty') * (float)$get('unit_price')) * (1 - (float)$get('discount_percent') / 100)))
+                                    ->helperText(function (Forms\Get $get) {
+                                        $productId = $get('product_id');
+                                        
+                                        if (!$productId) {
+                                            return null;
+                                        }
+                                        
+                                        $product = Product::with('stock')->find($productId);
+                                        
+                                        if (!$product) {
+                                            return null;
+                                        }
+                                        
+                                        // CATALOG products don't have stock limitation
+                                        if ($product->product_type === 'CATALOG') {
+                                            return '📦 Produk CATALOG (tidak ada batasan stock)';
+                                        }
+                                        
+                                        // STOCK products - show available quantity
+                                        $companyId = session('selected_company_id');
+                                        $stock = $product->stock()->where('company_id', $companyId)->first();
+                                        
+                                        if (!$stock) {
+                                            return '⚠️ Stock tidak tersedia';
+                                        }
+                                        
+                                        $available = $stock->available_quantity;
+                                        
+                                        if ($available <= 0) {
+                                            return '⚠️ Stock habis';
+                                        }
+                                        
+                                        return "✅ Stock tersedia: {$available} unit";
+                                    })
+                                    ->rules([
+                                        function (Forms\Get $get) {
+                                            return function ($attribute, $value, $fail) use ($get) {
+                                                $productId = $get('product_id');
+                                                
+                                                if (!$productId || !$value) {
+                                                    return;
+                                                }
+                                                
+                                                $product = Product::find($productId);
+                                                
+                                                if (!$product) {
+                                                    return;
+                                                }
+                                                
+                                                // Skip validation for CATALOG products
+                                                if ($product->product_type === 'CATALOG') {
+                                                    return;
+                                                }
+                                                
+                                                // Validate for STOCK products
+                                                $companyId = session('selected_company_id');
+                                                $stock = \App\Models\Stock::where('company_id', $companyId)
+                                                    ->where('product_id', $productId)
+                                                    ->first();
+                                                
+                                                if (!$stock) {
+                                                    $fail('Stock tidak tersedia untuk produk ini.');
+                                                    return;
+                                                }
+                                                
+                                                if ($value > $stock->available_quantity) {
+                                                    $kekurangan = $value - $stock->available_quantity;
+                                                    $fail("Stock tidak mencukupi! Stock tersedia: {$stock->available_quantity} unit. Kekurangan: {$kekurangan} unit.");
+                                                }
+                                            };
+                                        }
+                                    ]),
                                 Forms\Components\TextInput::make('unit')
                                     ->label('Satuan')
                                     ->required(),
@@ -172,6 +263,54 @@ class DeliveryNoteResource extends Resource
                         'primary' => 'Sent',
                         'success' => 'Completed',
                     ]),
+                Tables\Columns\TextColumn::make('stock_movement_status')
+                    ->label('Stock Movement')
+                    ->badge()
+                    ->getStateUsing(function ($record) {
+                        $movements = \App\Models\StockMovement::where('reference_type', 'delivery_note')
+                            ->where('reference_id', $record->sj_id)
+                            ->count();
+                        
+                        if ($movements > 0) {
+                            return "✅ {$movements} records";
+                        }
+                        
+                        if (in_array($record->status, ['Sent', 'Completed'])) {
+                            return "⚠️ Belum ada";
+                        }
+                        
+                        return "-";
+                    })
+                    ->color(function ($record) {
+                        $movements = \App\Models\StockMovement::where('reference_type', 'delivery_note')
+                            ->where('reference_id', $record->sj_id)
+                            ->count();
+                        
+                        if ($movements > 0) {
+                            return 'success';
+                        }
+                        
+                        if (in_array($record->status, ['Sent', 'Completed'])) {
+                            return 'warning';
+                        }
+                        
+                        return 'gray';
+                    })
+                    ->tooltip(function ($record) {
+                        $movements = \App\Models\StockMovement::where('reference_type', 'delivery_note')
+                            ->where('reference_id', $record->sj_id)
+                            ->count();
+                        
+                        if ($movements > 0) {
+                            return "Stock movement telah dibuat ({$movements} movement records)";
+                        }
+                        
+                        if (in_array($record->status, ['Sent', 'Completed'])) {
+                            return "Stock movement belum dibuat (seharusnya sudah ada)";
+                        }
+                        
+                        return "Status masih Draft";
+                    }),
                 Tables\Columns\IconColumn::make('has_invoice')
                     ->label('Invoice')
                     ->boolean()
@@ -224,22 +363,26 @@ class DeliveryNoteResource extends Resource
         $month = date('m');
         $companyId = session('selected_company_id');
         
-        // Get last number from existing records
-        $lastRecord = DeliveryNote::where('company_id', $companyId)
-            ->where('sj_number', 'like', "SJ/{$year}/{$month}/%")
-            ->orderBy('sj_number', 'desc')
-            ->first();
-        
-        if ($lastRecord) {
-            // Extract number from last record (e.g., "SJ/2025/10/001" -> 1)
-            $parts = explode('/', $lastRecord->sj_number);
-            $lastNumber = isset($parts[3]) ? (int)$parts[3] : 0;
-            $nextNumber = $lastNumber + 1;
-        } else {
-            $nextNumber = 1;
-        }
+        // Use database transaction with lock to prevent race condition
+        return \DB::transaction(function () use ($year, $month, $companyId) {
+            // Get last number from existing records with lock
+            $lastRecord = DeliveryNote::where('company_id', $companyId)
+                ->where('sj_number', 'like', "SJ/{$year}/{$month}/%")
+                ->lockForUpdate() // Lock the row to prevent concurrent reads
+                ->orderBy('sj_number', 'desc')
+                ->first();
+            
+            if ($lastRecord) {
+                // Extract number from last record (e.g., "SJ/2025/10/001" -> 1)
+                $parts = explode('/', $lastRecord->sj_number);
+                $lastNumber = isset($parts[3]) ? (int)$parts[3] : 0;
+                $nextNumber = $lastNumber + 1;
+            } else {
+                $nextNumber = 1;
+            }
 
-        return sprintf('SJ/%s/%s/%03d', $year, $month, $nextNumber);
+            return sprintf('SJ/%s/%s/%03d', $year, $month, $nextNumber);
+        });
     }
 
     public static function getPages(): array
@@ -250,5 +393,11 @@ class DeliveryNoteResource extends Resource
             'view' => Pages\ViewDeliveryNote::route('/{record}'),
             'edit' => Pages\EditDeliveryNote::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['customer', 'items.product', 'createdBy']);
     }
 }

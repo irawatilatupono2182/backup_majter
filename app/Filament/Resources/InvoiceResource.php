@@ -50,7 +50,7 @@ class InvoiceResource extends Resource
                         TextInput::make('invoice_number')
                             ->label('Nomor Invoice')
                             ->disabled()
-                            ->dehydrated()
+                            ->dehydrated(false)
                             ->default('(Auto Generated)')
                             ->helperText('Nomor invoice akan di-generate otomatis saat disimpan'),
 
