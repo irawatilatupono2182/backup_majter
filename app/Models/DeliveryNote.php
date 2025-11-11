@@ -26,6 +26,9 @@ class DeliveryNote extends Model
         'delivery_date',
         'status',
         'notes',
+        'vehicle_type',
+        'vehicle_number',
+        'driver_name',
         'created_by',
     ];
 
@@ -56,9 +59,14 @@ class DeliveryNote extends Model
         return $this->hasMany(DeliveryNoteItem::class, 'sj_id', 'sj_id');
     }
 
-    public function invoice(): HasMany
+    public function invoice(): BelongsTo
     {
-        return $this->hasMany(Invoice::class, 'sj_id', 'sj_id');
+        return $this->belongsTo(Invoice::class, 'sj_id', 'sj_id');
+    }
+
+    public function getDeliveryNoteNumberAttribute(): string
+    {
+        return $this->sj_number;
     }
 
     public function getTotalAmount(): float
@@ -83,7 +91,7 @@ class DeliveryNote extends Model
 
     public function hasInvoice(): bool
     {
-        return $this->invoice()->exists();
+        return $this->invoice !== null;
     }
 
     // Method to deliver items and update stock

@@ -24,6 +24,7 @@ class Customer extends Model
         'contact_person',
         'address_ship_to',
         'address_bill_to',
+        'city',
         'npwp',
         'billing_schedule',
         'is_ppn',

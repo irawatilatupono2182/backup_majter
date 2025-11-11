@@ -93,7 +93,7 @@ class Invoice extends Model
 
     public function isOverdue(): bool
     {
-        return $this->due_date < Carbon::now() && !in_array($this->status, ['paid', 'Paid']);
+        return $this->due_date < Carbon::now() && !in_array($this->status, ['Paid', 'paid']);
     }
 
     public function updateStatus(): void
@@ -101,13 +101,13 @@ class Invoice extends Model
         $totalPaid = $this->getTotalPaid();
         
         if ($totalPaid >= $this->grand_total) {
-            $this->status = 'paid';
+            $this->status = 'Paid';
         } elseif ($totalPaid > 0) {
-            $this->status = 'partial';
+            $this->status = 'Partial';
         } elseif ($this->isOverdue()) {
-            $this->status = 'overdue';
+            $this->status = 'Overdue';
         } else {
-            $this->status = 'unpaid';
+            $this->status = 'Unpaid';
         }
         
         $this->save();

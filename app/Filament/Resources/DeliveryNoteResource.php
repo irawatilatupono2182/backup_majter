@@ -83,6 +83,23 @@ class DeliveryNoteResource extends Resource
                             ->label('Catatan')
                             ->rows(3),
                     ]),
+                Forms\Components\Section::make('Informasi Pengiriman')
+                    ->schema([
+                        Forms\Components\TextInput::make('vehicle_type')
+                            ->label('Jenis Kendaraan')
+                            ->placeholder('Contoh: Truk, Mobil Box, Motor')
+                            ->maxLength(100),
+                        Forms\Components\TextInput::make('vehicle_number')
+                            ->label('No. Polisi')
+                            ->placeholder('Contoh: B 1234 XYZ')
+                            ->maxLength(50),
+                        Forms\Components\TextInput::make('driver_name')
+                            ->label('Nama Supir (Opsional)')
+                            ->placeholder('Nama lengkap supir')
+                            ->maxLength(100),
+                    ])
+                    ->columns(3)
+                    ->collapsible(),
                 Forms\Components\Section::make('Items')
                     ->schema([
                         Forms\Components\Repeater::make('items')
@@ -223,6 +240,11 @@ class DeliveryNoteResource extends Resource
                                     ->prefix('Rp')
                                     ->disabled()
                                     ->dehydrated(),
+                                Forms\Components\Textarea::make('notes')
+                                    ->label('Keterangan')
+                                    ->rows(2)
+                                    ->placeholder('Keterangan tambahan untuk item ini (opsional)')
+                                    ->columnSpanFull(),
                             ])
                             ->columns(3)
                             ->columnSpanFull()

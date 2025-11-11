@@ -162,24 +162,12 @@ class InvoiceResource extends Resource
                                     ->numeric()
                                     ->required()
                                     ->default(1)
-                                    ->live(debounce: 500)
+                                    ->reactive()
                                     ->afterStateUpdated(function (Set $set, Get $get, $state) {
                                         $unitPrice = (float)($get('unit_price') ?? 0);
                                         $qty = (float)($state ?? 0);
                                         $subtotal = $qty * $unitPrice;
                                         $set('subtotal', $subtotal);
-                                        
-                                        // Update total section
-                                        $items = $get('../../items') ?? [];
-                                        $totalSubtotal = collect($items)->sum(function ($item) {
-                                            return (float)($item['subtotal'] ?? 0);
-                                        });
-                                        $set('../../subtotal_amount', $totalSubtotal);
-                                        
-                                        $ppnIncluded = $get('../../ppn_included') ?? true;
-                                        $ppnAmount = $ppnIncluded ? $totalSubtotal * 0.11 : 0;
-                                        $set('../../ppn_amount', $ppnAmount);
-                                        $set('../../total_amount', $totalSubtotal + $ppnAmount);
                                     }),
 
                                 TextInput::make('unit')
@@ -191,24 +179,12 @@ class InvoiceResource extends Resource
                                     ->label('Harga Satuan')
                                     ->numeric()
                                     ->required()
-                                    ->live(debounce: 500)
+                                    ->reactive()
                                     ->afterStateUpdated(function (Set $set, Get $get, $state) {
                                         $qty = (float)($get('qty') ?? 1);
                                         $unitPrice = (float)($state ?? 0);
                                         $subtotal = $qty * $unitPrice;
                                         $set('subtotal', $subtotal);
-                                        
-                                        // Update total section
-                                        $items = $get('../../items') ?? [];
-                                        $totalSubtotal = collect($items)->sum(function ($item) {
-                                            return (float)($item['subtotal'] ?? 0);
-                                        });
-                                        $set('../../subtotal_amount', $totalSubtotal);
-                                        
-                                        $ppnIncluded = $get('../../ppn_included') ?? true;
-                                        $ppnAmount = $ppnIncluded ? $totalSubtotal * 0.11 : 0;
-                                        $set('../../ppn_amount', $ppnAmount);
-                                        $set('../../total_amount', $totalSubtotal + $ppnAmount);
                                     }),
 
                                 TextInput::make('subtotal')
@@ -268,18 +244,17 @@ class InvoiceResource extends Resource
                             ->dehydrated(),
 
                         ToggleButtons::make('status')
-                            ->label('Status')
+                            ->label('Status Pembayaran')
                             ->inline()
                             ->options([
-                                'unpaid' => 'Belum Lunas',
-                                'partial' => 'Sebagian',
-                                'paid' => 'Lunas',
-                                'overdue' => 'Jatuh Tempo',
+                                'Unpaid' => 'Belum Lunas',
+                                'Partial' => 'Sebagian',
+                                'Paid' => 'Lunas',
+                                'Overdue' => 'Jatuh Tempo',
                             ])
-                            ->default('unpaid')
-                            ->disabled(function ($record) {
-                                return $record ? $record->exists : false;
-                            }),
+                            ->default('Unpaid')
+                            ->required()
+                            ->helperText('💡 Pilih status pembayaran invoice'),
                     ])
                     ->columns(2),
             ]);
@@ -323,15 +298,15 @@ class InvoiceResource extends Resource
                     ->label('Status')
                     ->badge()
                     ->color(function (string $state): string {
-                        if ($state === 'paid') return 'success';
-                        if ($state === 'partial') return 'warning';
-                        if ($state === 'overdue') return 'danger';
+                        if ($state === 'Paid' || $state === 'paid') return 'success';
+                        if ($state === 'Partial' || $state === 'partial') return 'warning';
+                        if ($state === 'Overdue' || $state === 'overdue') return 'danger';
                         return 'gray';
                     })
                     ->formatStateUsing(function (string $state): string {
-                        if ($state === 'paid') return 'Lunas';
-                        if ($state === 'partial') return 'Sebagian';
-                        if ($state === 'overdue') return 'Jatuh Tempo';
+                        if ($state === 'Paid' || $state === 'paid') return 'Lunas';
+                        if ($state === 'Partial' || $state === 'partial') return 'Sebagian';
+                        if ($state === 'Overdue' || $state === 'overdue') return 'Jatuh Tempo';
                         return 'Belum Lunas';
                     }),
 
@@ -347,10 +322,10 @@ class InvoiceResource extends Resource
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
-                        'unpaid' => 'Belum Lunas',
-                        'partial' => 'Sebagian',
-                        'paid' => 'Lunas',
-                        'overdue' => 'Jatuh Tempo',
+                        'Unpaid' => 'Belum Lunas',
+                        'Partial' => 'Sebagian',
+                        'Paid' => 'Lunas',
+                        'Overdue' => 'Jatuh Tempo',
                     ]),
 
                 SelectFilter::make('customer_id')

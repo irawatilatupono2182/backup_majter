@@ -51,4 +51,10 @@ class InvoiceItem extends Model
         $discountAmount = $baseAmount * ($this->discount_percent / 100);
         return $baseAmount - $discountAmount;
     }
+
+    // Accessor untuk compatibility - qty bisa dipanggil sebagai quantity
+    public function getQuantityAttribute()
+    {
+        return $this->qty;
+    }
 }

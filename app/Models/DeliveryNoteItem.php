@@ -25,6 +25,7 @@ class DeliveryNoteItem extends Model
         'unit_price',
         'discount_percent',
         'subtotal',
+        'notes',
     ];
 
     protected $casts = [
@@ -57,5 +58,11 @@ class DeliveryNoteItem extends Model
         $baseAmount = $this->qty * $this->unit_price;
         $discountAmount = $baseAmount * ($this->discount_percent / 100);
         return $baseAmount - $discountAmount;
+    }
+
+    // Accessor untuk compatibility - qty bisa dipanggil sebagai quantity
+    public function getQuantityAttribute()
+    {
+        return $this->qty;
     }
 }

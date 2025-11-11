@@ -17,4 +17,15 @@ class EditInvoice extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function afterSave(): void
+    {
+        // Refresh the record to ensure latest data is loaded
+        $this->record->refresh();
+    }
 }

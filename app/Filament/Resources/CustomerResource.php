@@ -55,6 +55,11 @@ class CustomerResource extends Resource
                         Forms\Components\Textarea::make('address_bill_to')
                             ->label('Alamat Tagihan (BILL TO)')
                             ->rows(3),
+                        Forms\Components\TextInput::make('city')
+                            ->label('Kota')
+                            ->placeholder('Contoh: BANDUNG')
+                            ->maxLength(100)
+                            ->helperText('Kota customer, akan muncul di Surat Jalan'),
                     ]),
                 Forms\Components\Section::make('Kontak & Administrasi')
                     ->schema([
@@ -92,6 +97,10 @@ class CustomerResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('contact_person')
                     ->label('Contact Person'),
+                Tables\Columns\TextColumn::make('city')
+                    ->label('Kota')
+                    ->searchable()
+                    ->toggleable(),
                 Tables\Columns\IconColumn::make('is_ppn')
                     ->label('PPN')
                     ->boolean(),

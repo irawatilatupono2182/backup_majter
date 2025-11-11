@@ -99,15 +99,15 @@ class SalesReportResource extends Resource
                     ->label('Status')
                     ->badge()
                     ->color(function (string $state): string {
-                        if ($state === 'paid') return 'success';
-                        if ($state === 'partial') return 'warning';
-                        if ($state === 'overdue') return 'danger';
+                        if ($state === 'Paid' || $state === 'paid') return 'success';
+                        if ($state === 'Partial' || $state === 'partial') return 'warning';
+                        if ($state === 'Overdue' || $state === 'overdue') return 'danger';
                         return 'gray';
                     })
                     ->formatStateUsing(function (string $state): string {
-                        if ($state === 'paid') return 'Lunas';
-                        if ($state === 'partial') return 'Sebagian';
-                        if ($state === 'overdue') return 'Jatuh Tempo';
+                        if ($state === 'Paid' || $state === 'paid') return 'Lunas';
+                        if ($state === 'Partial' || $state === 'partial') return 'Sebagian';
+                        if ($state === 'Overdue' || $state === 'overdue') return 'Jatuh Tempo';
                         return 'Belum Lunas';
                     }),
             ])
@@ -135,18 +135,11 @@ class SalesReportResource extends Resource
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
-                        'unpaid' => 'Belum Lunas',
-                        'partial' => 'Sebagian',
-                        'paid' => 'Lunas',
-                        'overdue' => 'Jatuh Tempo',
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        if (isset($data['value']) && $data['value'] !== '') {
-                            // Case-insensitive comparison to handle both 'paid' and 'Paid'
-                            return $query->whereRaw('LOWER(status) = ?', [strtolower($data['value'])]);
-                        }
-                        return $query;
-                    }),
+                        'Unpaid' => 'Belum Lunas',
+                        'Partial' => 'Sebagian',
+                        'Paid' => 'Lunas',
+                        'Overdue' => 'Jatuh Tempo',
+                    ]),
 
                 SelectFilter::make('customer_id')
                     ->label('Customer')
