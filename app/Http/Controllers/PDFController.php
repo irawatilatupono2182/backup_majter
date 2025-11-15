@@ -41,7 +41,13 @@ class PDFController extends Controller
     public function downloadDeliveryNote(DeliveryNote $deliveryNote)
     {
         $deliveryNote->load(['customer', 'items.product', 'company', 'invoice']);
-        $pdf = Pdf::loadView('pdf.delivery-note', compact('deliveryNote'));
+        
+        // Use alternative template for Non-PPN customers
+        $template = ($deliveryNote->customer && $deliveryNote->customer->is_ppn) 
+            ? 'pdf.delivery-note' 
+            : 'pdf.delivery-note-alternative';
+        
+        $pdf = Pdf::loadView($template, compact('deliveryNote'));
         $filename = $this->sanitizeFilename('Surat_Jalan_' . $deliveryNote->delivery_note_number . '.pdf');
         
         return $pdf->download($filename);
@@ -50,7 +56,13 @@ class PDFController extends Controller
     public function downloadInvoice(Invoice $invoice)
     {
         $invoice->load(['customer', 'items.product', 'company', 'deliveryNote']);
-        $pdf = Pdf::loadView('pdf.invoice', compact('invoice'));
+        
+        // Use alternative template for Non-PPN deliveries
+        $template = ($invoice->deliveryNote && $invoice->deliveryNote->type === 'PPN') 
+            ? 'pdf.invoice' 
+            : 'pdf.invoice-alternative';
+        
+        $pdf = Pdf::loadView($template, compact('invoice'));
         $filename = $this->sanitizeFilename('Invoice_' . $invoice->invoice_number . '.pdf');
         
         return $pdf->download($filename);
@@ -77,7 +89,13 @@ class PDFController extends Controller
     public function previewDeliveryNote(DeliveryNote $deliveryNote)
     {
         $deliveryNote->load(['customer', 'items.product', 'company', 'invoice']);
-        $pdf = Pdf::loadView('pdf.delivery-note', compact('deliveryNote'));
+        
+        // Use alternative template for Non-PPN customers
+        $template = ($deliveryNote->customer && $deliveryNote->customer->is_ppn) 
+            ? 'pdf.delivery-note' 
+            : 'pdf.delivery-note-alternative';
+        
+        $pdf = Pdf::loadView($template, compact('deliveryNote'));
         $filename = $this->sanitizeFilename('Surat_Jalan_' . $deliveryNote->delivery_note_number . '.pdf');
         
         return $pdf->stream($filename);
@@ -86,8 +104,36 @@ class PDFController extends Controller
     public function previewInvoice(Invoice $invoice)
     {
         $invoice->load(['customer', 'items.product', 'company', 'deliveryNote']);
-        $pdf = Pdf::loadView('pdf.invoice', compact('invoice'));
+        
+        // Use alternative template for Non-PPN deliveries
+        $template = ($invoice->deliveryNote && $invoice->deliveryNote->type === 'PPN') 
+            ? 'pdf.invoice' 
+            : 'pdf.invoice-alternative';
+        
+        $pdf = Pdf::loadView($template, compact('invoice'));
         $filename = $this->sanitizeFilename('Invoice_' . $invoice->invoice_number . '.pdf');
+        
+        return $pdf->stream($filename);
+    }
+
+    public function downloadReceipt($paymentId)
+    {
+        $payment = \App\Models\Payment::with(['invoice.customer'])->findOrFail($paymentId);
+        $amountInWords = terbilang($payment->amount);
+        
+        $pdf = Pdf::loadView('pdf.receipt', compact('payment', 'amountInWords'));
+        $filename = $this->sanitizeFilename('Kwitansi_' . ($payment->payment_number ?? $payment->payment_id) . '.pdf');
+        
+        return $pdf->download($filename);
+    }
+
+    public function previewReceipt($paymentId)
+    {
+        $payment = \App\Models\Payment::with(['invoice.customer'])->findOrFail($paymentId);
+        $amountInWords = terbilang($payment->amount);
+        
+        $pdf = Pdf::loadView('pdf.receipt', compact('payment', 'amountInWords'));
+        $filename = $this->sanitizeFilename('Kwitansi_' . ($payment->payment_number ?? $payment->payment_id) . '.pdf');
         
         return $pdf->stream($filename);
     }

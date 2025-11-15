@@ -69,6 +69,16 @@ class InvoiceResource extends Resource
                                         $set('invoice_date', now()->format('Y-m-d'));
                                         $set('due_date', now()->addDays(30)->format('Y-m-d'));
                                         
+                                        // Set PO Number dari surat jalan (kosongkan jika tidak ada)
+                                        $set('po_number', $deliveryNote->po_number ?? null);
+                                        
+                                        // Set Payment Terms dari TOP surat jalan (default 30 jika tidak ada)
+                                        $set('payment_terms', $deliveryNote->top ?? 30);
+                                        
+                                        // Set PPN based on delivery note type
+                                        $ppnIncluded = ($deliveryNote->type === 'PPN');
+                                        $set('ppn_included', $ppnIncluded);
+                                        
                                         // Set items dari delivery note
                                         $items = $deliveryNote->items->map(function ($item) {
                                             return [
@@ -86,7 +96,7 @@ class InvoiceResource extends Resource
                                         $subtotalAmount = collect($items)->sum('subtotal');
                                         $set('subtotal_amount', $subtotalAmount);
                                         
-                                        $ppnAmount = $subtotalAmount * 0.11;
+                                        $ppnAmount = $ppnIncluded ? $subtotalAmount * 0.11 : 0;
                                         $set('ppn_amount', $ppnAmount);
                                         $set('total_amount', $subtotalAmount + $ppnAmount);
                                     }
@@ -112,6 +122,18 @@ class InvoiceResource extends Resource
                             ->required()
                             ->default(fn() => now()->addDays(30)),
 
+                        TextInput::make('po_number')
+                            ->label('PO Number')
+                            ->placeholder('Nomor PO dari Customer')
+                            ->maxLength(100),
+
+                        TextInput::make('payment_terms')
+                            ->label('TOP (Hari)')
+                            ->numeric()
+                            ->default(30)
+                            ->suffix('Hari')
+                            ->helperText('Terms of Payment dalam hari'),
+
                         ToggleButtons::make('ppn_included')
                             ->label('PPN')
                             ->inline()
@@ -120,6 +142,8 @@ class InvoiceResource extends Resource
                                 false => 'Tidak',
                             ])
                             ->default(true)
+                            ->disabled(fn(Get $get) => !empty($get('delivery_note_id')))
+                            ->helperText('💡 PPN otomatis mengikuti jenis Surat Jalan')
                             ->reactive()
                             ->afterStateUpdated(function (Set $set, Get $get, $state) {
                                 $subtotal = $get('subtotal_amount') ?? 0;
@@ -193,7 +217,7 @@ class InvoiceResource extends Resource
                                     ->disabled()
                                     ->dehydrated(),
                             ])
-                            ->columns(4)
+                            ->columns(5)
                             ->addActionLabel('Tambah Item')
                             ->live()
                             ->afterStateUpdated(function (Set $set, Get $get, $state) {

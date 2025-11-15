@@ -33,10 +33,10 @@
             border-collapse: collapse;
         }
 
-        /* Header Section */
+        /* Header Section - Alternative Style */
         .header {
             border-bottom: 1.5px solid #000;
-            padding: 6px 10px;
+            padding: 6px 0px 6px 0px;
         }
 
         .header-table {
@@ -44,13 +44,14 @@
         }
 
         .logo-box {
-            width: 50px;
-            height: 50px;
+            width: 110px;
+            height: 45px;
             border: 0px solid #000;
             display: inline-block;
             text-align: center;
             vertical-align: middle;
-            padding: 3px;
+            margin-right: 8px;
+            padding: 2px;
         }
 
         .logo-box img {
@@ -70,22 +71,36 @@
             font-weight: 900;
         }
 
-        .customer-info {
+        .title {
+            text-align: left;
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0;
+            letter-spacing: 6px;
+        }
+
+        .company-logo-section {
+            text-align: left;
+            font-size: 11px;
+            line-height: 1.3;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .company-brand {
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .company-tagline {
             font-size: 7px;
-            line-height: 1.4;
+            margin-top: 2px;
         }
 
         /* Content Section */
         .content {
             padding: 10px 12px;
-        }
-
-        .title {
-            text-align: right;
-            font-size: 22px;
-            font-weight: 900;
-            margin: 0;
-            letter-spacing: 6px;
         }
 
         .doc-info {
@@ -103,25 +118,19 @@
             vertical-align: top;
         }
 
-        .instruction-text {
-            font-size: 7px;
-            margin: 5px 0;
-            line-height: 1.3;
-        }
-
         /* Items Table */
         .items-table {
             width: 100%;
             margin: 8px 0;
             font-size: 8px;
-            border: none;
+            border: 1.5px solid #000;
         }
 
         .items-table th {
-            border-top: 1.5px solid #000;
+            border-top: none;
             border-bottom: 1.5px solid #000;
-            border-left: none;
-            border-right: none;
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
             padding: 5px 3px;
             text-align: center;
             font-weight: bold;
@@ -130,7 +139,8 @@
         }
 
         .items-table td {
-            border: none;
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
             border-bottom: 0.5px solid #ddd;
             padding: 5px 3px;
             vertical-align: top;
@@ -138,7 +148,7 @@
         }
 
         .items-table tbody tr:last-child td {
-            border-bottom: 1.5px solid #000;
+            border-bottom: none;
         }
 
         .items-table .col-no {
@@ -201,23 +211,27 @@
 <body>
     <div class="container">
         
-        <!-- Header -->
+        <!-- Header - Alternative Style -->
         <div class="header">
             <table class="header-table">
                 <tr>
-                    <td style="width: 65px; vertical-align: middle;">
-                        <div class="logo-box"><img src="{{ public_path('logo/aj.png') }}" alt="AJ Logo"></div>
-                    </td>
-                    <td style="width: 48%; vertical-align: middle; padding-left: 8px;">
-                        <div class="company-info">
-                            <strong>CV. ADAM JAYA</strong><br>
-                            Jl. Sadang, Rahayu, Kab. Bandung<br>
-                            Jawa Barat 40218<br>
-                            Telp: 085721322812 | Email: majter.ads@gmail.com
-                        </div>
-                    </td>
-                    <td style="vertical-align: middle; text-align: right;">
+                    <!-- Left: Title -->
+                    <td style="width: 50%; vertical-align: middle; padding-left: 0;">
                         <div class="title">SURAT JALAN</div>
+                    </td>
+                    
+                    <!-- Right: Logo + Company Brand -->
+                    <td style="width: 50%; vertical-align: middle; text-align: right; padding-right: 0;">
+                    <div style="display: inline-block; text-align: right;">
+                        <div class="logo-box" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><img src="{{ public_path('logo/majter.png') }}" alt="AJ Logo"></div>
+                             <!-- Garis vertikal kustom yang lebih tinggi -->
+                            <div style="display: inline-block; vertical-align: middle; height: 45px; width: 1px; background-color: #000; margin: 0 8px;"></div>
+
+                            <div class="company-logo-section" style="display: inline-block; vertical-align: middle; margin-left: 8px;">
+                                <div class="company-brand">AJT</div>
+                                <div class="company-tagline">BANDUNG - JAWA BARAT 40218</div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </table>

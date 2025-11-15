@@ -52,7 +52,9 @@ class DeliveryNoteResource extends Resource
                             ->afterStateUpdated(function ($state, Forms\Set $set) {
                                 if ($state) {
                                     $customer = Customer::find($state);
-                                    $set('type', $customer && $customer->is_ppn ? 'PPN' : 'Non-PPN');
+                                    if ($customer) {
+                                        $set('type', $customer->is_ppn ? 'PPN' : 'Non-PPN');
+                                    }
                                 }
                             }),
                         Forms\Components\Select::make('type')
@@ -63,11 +65,27 @@ class DeliveryNoteResource extends Resource
                                 'Supplier' => 'Supplier',
                             ])
                             ->required()
-                            ->default('PPN'),
+                            ->default('PPN')
+                            ->disabled(fn(Forms\Get $get) => !empty($get('customer_id')))
+                            ->dehydrated()
+                            ->helperText('💡 Jenis otomatis mengikuti status PPN customer'),
                         Forms\Components\DatePicker::make('delivery_date')
                             ->label('Tanggal Kirim')
                             ->required()
                             ->default(now()),
+                        Forms\Components\TextInput::make('po_number')
+                            ->label('PO Number')
+                            ->placeholder('Nomor PO dari Customer')
+                            ->maxLength(100),
+                        Forms\Components\DatePicker::make('po_date')
+                            ->label('Tanggal PO')
+                            ->placeholder('Tanggal PO dari Customer'),
+                        Forms\Components\TextInput::make('top')
+                            ->label('TOP (Hari)')
+                            ->numeric()
+                            ->default(14)
+                            ->suffix('Hari')
+                            ->helperText('Terms of Payment dalam hari'),
                         Forms\Components\Select::make('status')
                             ->label('Status')
                             ->options([

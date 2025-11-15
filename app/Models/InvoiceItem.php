@@ -24,6 +24,7 @@ class InvoiceItem extends Model
         'unit_price',
         'discount_percent',
         'subtotal',
+        'notes',
     ];
 
     protected $casts = [

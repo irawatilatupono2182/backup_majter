@@ -22,6 +22,9 @@ class DeliveryNote extends Model
         'company_id',
         'customer_id',
         'sj_number',
+        'po_number',
+        'po_date',
+        'top',
         'type',
         'delivery_date',
         'status',
@@ -34,6 +37,7 @@ class DeliveryNote extends Model
 
     protected $casts = [
         'delivery_date' => 'date',
+        'po_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',

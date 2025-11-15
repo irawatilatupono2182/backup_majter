@@ -33,6 +33,17 @@ class ViewDeliveryNote extends ViewRecord
                         Infolists\Components\TextEntry::make('delivery_date')
                             ->label('Tanggal Kirim')
                             ->date('d/m/Y'),
+                        Infolists\Components\TextEntry::make('po_number')
+                            ->label('PO Number')
+                            ->placeholder('-'),
+                        Infolists\Components\TextEntry::make('po_date')
+                            ->label('Tanggal PO')
+                            ->date('d/m/Y')
+                            ->placeholder('-'),
+                        Infolists\Components\TextEntry::make('top')
+                            ->label('TOP')
+                            ->suffix(' Hari')
+                            ->default('14'),
                         Infolists\Components\TextEntry::make('status')
                             ->label('Status')
                             ->badge()
@@ -42,10 +53,26 @@ class ViewDeliveryNote extends ViewRecord
                                 return 'gray';
                             }),
                         Infolists\Components\TextEntry::make('notes')
-                            ->label('Catatan')
+                            ->label('Catatan Global')
+                            ->placeholder('-')
                             ->columnSpanFull(),
                     ])
-                    ->columns(2),
+                    ->columns(3),
+
+                Infolists\Components\Section::make('Informasi Pengiriman')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('vehicle_type')
+                            ->label('Jenis Kendaraan')
+                            ->placeholder('-'),
+                        Infolists\Components\TextEntry::make('vehicle_number')
+                            ->label('No. Polisi')
+                            ->placeholder('-'),
+                        Infolists\Components\TextEntry::make('driver_name')
+                            ->label('Nama Supir')
+                            ->placeholder('-'),
+                    ])
+                    ->columns(3)
+                    ->collapsible(),
 
                 Infolists\Components\Section::make('Detail Items')
                     ->schema([
@@ -69,6 +96,10 @@ class ViewDeliveryNote extends ViewRecord
                                 Infolists\Components\TextEntry::make('subtotal')
                                     ->label('Subtotal')
                                     ->money('IDR'),
+                                Infolists\Components\TextEntry::make('notes')
+                                    ->label('Catatan Item')
+                                    ->placeholder('-')
+                                    ->columnSpanFull(),
                             ])
                             ->columns(5),
                     ]),

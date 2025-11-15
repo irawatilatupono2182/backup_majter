@@ -168,6 +168,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/invoice/{invoice}/preview', [PDFController::class, 'previewInvoice'])
             ->name('pdf.invoice.preview');
         
+        // Receipt/Kwitansi PDF
+        Route::get('/receipt/{payment}/download', [PDFController::class, 'downloadReceipt'])
+            ->name('pdf.receipt.download');
+        Route::get('/receipt/{payment}/preview', [PDFController::class, 'previewReceipt'])
+            ->name('pdf.receipt.preview');
+        
         // Sales Report PDF Summary
         Route::get('/sales-report/summary', [PDFController::class, 'salesReportSummary'])
             ->name('pdf.sales-report.summary');

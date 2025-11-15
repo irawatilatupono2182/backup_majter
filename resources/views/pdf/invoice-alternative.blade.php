@@ -33,21 +33,23 @@
             border-collapse: collapse;
         }
 
+        /* Header Section - Alternative Style */
         .header-table {
             width: 100%;
             border-bottom: 1.5px solid #000;
-            padding: 6px 10px 15px 10px;
+            padding: 6px 0px 6px 0px;
             margin-bottom: 8px;
         }
 
-        .logo-box {
-            width: 50px;
-            height: 50px;
+        .logo-box {  
+            width: 110px;
+            height: 45px;
             border: 0px solid #000;
             display: inline-block;
             text-align: center;
             vertical-align: middle;
-            padding: 3px;
+            margin-right: 8px;
+            padding: 2px;
         }
 
         .logo-box img {
@@ -68,11 +70,31 @@
         }
 
         .invoice-title {
-            font-size: 32px;
+            text-align: left;
+            font-size: 22px;
             font-weight: 900;
             letter-spacing: 6px;
             line-height: 1;
             margin: 0;
+        }
+
+        .company-logo-section {
+            text-align: left;
+            font-size: 11px;
+            line-height: 1.3;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .company-brand {
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .company-tagline {
+            font-size: 7px;
+            margin-top: 2px;
         }
 
         .info-box {
@@ -84,11 +106,11 @@
             width: 100%;
             margin: 8px 0;
             font-size: 8px;
-            border: none;
+            border: 1.5px solid #000;
         }
 
         .items-table th {
-            border-top: 1.5px solid #000;
+            border-top: none;
             border-bottom: 1.5px solid #000;
             border-left: 1px solid #000;
             border-right: 1px solid #000;
@@ -110,7 +132,7 @@
         }
 
         .items-table tbody tr:last-child td {
-            border-bottom: 1.5px solid #000;
+            border-bottom: none;
         }
 
         .items-table .col-no {
@@ -207,34 +229,26 @@
 <body>
     <div class="container">
         
-        <!-- Header -->
+        <!-- Header - Alternative Style -->
         <table class="header-table">
             <tr>
-                <!-- Logo + Company -->
-                <td style="width: 50%; vertical-align: top;">
-                    <table style="width: 100%;">
-                        <tr>
-                            <td style="width: 60px; vertical-align: top;">
-                                <div class="logo-box"><img src="{{ public_path('logo/aj.png') }}" alt="AJ Logo"></div>
-                            </td>
-                            <td style="vertical-align: top; padding-left: 8px;">
-                                <div class="company-info">
-                                    <strong>CV. ADAM JAYA</strong><br>
-                                    Jl. Sadang, Rahayu, Kab. Bandung<br>
-                                    Jawa Barat 40218<br>
-                                    Telp: 085721322812 | Email: majter.ads@gmail.com
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                
-                <!-- INVOICE Title -->
-                <td style="width: 50%; vertical-align: middle; text-align: right; padding-right: 0;">
+                <!-- Left: Title -->
+                <td style="width: 50%; vertical-align: middle; padding-left: 0;">
                     <div class="invoice-title">INVOICE</div>
                 </td>
+                
+                <!-- Right: Logo + Company Brand -->
+                <td style="width: 50%; vertical-align: middle; text-align: right; padding-right: 0;">
+                    <div style="display: inline-block; text-align: right;">
+                        <div class="logo-box" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><img src="{{ public_path('logo/majter.png') }}" alt="AJ Logo"></div>
+                        <span style="display: inline-block; vertical-align: middle; font-size: 20px; font-weight: 300; margin: 0 8px; color: #000;">|</span>
+                        <div class="company-logo-section" style="display: inline-block; vertical-align: middle; margin-left: 8px;">
+                            <div class="company-brand">MAJTER</div>
+                            <div class="company-tagline">BANDUNG - JAWA BARAT 40218</div>
+                        </div>
+                    </div>
+                </td>
             </tr>
-            <tr><td colspan="2" style="height: 8px;"></td></tr>
         </table>
 
         <!-- Content Section -->
@@ -343,10 +357,6 @@
                     <td style="padding: 2px 0; text-align: left;">: Rp. {{ number_format(0, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 2px 10px 2px 0; text-align: left;"><strong>PPN</strong></td>
-                    <td style="padding: 2px 0; text-align: left;">: Rp. {{ number_format(isset($invoice->tax) ? $invoice->tax : 0, 0, ',', '.') }}</td>
-                </tr>
-                <tr>
                     <td style="padding: 2px 10px 2px 0; border-bottom: 1.5px solid #000; text-align: left;"><strong>GRAND TOTAL</strong></td>
                     <td style="padding: 2px 0; border-bottom: 1.5px solid #000; text-align: left;">: <strong>Rp. {{ number_format($invoice->grand_total ?? $grandTotal, 0, ',', '.') }}</strong></td>
                 </tr>
@@ -362,7 +372,7 @@
                     <table style="width: 100%; font-size: 7.5px;">
                         <tr>
                             <td style="width: 50px; vertical-align: top;">BCA</td>
-                            <td style="vertical-align: top;">- 156 156 2275 A/N <strong>ADAM JAYA CV</strong></td>
+                            <td style="vertical-align: top;">- 139 0800 645 A/N <strong>DIO GIANI PUTRA</strong></td>
                         </tr>
                     </table>
                 </div>
