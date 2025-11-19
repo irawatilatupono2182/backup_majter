@@ -3,48 +3,47 @@
 return [
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Class Namespace
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     |
     | This value sets the root class namespace for Livewire component classes in
-    | your application. This value affects component auto-discovery and
-    | any Livewire file helper commands, like `artisan make:livewire`.
-    |
-    | After changing this item, run: `php artisan livewire:discover`.
+    | your application. This value will change where component auto-discovery
+    | finds components. It's also referenced by the file creation commands.
     |
     */
 
     'class_namespace' => 'App\\Livewire',
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | View Path
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     |
-    | This value sets the path for Livewire component views. This affects
-    | file manipulation helper commands like `artisan make:livewire`.
+    | This value is used to specify where Livewire component Blade templates are
+    | stored when running file creation commands like `artisan make:livewire`.
+    | It is also used if you choose to omit a component's render() method.
     |
     */
 
     'view_path' => resource_path('views/livewire'),
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Layout
-    |--------------------------------------------------------------------------
-    | The default layout view that will be used when rendering a component via
-    | Route::get('/some-endpoint', SomeComponent::class);. In this case the
-    | the view returned by SomeComponent will be wrapped in "layouts.app"
+    |---------------------------------------------------------------------------
+    | The view that will be used as the layout when rendering a single component
+    | as an entire page via `Route::get('/post/create', CreatePost::class);`.
+    | In this case, the view returned by CreatePost will render into $slot.
     |
     */
 
     'layout' => 'components.layouts.app',
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Lazy Loading Placeholder
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Livewire allows you to lazy load components that would otherwise slow down
     | the initial page load. Every component can have a custom placeholder or
     | you can define the default placeholder view for all components below.
@@ -54,80 +53,77 @@ return [
     'lazy_placeholder' => null,
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Temporary File Uploads
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     |
     | Livewire handles file uploads by storing uploads in a temporary directory
-    | before the file is validated and stored permanently. All file uploads
-    | are directed to a global endpoint for temporary storage. The config
-    | items below are used for customizing the way the endpoint works.
+    | before the file is stored permanently. All file uploads are directed to
+    | a global endpoint for temporary storage. You may configure this below:
     |
     */
 
     'temporary_file_upload' => [
-        'disk' => null,        // Example: 'local', 's3'              Default: 'default'
-        'rules' => null,       // Example: ['file', 'mimes:png,jpg']  Default: ['required', 'file', 'max:12288'] (12MB)
-        'directory' => null,   // Example: 'tmp'                      Default: 'livewire-tmp'
-        'middleware' => null,  // Example: 'throttle:5,1'             Default: 'throttle:60,1'
-        'preview_mimes' => [   // Supported file types for temporary pre-signed file URLs.
+        'disk' => null,        // Example: 'local', 's3'              | Default: 'default'
+        'rules' => null,       // Example: ['file', 'mimes:png,jpg']  | Default: ['required', 'file', 'max:12288'] (12MB)
+        'directory' => null,   // Example: 'tmp'                      | Default: 'livewire-tmp'
+        'middleware' => null,  // Example: 'throttle:5,1'             | Default: 'throttle:60,1'
+        'preview_mimes' => [   // Supported file types for temporary pre-signed file URLs...
             'png', 'gif', 'bmp', 'svg', 'wav', 'mp4',
             'mov', 'avi', 'wmv', 'mp3', 'm4a',
             'jpg', 'jpeg', 'mpga', 'webp', 'wma',
         ],
-        'max_upload_time' => 5, // Max upload time in minutes. Default: 5
+        'max_upload_time' => 5, // Max duration (in minutes) before an upload is invalidated...
+        'cleanup' => true, // Should cleanup temporary uploads older than 24 hrs...
     ],
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Render On Redirect
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     |
-    | This value determines whether Livewire will render before it's redirected
-    | or not. Setting this to "false" (default) will mean the render method is
-    | skipped when redirecting. And "true" will mean the render method is run
-    | before redirecting. Browsers bfcache can store a potentially stale view
-    | if render is skipped on redirect.
+    | This value determines if Livewire will run a component's `render()` method
+    | after a redirect has been triggered using something like `redirect(...)`
+    | Setting this to true will render the view once more before redirecting
     |
     */
 
     'render_on_redirect' => false,
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Eloquent Model Binding
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     |
-    | Previous versions of Livewire always bound properties to Eloquent models
-    | using the "id" of the model. However, you may want to use a different
-    | key to bind your models to Livewire properties. You may use this to
-    | configure the default binding key for all models.
+    | Previous versions of Livewire supported binding directly to eloquent model
+    | properties using wire:model by default. However, this behavior has been
+    | deemed too "magical" and has therefore been put under a feature flag.
     |
     */
 
     'legacy_model_binding' => false,
 
     /*
-    |--------------------------------------------------------------------------
-    | Auto-inject class names
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
+    | Auto-inject Frontend Assets
+    |---------------------------------------------------------------------------
     |
-    | Previous versions of Livewire would automatically inject class names into
-    | the rendered HTML. In the latest version, this behavior is disabled by
-    | default to reduce HTML size. However, you can re-enable the behavior if
-    | you rely on it for other tools that might depend on it.
+    | By default, Livewire automatically injects its JavaScript and CSS into the
+    | <head> and <body> of pages containing Livewire components. By disabling
+    | this behavior, you need to use @livewireStyles and @livewireScripts.
     |
     */
 
     'inject_assets' => true,
 
     /*
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     | Navigate (SPA mode)
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
     |
-    | By default, wire:navigate is enabled, allowing you to use SPA mode if
-    | you want. If you'd like to disable this behavior, set this to false.
+    | By adding `wire:navigate` to links in your Livewire application, Livewire
+    | will prevent the default link handling and instead request those pages
+    | via AJAX, creating an SPA-like effect. Configure this behavior here.
     |
     */
 
@@ -137,27 +133,28 @@ return [
     ],
 
     /*
-    |--------------------------------------------------------------------------
-    | HTML Minification
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
+    | HTML Morph Markers
+    |---------------------------------------------------------------------------
     |
-    | By default, HTML minification is disabled. Set to true to enable.
-    | This can improve performance by reducing HTML payload size.
+    | Livewire intelligently "morphs" existing HTML into the newly rendered HTML
+    | after each update. To make this process more reliable, Livewire injects
+    | "markers" into the rendered Blade surrounding @if, @class & @foreach.
     |
     */
 
-    'minify' => false, // Set to true in production
+    'inject_morph_markers' => true,
 
     /*
-    |--------------------------------------------------------------------------
-    | Back Button Cache
-    |--------------------------------------------------------------------------
+    |---------------------------------------------------------------------------
+    | Pagination Theme
+    |---------------------------------------------------------------------------
     |
-    | This will use the back/forward cache in the browser to instantly
-    | show pages when using the back or forward buttons.
+    | When enabling Livewire's pagination feature by using the `WithPagination`
+    | trait, Livewire will use Tailwind templates to render pagination views
+    | on the page. If you want Bootstrap CSS, you can specify: "bootstrap"
     |
     */
 
-    'back_button_cache' => true,
-
+    'pagination_theme' => 'tailwind',
 ];

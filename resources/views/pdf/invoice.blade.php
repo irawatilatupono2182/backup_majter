@@ -35,19 +35,19 @@
 
         .header-table {
             width: 100%;
-            border-bottom: 1.5px solid #000;
-            padding: 6px 10px 15px 10px;
-            margin-bottom: 8px;
+            border-bottom: 2px solid #000;
+            padding: 10px 15px 20px 15px;
+            margin-bottom: 12px;
         }
 
         .logo-box {
-            width: 50px;
-            height: 50px;
+            width: 80px;
+            height: 80px;
             border: 0px solid #000;
             display: inline-block;
             text-align: center;
             vertical-align: middle;
-            padding: 3px;
+            padding: 5px;
         }
 
         .logo-box img {
@@ -57,94 +57,94 @@
         }
 
         .company-info {
-            font-size: 7px;
-            line-height: 1.35;
+            font-size: 11px;
+            line-height: 1.5;
             font-weight: normal;
         }
 
         .company-info strong {
-            font-size: 22px;
+            font-size: 28px;
             font-weight: 900;
         }
 
         .invoice-title {
-            font-size: 32px;
+            font-size: 42px;
             font-weight: 900;
-            letter-spacing: 6px;
+            letter-spacing: 8px;
             line-height: 1;
             margin: 0;
         }
 
         .info-box {
-            font-size: 7.5px;
-            line-height: 1.5;
+            font-size: 11px;
+            line-height: 1.6;
         }
 
         .items-table {
             width: 100%;
-            margin: 8px 0;
-            font-size: 8px;
+            margin: 12px 0;
+            font-size: 12px;
             border: none;
         }
 
         .items-table th {
-            border-top: 1.5px solid #000;
-            border-bottom: 1.5px solid #000;
-            border-left: 1px solid #000;
-            border-right: 1px solid #000;
-            padding: 5px 3px;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+            border-left: 1.5px solid #000;
+            border-right: 1.5px solid #000;
+            padding: 8px 5px;
             text-align: center;
             font-weight: bold;
-            font-size: 9px;
+            font-size: 13px;
             background-color: #fff;
         }
 
         .items-table td {
-            border-left: 1px solid #000;
-            border-right: 1px solid #000;
-            border-bottom: 0.5px solid #ddd;
-            padding: 5px 3px;
+            border-left: 1.5px solid #000;
+            border-right: 1.5px solid #000;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 5px;
             text-align: left;
             vertical-align: top;
-            font-size: 8px;
+            font-size: 12px;
         }
 
         .items-table tbody tr:last-child td {
-            border-bottom: 1.5px solid #000;
+            border-bottom: 2px solid #000;
         }
 
         .items-table .col-no {
-            width: 35px;
+            width: 50px;
             text-align: center;
         }
 
         .items-table .col-desc {
             width: auto;
-            padding-left: 5px;
+            padding-left: 8px;
         }
 
         .items-table .col-qty {
-            width: 65px;
+            width: 90px;
             text-align: center;
         }
 
         .items-table .col-price {
-            width: 120px;
+            width: 150px;
             text-align: right;
-            padding-right: 5px;
+            padding-right: 8px;
         }
 
         .items-table .col-amount {
-            width: 120px;
+            width: 150px;
             text-align: right;
-            padding-right: 5px;
+            padding-right: 8px;
         }
 
         .items-table .col-notes {
-            width: 100px;
+            width: 130px;
             text-align: left;
-            padding-left: 5px;
-            font-size: 7px;
+            padding-left: 8px;
+            font-size: 11px;
         }
 
         .total-row {
@@ -153,13 +153,13 @@
         }
 
         .footer-section {
-            margin-top: 5px;
-            font-size: 7.5px;
+            margin-top: 10px;
+            font-size: 11px;
         }
 
         .bank-box {
-            border: 1px solid #000;
-            padding: 8px;
+            border: 1.5px solid #000;
+            padding: 12px;
             width: 40%;
             float: left;
             margin-right: 5%;
@@ -169,20 +169,20 @@
             width: 53%;
             float: right;
             text-align: center;
-            padding: 8px;
+            padding: 12px;
         }
 
         .signature-space {
-            height: 50px;
-            margin: 10px 0;
+            height: 70px;
+            margin: 15px 0;
         }
 
         .signature-line {
-            border-top: 1px dotted #000;
+            border-top: 1.5px dotted #000;
             display: inline-block;
-            min-width: 150px;
-            margin-top: 5px;
-            padding-top: 3px;
+            min-width: 200px;
+            margin-top: 8px;
+            padding-top: 5px;
         }
 
         .clearfix::after {
@@ -214,10 +214,10 @@
                 <td style="width: 50%; vertical-align: top;">
                     <table style="width: 100%;">
                         <tr>
-                            <td style="width: 60px; vertical-align: top;">
+                            <td style="width: 90px; vertical-align: top;">
                                 <div class="logo-box"><img src="{{ public_path('logo/aj.png') }}" alt="AJ Logo"></div>
                             </td>
-                            <td style="vertical-align: top; padding-left: 8px;">
+                            <td style="vertical-align: top; padding-left: 12px;">
                                 <div class="company-info">
                                     <strong>CV. ADAM JAYA</strong><br>
                                     Jl. Sadang, Rahayu, Kab. Bandung<br>
@@ -244,38 +244,38 @@
         <table style="width: 100%; margin-bottom: 8px; border-collapse: collapse;">
             <tr>
                 <!-- BILL TO -->
-                <td style="width: 55%; vertical-align: top; padding-right: 10px;">
-                    <div style="font-size: 8px; line-height: 1.6; margin-bottom: 5px;">
+                <td style="width: 55%; vertical-align: top; padding-right: 15px;">
+                    <div style="font-size: 12px; line-height: 1.6; margin-bottom: 8px;">
                         <strong style="font-weight: bold;">BILL TO  :  {{ strtoupper($invoice->customer->name ?? 'PT. ARGO MANUNGGAL TRIASTA') }}</strong>
                     </div>
-                    <div style="font-size: 7px; line-height: 1.4; margin-top: 5px;">
+                    <div style="font-size: 11px; line-height: 1.5; margin-top: 8px;">
                         {{ $invoice->customer->address_bill_to ?? $invoice->customer->address_ship_to ?? 'Wisma Argo Manunggal Lt 2, Jalan Jend. Gatat Subroto Kav 22 Karet Semanggi - Setia budi, Jakarta Selatan, DKI Jakarta 12930, Indonesia' }}
                     </div>
                 </td>
                 
                 <!-- Date + Invoice Info -->
-                <td style="width: 45%; vertical-align: top; padding-left: 10px;">
-                    <div style="text-align: right; padding-right: 20px;">
-                        <table style="font-size: 7.5px; margin-bottom: 5px; margin-left: auto;">
+                <td style="width: 45%; vertical-align: top; padding-left: 15px;">
+                    <div style="text-align: right; padding-right: 25px;">
+                        <table style="font-size: 11px; margin-bottom: 8px; margin-left: auto;">
                             <tr>
-                                <td colspan="2" style="padding: 1px 0; padding-bottom: 5px;">
+                                <td colspan="2" style="padding: 2px 0; padding-bottom: 8px;">
                                     <strong>BANDUNG, {{ $invoice->invoice_date ? strtoupper($invoice->invoice_date->translatedFormat('d/F/Y')) : strtoupper(now()->translatedFormat('d/F/Y')) }}</strong>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 80px; padding: 1px 0;">NO INVOICE</td>
-                                <td style="padding: 1px 0;">: {{ $invoice->invoice_number }}</td>
+                                <td style="width: 100px; padding: 2px 0;">NO INVOICE</td>
+                                <td style="padding: 2px 0;">: {{ $invoice->invoice_number }}</td>
                             </tr>
                             @if($invoice->po_number)
                             <tr>
-                                <td style="padding: 1px 0;">PO NO.</td>
-                                <td style="padding: 1px 0;">: {{ $invoice->po_number }}</td>
+                                <td style="padding: 2px 0;">PO NO.</td>
+                                <td style="padding: 2px 0;">: {{ $invoice->po_number }}</td>
                             </tr>
                             @endif
                             @if($invoice->payment_terms)
                             <tr>
-                                <td style="padding: 1px 0;">TOP</td>
-                                <td style="padding: 1px 0;">: {{ $invoice->payment_terms }} HARI</td>
+                                <td style="padding: 2px 0;">TOP</td>
+                                <td style="padding: 2px 0;">: {{ $invoice->payment_terms }} HARI</td>
                             </tr>
                             @endif
                         </table>
@@ -324,7 +324,7 @@
                     $emptyRows = 8 - count($invoice->items);
                     if ($emptyRows > 0) {
                         for ($i = 0; $i < $emptyRows; $i++) {
-                            echo '<tr style="height: 20px;"><td class="col-no">&nbsp;</td><td class="col-desc">&nbsp;</td><td class="col-qty">&nbsp;</td><td class="col-price">&nbsp;</td><td class="col-amount">&nbsp;</td></tr>';
+                            echo '<tr style="height: 28px;"><td class="col-no">&nbsp;</td><td class="col-desc">&nbsp;</td><td class="col-qty">&nbsp;</td><td class="col-price">&nbsp;</td><td class="col-amount">&nbsp;</td></tr>';
                         }
                     }
                 @endphp
@@ -332,23 +332,23 @@
         </table>
 
         <!-- Totals Section -->
-        <div style="margin-top: 8px; text-align: right; font-size: 7.5px;">
-            <table style="width: 380px; margin-left: auto; border-collapse: collapse;">
+        <div style="margin-top: 12px; text-align: right; font-size: 11px;">
+            <table style="width: 480px; margin-left: auto; border-collapse: collapse;">
                 <tr>
-                    <td style="padding: 2px 10px 2px 0; width: 140px; text-align: left;">SUB. TOTAL</td>
-                    <td style="padding: 2px 0; width: 240px; text-align: left;">: Rp. {{ number_format($grandTotal, 0, ',', '.') }}</td>
+                    <td style="padding: 3px 12px 3px 0; width: 170px; text-align: left;">SUB. TOTAL</td>
+                    <td style="padding: 3px 0; width: 310px; text-align: left;">: Rp. {{ number_format($grandTotal, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 2px 10px 2px 0; text-align: left;">DPP NILAI LAIN</td>
-                    <td style="padding: 2px 0; text-align: left;">: Rp. {{ number_format(0, 0, ',', '.') }}</td>
+                    <td style="padding: 3px 12px 3px 0; text-align: left;">DPP NILAI LAIN</td>
+                    <td style="padding: 3px 0; text-align: left;">: Rp. {{ number_format(0, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 2px 10px 2px 0; text-align: left;"><strong>PPN</strong></td>
-                    <td style="padding: 2px 0; text-align: left;">: Rp. {{ number_format(isset($invoice->tax) ? $invoice->tax : 0, 0, ',', '.') }}</td>
+                    <td style="padding: 3px 12px 3px 0; text-align: left;"><strong>PPN</strong></td>
+                    <td style="padding: 3px 0; text-align: left;">: Rp. {{ number_format(isset($invoice->tax) ? $invoice->tax : 0, 0, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 2px 10px 2px 0; border-bottom: 1.5px solid #000; text-align: left;"><strong>GRAND TOTAL</strong></td>
-                    <td style="padding: 2px 0; border-bottom: 1.5px solid #000; text-align: left;">: <strong>Rp. {{ number_format($invoice->grand_total ?? $grandTotal, 0, ',', '.') }}</strong></td>
+                    <td style="padding: 3px 12px 3px 0; border-bottom: 2px solid #000; text-align: left;"><strong>GRAND TOTAL</strong></td>
+                    <td style="padding: 3px 0; border-bottom: 2px solid #000; text-align: left;">: <strong>Rp. {{ number_format($invoice->grand_total ?? $grandTotal, 0, ',', '.') }}</strong></td>
                 </tr>
             </table>
         </div>
@@ -357,11 +357,11 @@
         <div class="footer-section clearfix" style="margin-top: 5px; margin-bottom: 10px;">
             <!-- Bank Info -->
             <div class="bank-box">
-                <strong style="font-size: 8px;">PEMBAYARAN HARAP DI TRANSFER KE :</strong><br>
-                <div style="margin-top: 5px; line-height: 1.6;">
-                    <table style="width: 100%; font-size: 7.5px;">
+                <strong style="font-size: 12px;">PEMBAYARAN HARAP DI TRANSFER KE :</strong><br>
+                <div style="margin-top: 8px; line-height: 1.7;">
+                    <table style="width: 100%; font-size: 11px;">
                         <tr>
-                            <td style="width: 50px; vertical-align: top;">BCA</td>
+                            <td style="width: 65px; vertical-align: top;">BCA</td>
                             <td style="vertical-align: top;">- 156 156 2275 A/N <strong>ADAM JAYA CV</strong></td>
                         </tr>
                     </table>
@@ -370,8 +370,8 @@
             
             <!-- Signature -->
             <div class="signature-box">
-                <div style="font-size: 8px;">HORMAT KAMI</div>
-                <div class="signature-space" style="min-height: 60px; margin: 10px 0 5px 0;"></div>
+                <div style="font-size: 12px;">HORMAT KAMI</div>
+                <div class="signature-space" style="min-height: 80px; margin: 15px 0 8px 0;"></div>
             </div>
         
         </div><!-- End content -->

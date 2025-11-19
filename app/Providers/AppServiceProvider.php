@@ -27,6 +27,18 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register DeliveryNote Observer for automatic stock movement integration
         DeliveryNote::observe(DeliveryNoteObserver::class);
+
+        // Performance Optimizations
+        if ($this->app->environment('production')) {
+            // URL generation optimization
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
+
+        // Model optimization - prevent lazy loading only in strict development mode
+        // Disabled because it's too strict for Filament
+        // if ($this->app->environment('local')) {
+        //     \Illuminate\Database\Eloquent\Model::preventLazyLoading();
+        // }
     }
 }
 

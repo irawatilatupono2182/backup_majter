@@ -60,7 +60,20 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                // Performance optimizations
+                PDO::ATTR_EMULATE_PREPARES => false,
+                PDO::ATTR_STRINGIFY_FETCHES => false,
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                PDO::ATTR_PERSISTENT => env('DB_PERSISTENT', false),
             ]) : [],
+            // Connection pooling and timeouts
+            'pool' => [
+                'min' => env('DB_POOL_MIN', 1),
+                'max' => env('DB_POOL_MAX', 10),
+            ],
+            'timeout' => env('DB_TIMEOUT', 30),
+            'retry_times' => env('DB_RETRY_TIMES', 3),
+            'retry_sleep' => env('DB_RETRY_SLEEP', 100),
         ],
 
         'mariadb' => [

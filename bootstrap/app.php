@@ -25,6 +25,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'livewire/update',
             'livewire/message/*',
         ]);
+
+        // Performance optimization middleware
+        $middleware->append(\App\Http\Middleware\OptimizeMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
