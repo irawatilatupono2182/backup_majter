@@ -44,8 +44,8 @@
         }
 
         .logo-box {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border: 0px solid #000;
             display: inline-block;
             text-align: center;
@@ -60,8 +60,8 @@
         }
 
         .company-info {
-            font-size: 7px;
-            line-height: 1.35;
+            font-size: 13px;
+            line-height: 1.4;
             font-weight: normal;
         }
 
@@ -71,7 +71,7 @@
         }
 
         .customer-info {
-            font-size: 7px;
+            font-size: 13px;
             line-height: 1.4;
         }
 
@@ -82,16 +82,16 @@
 
         .title {
             text-align: right;
-            font-size: 22px;
+            font-size: 28px;
             font-weight: 900;
             margin: 0;
-            letter-spacing: 6px;
+            letter-spacing: 5px;
         }
 
         .doc-info {
-            font-size: 7.5px;
+            font-size: 13px;
             margin-bottom: 8px;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .doc-info table {
@@ -104,7 +104,7 @@
         }
 
         .instruction-text {
-            font-size: 7px;
+            font-size: 13px;
             margin: 5px 0;
             line-height: 1.3;
         }
@@ -113,32 +113,32 @@
         .items-table {
             width: 100%;
             margin: 8px 0;
-            font-size: 8px;
+            font-size: 13px;
             border: none;
         }
 
         .items-table th {
-            border-top: 1.5px solid #000;
-            border-bottom: 1.5px solid #000;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
             border-left: none;
             border-right: none;
-            padding: 5px 3px;
+            padding: 8px 6px;
             text-align: center;
             font-weight: bold;
-            font-size: 9px;
+            font-size: 14px;
             background-color: #fff;
         }
 
         .items-table td {
             border: none;
-            border-bottom: 0.5px solid #ddd;
-            padding: 5px 3px;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 6px;
             vertical-align: top;
-            font-size: 8px;
+            font-size: 13px;
         }
 
         .items-table tbody tr:last-child td {
-            border-bottom: 1.5px solid #000;
+            border-bottom: 2px solid #000;
         }
 
         .items-table .col-no {
@@ -166,7 +166,7 @@
         .signature-section {
             margin-top: 20px;
             margin-bottom: 10px;
-            font-size: 8px;
+            font-size: 13px;
         }
 
         .signatures-table {
@@ -187,14 +187,14 @@
 
         /* Notes */
         .notes {
-            font-size: 6.5px;
+            font-size: 13px;
             margin-top: 5px;
             line-height: 1.4;
         }
 
         .notes strong {
             font-weight: bold;
-            font-size: 7px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -205,7 +205,7 @@
         <div class="header">
             <table class="header-table">
                 <tr>
-                    <td style="width: 65px; vertical-align: middle;">
+                    <td style="width: 70px; vertical-align: middle;">
                         <div class="logo-box"><img src="{{ public_path('logo/aj.png') }}" alt="AJ Logo"></div>
                     </td>
                     <td style="width: 48%; vertical-align: middle; padding-left: 8px;">
@@ -261,20 +261,20 @@
                         </td>
                         <td style="width: 45%; vertical-align: top; padding-left: 10px;">
                             <!-- Right Column -->
-                            <table style="width: 100%; font-size: 8px;">
+                            <table style="width: 100%; font-size: 13px;">
                                 <tr>
-                                    <td style="width: 50px; padding: 1px 0;">TO</td>
-                                    <td style="padding: 1px 0;">: <strong>{{ strtoupper($deliveryNote->customer->name ?? '-') }}@if($deliveryNote->customer->is_ppn ?? false) (PPN)@endif</strong></td>
+                                    <td style="width: 90px; padding: 2px 0;">TO</td>
+                                    <td style="padding: 2px 0;">: <strong>{{ strtoupper($deliveryNote->customer->name ?? '-') }}@if($deliveryNote->customer->is_ppn ?? false) (PPN)@endif</strong></td>
                                 </tr>
                                 @if($deliveryNote->customer->contact_person)
                                 <tr>
-                                    <td style="padding: 1px 0; font-size: 7px;">Up</td>
-                                    <td style="padding: 1px 0; font-size: 7px;">: {{ $deliveryNote->customer->contact_person }}</td>
+                                    <td style="padding: 2px 0; font-size: 13px;">Up</td>
+                                    <td style="padding: 2px 0; font-size: 13px;">: {{ $deliveryNote->customer->contact_person }}</td>
                                 </tr>
                                 @endif
                             </table>
                             @if($deliveryNote->customer->address_ship_to || $deliveryNote->customer->address_bill_to)
-                            <div style="margin-top: 5px; font-size: 8px;">
+                            <div style="margin-top: 5px; font-size: 13px;">
                                 <strong>SHIP TO :</strong> {{ $deliveryNote->customer->address_ship_to ?? $deliveryNote->customer->address_bill_to }}
                             </div>
                             @endif
@@ -311,13 +311,6 @@
                         </td>
                     </tr>
                     @endforelse
-                    
-                    @php
-                        $emptyRows = max(0, 10 - count($deliveryNote->items));
-                        for ($i = 0; $i < $emptyRows; $i++) {
-                            echo '<tr style="height: 18px;"><td class="col-no">&nbsp;</td><td class="col-item">&nbsp;</td><td class="col-qty">&nbsp;</td><td class="col-notes">&nbsp;</td></tr>';
-                        }
-                    @endphp
                 </tbody>
             </table>
 

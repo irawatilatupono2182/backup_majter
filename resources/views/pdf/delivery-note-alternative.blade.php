@@ -44,8 +44,8 @@
         }
 
         .logo-box {
-            width: 110px;
-            height: 45px;
+            width: 115px;
+            height: 47px;
             border: 0px solid #000;
             display: inline-block;
             text-align: center;
@@ -61,40 +61,40 @@
         }
 
         .company-info {
-            font-size: 7px;
-            line-height: 1.35;
+            font-size: 13px;
+            line-height: 1.4;
             font-weight: normal;
         }
 
         .company-info strong {
-            font-size: 22px;
+            font-size: 28px;
             font-weight: 900;
         }
 
         .title {
             text-align: left;
-            font-size: 22px;
+            font-size: 28px;
             font-weight: 900;
             margin: 0;
-            letter-spacing: 6px;
+            letter-spacing: 5px;
         }
 
         .company-logo-section {
             text-align: left;
-            font-size: 11px;
+            font-size: 13px;
             line-height: 1.3;
             display: inline-block;
             vertical-align: middle;
         }
 
         .company-brand {
-            font-size: 16px;
+            font-size: 22px;
             font-weight: 900;
             letter-spacing: 2px;
         }
 
         .company-tagline {
-            font-size: 7px;
+            font-size: 10px;
             margin-top: 2px;
         }
 
@@ -104,9 +104,9 @@
         }
 
         .doc-info {
-            font-size: 7.5px;
+            font-size: 13px;
             margin-bottom: 8px;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .doc-info table {
@@ -122,29 +122,29 @@
         .items-table {
             width: 100%;
             margin: 8px 0;
-            font-size: 8px;
-            border: 1.5px solid #000;
+            font-size: 13px;
+            border: 2px solid #000;
         }
 
         .items-table th {
             border-top: none;
-            border-bottom: 1.5px solid #000;
-            border-left: 1px solid #000;
-            border-right: 1px solid #000;
-            padding: 5px 3px;
+            border-bottom: 2px solid #000;
+            border-left: 1.5px solid #000;
+            border-right: 1.5px solid #000;
+            padding: 8px 6px;
             text-align: center;
             font-weight: bold;
-            font-size: 9px;
+            font-size: 14px;
             background-color: #fff;
         }
 
         .items-table td {
-            border-left: 1px solid #000;
-            border-right: 1px solid #000;
-            border-bottom: 0.5px solid #ddd;
-            padding: 5px 3px;
+            border-left: 1.5px solid #000;
+            border-right: 1.5px solid #000;
+            border-bottom: 1px solid #ddd;
+            padding: 8px 6px;
             vertical-align: top;
-            font-size: 8px;
+            font-size: 13px;
         }
 
         .items-table tbody tr:last-child td {
@@ -176,7 +176,7 @@
         .signature-section {
             margin-top: 20px;
             margin-bottom: 10px;
-            font-size: 8px;
+            font-size: 13px;
         }
 
         .signatures-table {
@@ -197,14 +197,14 @@
 
         /* Notes */
         .notes {
-            font-size: 6.5px;
+            font-size: 13px;
             margin-top: 5px;
             line-height: 1.4;
         }
 
         .notes strong {
             font-weight: bold;
-            font-size: 7px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -225,7 +225,7 @@
                     <div style="display: inline-block; text-align: right;">
                         <div class="logo-box" style="display: inline-block; vertical-align: middle; margin-right: 8px;"><img src="{{ public_path('logo/majter.png') }}" alt="AJ Logo"></div>
                              <!-- Garis vertikal kustom yang lebih tinggi -->
-                            <div style="display: inline-block; vertical-align: middle; height: 45px; width: 1px; background-color: #000; margin: 0 8px;"></div>
+                            <div style="display: inline-block; vertical-align: middle; height: 47px; width: 1px; background-color: #000; margin: 0 8px;"></div>
 
                             <div class="company-logo-section" style="display: inline-block; vertical-align: middle; margin-left: 8px;">
                                 <div class="company-brand">AJT</div>
@@ -275,20 +275,20 @@
                         </td>
                         <td style="width: 45%; vertical-align: top; padding-left: 10px;">
                             <!-- Right Column -->
-                            <table style="width: 100%; font-size: 8px;">
+                            <table style="width: 100%; font-size: 13px;">
                                 <tr>
-                                    <td style="width: 50px; padding: 1px 0;">TO</td>
-                                    <td style="padding: 1px 0;">: <strong>{{ strtoupper($deliveryNote->customer->name ?? '-') }}@if($deliveryNote->customer->is_ppn ?? false) (PPN)@endif</strong></td>
+                                    <td style="width: 90px; padding: 2px 0;">TO</td>
+                                    <td style="padding: 2px 0;">: <strong>{{ strtoupper($deliveryNote->customer->name ?? '-') }}@if($deliveryNote->customer->is_ppn ?? false) (PPN)@endif</strong></td>
                                 </tr>
                                 @if($deliveryNote->customer->contact_person)
                                 <tr>
-                                    <td style="padding: 1px 0; font-size: 7px;">Up</td>
-                                    <td style="padding: 1px 0; font-size: 7px;">: {{ $deliveryNote->customer->contact_person }}</td>
+                                    <td style="padding: 2px 0; font-size: 13px;">Up</td>
+                                    <td style="padding: 2px 0; font-size: 13px;">: {{ $deliveryNote->customer->contact_person }}</td>
                                 </tr>
                                 @endif
                             </table>
                             @if($deliveryNote->customer->address_ship_to || $deliveryNote->customer->address_bill_to)
-                            <div style="margin-top: 5px; font-size: 8px;">
+                            <div style="margin-top: 5px; font-size: 13px;">
                                 <strong>SHIP TO :</strong> {{ $deliveryNote->customer->address_ship_to ?? $deliveryNote->customer->address_bill_to }}
                             </div>
                             @endif
@@ -325,13 +325,6 @@
                         </td>
                     </tr>
                     @endforelse
-                    
-                    @php
-                        $emptyRows = max(0, 10 - count($deliveryNote->items));
-                        for ($i = 0; $i < $emptyRows; $i++) {
-                            echo '<tr style="height: 18px;"><td class="col-no">&nbsp;</td><td class="col-item">&nbsp;</td><td class="col-qty">&nbsp;</td><td class="col-notes">&nbsp;</td></tr>';
-                        }
-                    @endphp
                 </tbody>
             </table>
 
