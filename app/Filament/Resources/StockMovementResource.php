@@ -26,9 +26,15 @@ class StockMovementResource extends Resource
 {
     protected static ?string $model = StockMovement::class;
     protected static ?string $navigationIcon = 'heroicon-o-arrows-right-left';
-    protected static ?string $navigationLabel = 'Stock Movement';
-    protected static ?string $navigationGroup = 'Inventory';
+    protected static ?string $navigationLabel = 'Mutasi Stok';
+    protected static ?string $navigationGroup = '🏭 Inventori';
+    
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'History pergerakan stock masuk dan keluar';
+    }
 
     public static function form(Form $form): Form
     {

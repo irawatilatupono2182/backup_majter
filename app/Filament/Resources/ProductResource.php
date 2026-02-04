@@ -18,9 +18,15 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
 
-    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationGroup = '📦 Master Data';
+    
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 3;
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Katalog produk/barang yang dijual';
+    }
 
     public static function form(Form $form): Form
     {
@@ -31,9 +37,14 @@ class ProductResource extends Resource
                         Forms\Components\Hidden::make('company_id')
                             ->default(fn() => session('selected_company_id')),
                         Forms\Components\TextInput::make('product_code')
-                            ->label('Kode Produk')
+                            ->label('Kode Produk (Internal)')
                             ->required()
-                            ->maxLength(50),
+                            ->maxLength(50)
+                            ->helperText('Kode produk untuk kebutuhan internal sistem'),
+                        Forms\Components\TextInput::make('original_product_code')
+                            ->label('Kode Produk (Asal)')
+                            ->maxLength(50)
+                            ->helperText('Kode produk asli dari supplier/pabrik'),
                         Forms\Components\TextInput::make('name')
                             ->label('Nama Produk')
                             ->required()
@@ -95,9 +106,14 @@ class ProductResource extends Resource
                 ->with('stock')) // Eager load stock relation
             ->columns([
                 Tables\Columns\TextColumn::make('product_code')
-                    ->label('Kode')
+                    ->label('Kode (Internal)')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('original_product_code')
+                    ->label('Kode (Asal)')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(true),
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nama Produk')
                     ->searchable()
@@ -115,14 +131,14 @@ class ProductResource extends Resource
                     ->getStateUsing(function ($record) {
                         // For CATALOG products
                         if ($record->product_type === 'CATALOG') {
-                            return '📦 Catalog';
+                            return 'ðŸ“¦ Catalog';
                         }
                         
                         // For STOCK products
                         if ($record->product_type === 'STOCK') {
                             // Check if stock record exists
                             if (!$record->stock) {
-                                return '⚠️ Belum ada record';
+                                return 'âš ï¸ Belum ada record';
                             }
                             
                             $qty = $record->stock->quantity;
@@ -130,13 +146,13 @@ class ProductResource extends Resource
                             
                             // Check stock quantity
                             if ($qty == 0 && $available == 0) {
-                                return '❌ Kosong (0)';
+                                return 'âŒ Kosong (0)';
                             } elseif ($available == 0 && $qty > 0) {
-                                return '⚠️ Habis (reserved: ' . $qty . ')';
+                                return 'âš ï¸ Habis (reserved: ' . $qty . ')';
                             } elseif ($available > 0 && $available <= $record->min_stock_alert) {
-                                return '🔔 Low Stock (' . $available . ')';
+                                return 'ðŸ”” Low Stock (' . $available . ')';
                             } else {
-                                return '✅ Tersedia (' . $available . ')';
+                                return 'âœ… Tersedia (' . $available . ')';
                             }
                         }
                         
@@ -174,7 +190,7 @@ class ProductResource extends Resource
                         
                         if ($record->product_type === 'STOCK') {
                             if (!$record->stock) {
-                                return 'PERHATIAN: Produk ini belum memiliki record di tabel stocks. Klik Edit → Save untuk auto-create.';
+                                return 'PERHATIAN: Produk ini belum memiliki record di tabel stocks. Klik Edit â†’ Save untuk auto-create.';
                             }
                             
                             $stock = $record->stock;
@@ -214,10 +230,10 @@ class ProductResource extends Resource
                 Tables\Filters\SelectFilter::make('stock_status')
                     ->label('Status Stok')
                     ->options([
-                        'no_record' => '⚠️ Belum ada record',
-                        'empty' => '❌ Kosong (0)',
-                        'low_stock' => '🔔 Low Stock',
-                        'available' => '✅ Tersedia',
+                        'no_record' => 'âš ï¸ Belum ada record',
+                        'empty' => 'âŒ Kosong (0)',
+                        'low_stock' => 'ðŸ”” Low Stock',
+                        'available' => 'âœ… Tersedia',
                     ])
                     ->query(function ($query, array $data) {
                         if (!isset($data['value'])) {

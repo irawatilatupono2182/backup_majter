@@ -31,9 +31,31 @@ class InvoiceResource extends Resource
 {
     protected static ?string $model = Invoice::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static ?string $navigationLabel = 'Invoice';
-    protected static ?string $navigationGroup = 'Penjualan';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationLabel = 'Invoice (Semua)';
+    protected static ?string $navigationGroup = '� Penjualan';
+    
+
+    protected static ?int $navigationSort = 3;
+
+    public static function getNavigationBadge(): ?string
+    {
+        $companyId = session('selected_company_id');
+        if (!$companyId) return null;
+        
+        return static::getModel()::where('company_id', $companyId)
+            ->whereIn('status', ['Unpaid', 'Partial'])
+            ->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Semua invoice penjualan (PPN & Non-PPN)';
+    }
 
     public static function form(Form $form): Form
     {

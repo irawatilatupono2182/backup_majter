@@ -26,7 +26,10 @@ class PurchaseOrder extends Model
         'type',
         'order_date',
         'expected_delivery',
+        'due_date',
+        'payment_terms_days',
         'status',
+        'payment_status',
         'notes',
         'created_by',
     ];
@@ -34,6 +37,8 @@ class PurchaseOrder extends Model
     protected $casts = [
         'order_date' => 'date',
         'expected_delivery' => 'date',
+        'due_date' => 'date',
+        'payment_terms_days' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
@@ -62,6 +67,16 @@ class PurchaseOrder extends Model
     public function items(): HasMany
     {
         return $this->hasMany(PurchaseOrderItem::class, 'po_id', 'po_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(PurchasePayment::class, 'po_id', 'po_id');
+    }
+
+    public function payables(): HasMany
+    {
+        return $this->hasMany(\App\Models\Payable::class, 'purchase_order_id', 'po_id');
     }
 
     public function getTotalAmount(): float
@@ -161,5 +176,77 @@ class PurchaseOrder extends Model
         }
         
         $this->save();
+    }
+
+    // Payment-related methods
+    public function getTotalPaid(): float
+    {
+        return $this->payments()->sum('amount');
+    }
+
+    public function getRemainingAmount(): float
+    {
+        return max(0, $this->getGrandTotal() - $this->getTotalPaid());
+    }
+
+    public function updatePaymentStatus(): void
+    {
+        $totalPaid = $this->getTotalPaid();
+        $grandTotal = $this->getGrandTotal();
+
+        if ($totalPaid >= $grandTotal) {
+            $this->payment_status = 'paid';
+        } elseif ($totalPaid > 0) {
+            $this->payment_status = 'partial';
+        } else {
+            $this->payment_status = 'unpaid';
+        }
+
+        $this->save();
+    }
+
+    public function isOverdue(): bool
+    {
+        if (!$this->due_date || $this->payment_status === 'paid') {
+            return false;
+        }
+
+        return now()->greaterThan($this->due_date);
+    }
+
+    public function getDaysOverdue(): int
+    {
+        if (!$this->isOverdue()) {
+            return 0;
+        }
+
+        return now()->diffInDays($this->due_date);
+    }
+
+    public function getDaysTillDue(): int
+    {
+        if (!$this->due_date || $this->payment_status === 'paid') {
+            return 0;
+        }
+
+        return now()->diffInDays($this->due_date, false);
+    }
+
+    
+    /**
+     * Get outstanding payable amount for this PO
+     */
+    public function getOutstandingPayableAmount(): float
+    {
+        $payable = $this->payables()->first();
+        return $payable ? $payable->remaining_amount : 0;
+    }
+    
+    /**
+     * Check if PO has outstanding payable
+     */
+    public function hasOutstandingPayable(): bool
+    {
+        return $this->getOutstandingPayableAmount() > 0;
     }
 }

@@ -126,6 +126,24 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        
+        // ✅ CRITICAL FIX #6: Audit log channel
+        'audit' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/audit.log'),
+            'level' => env('LOG_LEVEL', 'info'),
+            'days' => 90, // Keep audit logs for 90 days
+            'permission' => 0644,
+        ],
+        
+        // ✅ CRITICAL FIX #8: Backup log channel  
+        'backup' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/backup.log'),
+            'level' => env('LOG_LEVEL', 'info'),
+            'days' => 30,
+            'permission' => 0644,
+        ],
 
     ],
 

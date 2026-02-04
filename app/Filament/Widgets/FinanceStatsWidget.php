@@ -9,34 +9,48 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class FinanceStatsWidget extends BaseWidget
 {
-    protected static ?int $sort = 8;
+    protected static ?int $sort = 2;
     protected static ?string $pollingInterval = '30s';
+    protected int | string | array $columnSpan = 'full';
 
     protected function getStats(): array
     {
         $companyId = session('selected_company_id');
+        
+        if (!$companyId) {
+            return [];
+        }
 
         return [
-            // Total Piutang (Unpaid + Partial)
-            Stat::make('Total Piutang', 'Rp ' . number_format($this->getTotalPiutang($companyId), 0, ',', '.'))
-                ->description('Unpaid + Partial invoices')
-                ->descriptionIcon('heroicon-m-currency-dollar')
-                ->color('danger')
-                ->chart($this->getPiutangTrend($companyId)),
+            // 📈 PIUTANG - Total Receivables
+            Stat::make('📈 Total Piutang', 'Rp ' . number_format($this->getTotalPiutang($companyId), 0, ',', '.'))
+                ->description('Belum dibayar oleh customer')
+                ->descriptionIcon('heroicon-m-arrow-trending-up')
+                ->color('warning')
+                ->chart($this->getPiutangTrend($companyId))
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.receivables.index')),
 
-            // Piutang Overdue
-            Stat::make('Piutang Jatuh Tempo', 'Rp ' . number_format($this->getOverduePiutang($companyId), 0, ',', '.'))
-                ->description($this->getOverdueCount($companyId) . ' invoice overdue')
+            // 🔴 OVERDUE - Piutang Jatuh Tempo
+            Stat::make('🔴 Piutang Jatuh Tempo', 'Rp ' . number_format($this->getOverduePiutang($companyId), 0, ',', '.'))
+                ->description($this->getOverdueCount($companyId) . ' invoice terlambat → URGENT!')
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
-                ->color('danger'),
+                ->color('danger')
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.receivables.index')),
 
-            // Total Payment Bulan Ini
-            Stat::make('Pembayaran Bulan Ini', 'Rp ' . number_format($this->getMonthlyPayment($companyId), 0, ',', '.'))
-                ->description('Total payment received')
+            // 💵 CASH IN - Pembayaran Bulan Ini
+            Stat::make('💵 Pembayaran Diterima', 'Rp ' . number_format($this->getMonthlyPayment($companyId), 0, ',', '.'))
+                ->description('Total cash in bulan ' . now()->format('F Y'))
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('success')
                 ->chart($this->getPaymentTrend($companyId)),
         ];
+    }
+    
+    public function getHeading(): ?string
+    {
+        return '💰 KEUANGAN - Cash Flow & Piutang';
     }
 
     private function getTotalPiutang($companyId): float

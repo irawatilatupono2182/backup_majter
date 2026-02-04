@@ -24,9 +24,16 @@ class SalesReportResource extends Resource
     protected static ?string $model = Invoice::class;
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
     protected static ?string $navigationLabel = 'Laporan Penjualan';
-    protected static ?string $navigationGroup = 'Laporan';
+    protected static ?string $navigationGroup = '� Laporan';
+    
+
     protected static ?int $navigationSort = 1;
     protected static ?string $slug = 'sales-report';
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Laporan penjualan dan revenue';
+    }
 
     public static function canCreate(): bool
     {

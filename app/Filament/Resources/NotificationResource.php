@@ -14,10 +14,12 @@ class NotificationResource extends Resource
 {
     protected static ?string $model = Stock::class;
     protected static ?string $navigationIcon = 'heroicon-o-bell';
-    protected static ?string $navigationLabel = 'Notifications';
-    protected static ?string $navigationGroup = 'Reports';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationLabel = 'Notifikasi Stok & Piutang';
+    protected static ?string $navigationGroup = '🔔 Notifikasi';
+    
+    protected static ?int $navigationSort = 1;
     protected static ?string $slug = 'notifications';
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function canCreate(): bool
     {

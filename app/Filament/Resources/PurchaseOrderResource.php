@@ -19,11 +19,31 @@ class PurchaseOrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
 
-    protected static ?string $navigationGroup = 'Purchasing';
-
-    protected static ?string $navigationLabel = 'Purchase Order (PO)';
-
+    protected static ?string $navigationGroup = '🛒 Pembelian';
+    
     protected static ?int $navigationSort = 2;
+
+    protected static ?string $navigationLabel = ' Purchase Order (PO)';
+
+    public static function getNavigationBadge(): ?string
+    {
+        $companyId = session('selected_company_id');
+        if (!$companyId) return null;
+        
+        return static::getModel()::where('company_id', $companyId)
+            ->where('status', 'Pending')
+            ->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Order pembelian barang dari supplier';
+    }
 
     public static function form(Form $form): Form
     {

@@ -25,9 +25,6 @@ return new class extends Migration
             // Add customer_id explicitly for clarity
             $table->uuid('customer_id')->nullable()->after('entity_id');
             
-            // Make supplier_id nullable (was required before)
-            $table->uuid('supplier_id')->nullable()->change();
-            
             // Add foreign key for customer
             $table->foreign('customer_id')->references('customer_id')->on('customers');
             
@@ -42,6 +39,10 @@ return new class extends Migration
                 entity_id = supplier_id
             WHERE supplier_id IS NOT NULL
         ");
+        
+        // Now make supplier_id nullable (after data migration)
+        // Using raw SQL to avoid issues with existing NULL values
+        DB::statement('ALTER TABLE `price_quotations` MODIFY `supplier_id` char(36) NULL');
     }
 
     /**
@@ -58,9 +59,10 @@ return new class extends Migration
             
             // Drop columns
             $table->dropColumn(['entity_type', 'entity_id', 'customer_id']);
-            
-            // Make supplier_id required again
-            $table->uuid('supplier_id')->nullable(false)->change();
         });
+        
+        // Restore supplier_id to NOT NULL if needed
+        // Note: This might fail if there are NULL values
+        // DB::statement('ALTER TABLE `price_quotations` MODIFY `supplier_id` char(36) NOT NULL');
     }
 };

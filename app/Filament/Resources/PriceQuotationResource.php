@@ -21,11 +21,32 @@ class PriceQuotationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = 'Purchasing';
+    protected static ?string $navigationGroup = '� Pembelian';
+    
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $navigationLabel = 'Penawaran Harga (PH)';
 
-    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        $companyId = session('selected_company_id');
+        if (!$companyId) return null;
+        
+        return static::getModel()::where('company_id', $companyId)
+            ->where('status', 'Sent')
+            ->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Kelola penawaran harga untuk customer (sales) atau dari supplier (purchasing)';
+    }
 
     public static function form(Form $form): Form
     {

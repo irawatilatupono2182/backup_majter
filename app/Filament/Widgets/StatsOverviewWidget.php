@@ -20,48 +20,74 @@ class StatsOverviewWidget extends BaseWidget
     protected function getStats(): array
     {
         $companyId = session('selected_company_id');
+        
+        if (!$companyId) {
+            return [
+                Stat::make('⚠️ Perhatian', 'Pilih Company')
+                    ->description('Silakan pilih company terlebih dahulu')
+                    ->color('warning'),
+            ];
+        }
 
         return [
-            // Revenue Today
-            Stat::make('Revenue Hari Ini', 'Rp ' . number_format($this->getTodayRevenue($companyId), 0, ',', '.'))
-                ->description('Total invoice hari ini')
+            // 💰 KEUANGAN - Revenue Today
+            Stat::make('💰 Penjualan Hari Ini', 'Rp ' . number_format($this->getTodayRevenue($companyId), 0, ',', '.'))
+                ->description('Total invoice lunas hari ini')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->chart($this->getLast7DaysRevenue($companyId))
-                ->color('success'),
+                ->color('success')
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.invoices.index')),
 
-            // Pending Invoices
-            Stat::make('Invoice Belum Lunas', $this->getPendingInvoicesCount($companyId))
-                ->description('Unpaid & Partial')
-                ->descriptionIcon('heroicon-m-document-text')
+            // 📋 PIUTANG - Pending Invoices
+            Stat::make('📋 Invoice Belum Dibayar', $this->getPendingInvoicesCount($companyId) . ' Invoice')
+                ->description($this->getPendingInvoicesAmount($companyId))
+                ->descriptionIcon('heroicon-m-exclamation-circle')
                 ->color('warning')
-                ->url(route('filament.admin.resources.invoices.index', ['tableFilters' => ['status' => ['values' => ['Unpaid', 'Partial']]]])),
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.receivables.index')),
 
-            // Low Stock Items
-            Stat::make('Produk Stok Rendah', $this->getLowStockCount($companyId))
-                ->description('Di bawah minimum')
-                ->descriptionIcon('heroicon-m-exclamation-triangle')
+            // ⚠️ STOCK ALERT - Low Stock Items
+            Stat::make('⚠️ Stock Perlu Restock', $this->getLowStockCount($companyId) . ' Produk')
+                ->description('Stock di bawah minimum → Segera order!')
+                ->descriptionIcon('heroicon-m-arrow-trending-down')
                 ->color('danger')
-                ->url(route('filament.admin.resources.stocks.index', ['tableFilters' => ['below_minimum' => true]])),
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.stocks.index')),
 
-            // Active Customers
-            Stat::make('Customer Aktif', Customer::where('company_id', $companyId)->where('is_active', true)->count())
-                ->description('Total customer')
+            // 👥 CUSTOMER - Active Customers
+            Stat::make('👥 Total Customer', number_format(Customer::where('company_id', $companyId)->where('is_active', true)->count()))
+                ->description('Customer aktif dalam sistem')
                 ->descriptionIcon('heroicon-m-user-group')
-                ->color('primary'),
+                ->color('primary')
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.customers.index')),
 
-            // Pending PO
-            Stat::make('PO Pending', PurchaseOrder::where('company_id', $companyId)->where('status', 'Pending')->count())
-                ->description('Menunggu konfirmasi')
-                ->descriptionIcon('heroicon-m-shopping-cart')
+            // 🛒 PURCHASING - Pending PO
+            Stat::make('🛒 PO Belum Dikonfirmasi', PurchaseOrder::where('company_id', $companyId)->where('status', 'Pending')->count() . ' Order')
+                ->description('Menunggu konfirmasi supplier')
+                ->descriptionIcon('heroicon-m-clock')
                 ->color('warning')
-                ->url(route('filament.admin.resources.purchase-orders.index', ['tableFilters' => ['status' => ['values' => ['Pending']]]])),
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.purchase-orders.index')),
 
-            // Products Total
-            Stat::make('Total Produk', Product::where('company_id', $companyId)->where('is_active', true)->count())
-                ->description('Produk aktif')
+            // 📦 PRODUK - Products Total
+            Stat::make('📦 Katalog Produk', number_format(Product::where('company_id', $companyId)->where('is_active', true)->count()))
+                ->description('Total produk aktif')
                 ->descriptionIcon('heroicon-m-cube')
-                ->color('info'),
+                ->color('info')
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.products.index')),
         ];
+    }
+    
+    private function getPendingInvoicesAmount($companyId): string
+    {
+        $amount = Invoice::where('company_id', $companyId)
+            ->whereIn('status', ['Unpaid', 'Partial'])
+            ->sum('grand_total') ?? 0;
+        
+        return 'Total: Rp ' . number_format($amount, 0, ',', '.');
     }
 
     private function getTodayRevenue($companyId): float

@@ -31,8 +31,31 @@ class StockResource extends Resource
     protected static ?string $model = Stock::class;
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
     protected static ?string $navigationLabel = 'Stok Barang';
-    protected static ?string $navigationGroup = 'Inventory';
+    protected static ?string $navigationGroup = '🏭 Inventori';
+    
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        $companyId = session('selected_company_id');
+        if (!$companyId) return null;
+        
+        $lowStock = static::getModel()::where('company_id', $companyId)
+            ->whereColumn('available_quantity', '<', 'minimum_stock')
+            ->count();
+        
+        return $lowStock > 0 ? (string) $lowStock : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Kelola stok barang di gudang';
+    }
 
     public static function form(Form $form): Form
     {
@@ -797,3 +820,4 @@ class StockResource extends Resource
             ->where('company_id', $companyId);
     }
 }
+

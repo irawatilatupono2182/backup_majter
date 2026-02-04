@@ -11,6 +11,9 @@ class AgingAnalysisChart extends ChartWidget
     protected static ?string $heading = 'Aging Analisis Piutang';
     protected static ?int $sort = 2;
     protected static ?string $pollingInterval = '60s';
+    
+    protected static ?string $maxHeight = '300px';
+    protected int | string | array $columnSpan = 1;
 
     protected function getData(): array
     {
@@ -78,6 +81,8 @@ class AgingAnalysisChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
+            'maintainAspectRatio' => true,
+            'aspectRatio' => 1.8,
             'scales' => [
                 'y' => [
                     'beginAtZero' => true,

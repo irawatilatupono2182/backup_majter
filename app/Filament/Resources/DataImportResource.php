@@ -21,8 +21,8 @@ class DataImportResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-arrow-down-tray';
     protected static ?string $navigationLabel = 'Import Data';
     protected static ?string $slug = 'data-import';
-    protected static ?string $navigationGroup = 'Admin';
-    protected static ?int $navigationSort = 4;
+    protected static ?string $navigationGroup = '⚙️ Pengaturan';
+    protected static ?int $navigationSort = 3;
 
     public static function canAccess(): bool
     {

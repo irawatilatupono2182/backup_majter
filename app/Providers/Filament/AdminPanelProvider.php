@@ -35,28 +35,70 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotificationsPolling('30s') // Poll every 30 seconds instead of default
             ->spa() // Single Page Application mode - faster navigation
             
+            // SIDEBAR NAVIGATION CONFIGURATION
+            ->sidebarCollapsibleOnDesktop() // Allow collapsing sidebar
+            ->collapsibleNavigationGroups(true) // Make navigation groups collapsible
+            ->sidebarFullyCollapsibleOnDesktop() // Allow fully collapsing
+            ->breadcrumbs(true) // Show breadcrumbs
+            ->topNavigation(false) // Use sidebar navigation (not top)
+            
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->navigationGroups([
+                '🔔 Notifikasi',
+                '📦 Master Data',
+                '🛒 Pembelian',
+                '📋 Penjualan',  
+                '💰 Keuangan',
+                '🏭 Inventori',
+                '📊 Laporan',
+                '⚙️ Pengaturan',
+            ])
             ->resources([
+                // Unified Notification (TOP PRIORITY)
+                \App\Filament\Resources\UnifiedNotificationResource::class,
+                
+                // Master Data
                 \App\Filament\Resources\CompanyResource::class,
-                \App\Filament\Resources\UserResource::class,
                 \App\Filament\Resources\CustomerResource::class,
                 \App\Filament\Resources\SupplierResource::class,
                 \App\Filament\Resources\ProductResource::class,
+                
+                // Purchasing
                 \App\Filament\Resources\PriceQuotationResource::class,
                 \App\Filament\Resources\PurchaseOrderResource::class,
+                \App\Filament\Resources\PurchasePaymentResource::class,
+                
+                // Penjualan (Sales)
                 \App\Filament\Resources\DeliveryNoteResource::class,
                 \App\Filament\Resources\InvoiceResource::class,
+                \App\Filament\Resources\InvoicePpnResource::class,
+                \App\Filament\Resources\InvoiceNonPpnResource::class,
+                
+                // Keuangan (Finance)
+                \App\Filament\Resources\ReceivablesResource::class,
+                \App\Filament\Resources\PayableResource::class,
                 \App\Filament\Resources\PaymentResource::class,
+                \App\Filament\Resources\PayablePaymentResource::class,
+                
+                // Inventory
                 \App\Filament\Resources\StockResource::class,
                 \App\Filament\Resources\StockMovementResource::class,
+                
+                // Reports
+                \App\Filament\Resources\SalesReportResource::class,
+                \App\Filament\Resources\InventoryReportResource::class,
+                
+                // Admin/Pengaturan
+                \App\Filament\Resources\UserResource::class,
                 \App\Filament\Resources\RoleResource::class,
                 \App\Filament\Resources\DataImportResource::class,
-                \App\Filament\Resources\InventoryReportResource::class,
-                \App\Filament\Resources\SalesReportResource::class,
+                
+                // Hidden but accessible via URL
                 \App\Filament\Resources\StockAnomalyReportResource::class,
                 \App\Filament\Resources\NotificationResource::class,
+                \App\Filament\Resources\InvoiceDueNotificationResource::class,
             ])
             ->pages([
                 \App\Filament\Pages\Dashboard::class,

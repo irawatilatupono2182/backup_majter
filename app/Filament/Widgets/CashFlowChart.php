@@ -13,6 +13,9 @@ class CashFlowChart extends ChartWidget
     protected static ?string $heading = 'Trend Cash Flow';
     protected static ?int $sort = 3;
     protected static ?string $pollingInterval = '60s';
+    
+    protected static ?string $maxHeight = '300px';
+    protected int | string | array $columnSpan = 1;
 
     protected function getData(): array
     {
@@ -69,6 +72,8 @@ class CashFlowChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
+            'maintainAspectRatio' => true,
+            'aspectRatio' => 2,
             'scales' => [
                 'y' => [
                     'beginAtZero' => true,

@@ -16,8 +16,11 @@ class StockAnomalyReportResource extends Resource
     protected static ?string $model = DeliveryNote::class;
     protected static ?string $navigationIcon = 'heroicon-o-exclamation-triangle';
     protected static ?string $navigationLabel = 'Anomali Stok';
-    protected static ?string $navigationGroup = 'Laporan';
+    protected static ?string $navigationGroup = '📈 Laporan';
+    
     protected static ?int $navigationSort = 4;
+    
+    protected static bool $shouldRegisterNavigation = false; // Hidden, accessible via URL
     protected static ?string $slug = 'stock-anomaly-report';
 
     public static function canCreate(): bool

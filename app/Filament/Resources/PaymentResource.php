@@ -29,9 +29,15 @@ class PaymentResource extends Resource
 {
     protected static ?string $model = Payment::class;
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
-    protected static ?string $navigationLabel = 'Pembayaran';
-    protected static ?string $navigationGroup = 'Penjualan';
+    protected static ?string $navigationLabel = 'Pembayaran dari Customer';
+    protected static ?string $navigationGroup = '💰 Keuangan';
+    
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Catat pembayaran yang diterima dari customer';
+    }
 
     public static function form(Form $form): Form
     {

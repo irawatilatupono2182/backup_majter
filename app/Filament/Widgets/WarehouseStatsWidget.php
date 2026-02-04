@@ -9,33 +9,49 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class WarehouseStatsWidget extends BaseWidget
 {
-    protected static ?int $sort = 9;
+    protected static ?int $sort = 6;
     protected static ?string $pollingInterval = '30s';
+    protected int | string | array $columnSpan = 'full';
 
     protected function getStats(): array
     {
         $companyId = session('selected_company_id');
+        
+        if (!$companyId) {
+            return [];
+        }
 
         return [
-            // Total Nilai Inventory
-            Stat::make('Nilai Inventory', 'Rp ' . number_format($this->getTotalInventoryValue($companyId), 0, ',', '.'))
-                ->description('Total stock value (HPP)')
+            // 📊 NILAI INVENTORY
+            Stat::make('📊 Total Nilai Stock', 'Rp ' . number_format($this->getTotalInventoryValue($companyId), 0, ',', '.'))
+                ->description('Nilai inventory di gudang (HPP)')
                 ->descriptionIcon('heroicon-m-cube')
-                ->color('info'),
+                ->color('info')
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.stocks.index')),
 
-            // Stock Movement Hari Ini
-            Stat::make('Stock Movement Hari Ini', $this->getTodayMovementCount($companyId))
-                ->description($this->getTodayOutCount($companyId) . ' OUT, ' . $this->getTodayInCount($companyId) . ' IN')
+            // 🔄 PERGERAKAN STOCK
+            Stat::make('🔄 Aktivitas Hari Ini', $this->getTodayMovementCount($companyId) . ' Transaksi')
+                ->description('🔻 ' . $this->getTodayOutCount($companyId) . ' Keluar | 🔺 ' . $this->getTodayInCount($companyId) . ' Masuk')
                 ->descriptionIcon('heroicon-m-arrow-path')
                 ->color('primary')
-                ->chart($this->getLast7DaysMovement($companyId)),
+                ->chart($this->getLast7DaysMovement($companyId))
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.stock-movements.index')),
 
-            // Produk Akan Kadaluarsa
-            Stat::make('Produk Akan Kadaluarsa', $this->getNearExpiryCount($companyId))
-                ->description('30 hari ke depan')
-                ->descriptionIcon('heroicon-m-clock')
-                ->color('warning'),
+            // ⏰ EXPIRY WARNING
+            Stat::make('⏰ Produk Hampir Kadaluarsa', $this->getNearExpiryCount($companyId) . ' Item')
+                ->description('30 hari ke depan → Segera jual!')
+                ->descriptionIcon('heroicon-m-exclamation-circle')
+                ->color('warning')
+                ->extraAttributes(['class' => 'cursor-pointer'])
+                ->url(route('filament.admin.resources.stocks.index')),
         ];
+    }
+    
+    public function getHeading(): ?string
+    {
+        return '📦 GUDANG - Inventory & Stock Movement';
     }
 
     private function getTotalInventoryValue($companyId): float

@@ -22,7 +22,8 @@ class RoleResource extends Resource
     protected static ?string $model = Role::class;
     protected static ?string $navigationIcon = 'heroicon-o-shield-check';
     protected static ?string $navigationLabel = 'Roles';
-    protected static ?string $navigationGroup = 'User Management';
+    protected static ?string $navigationGroup = '⚙️ Pengaturan';
+    
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -120,6 +121,11 @@ class RoleResource extends Resource
             'view' => Pages\ViewRole::route('/{record}'),
             'edit' => Pages\EditRole::route('/{record}/edit'),
         ];
+    }
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Kelola role dan permission';
     }
 
     public static function canAccess(): bool

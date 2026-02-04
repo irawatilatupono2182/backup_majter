@@ -12,6 +12,9 @@ class SalesRevenueChart extends ChartWidget
     protected static ?string $heading = 'Revenue Penjualan (30 Hari Terakhir)';
     protected static ?int $sort = 2;
     protected static ?string $pollingInterval = '60s';
+    
+    protected static ?string $maxHeight = '250px';
+    protected int | string | array $columnSpan = 'full';
 
     protected function getData(): array
     {
@@ -45,6 +48,8 @@ class SalesRevenueChart extends ChartWidget
     protected function getOptions(): array
     {
         return [
+            'maintainAspectRatio' => true,
+            'aspectRatio' => 3,
             'plugins' => [
                 'legend' => [
                     'display' => true,

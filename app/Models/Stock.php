@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\HasAuditLog;
 
 class Stock extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes, HasAuditLog; // ✅ Add audit trail
 
     protected $table = 'stocks';
     protected $primaryKey = 'stock_id';
@@ -110,23 +111,61 @@ class Stock extends Model
     // Reduce stock (from sale/adjustment)
     public function reduceStock(float $quantity): bool
     {
-        if ($this->available_quantity >= $quantity) {
-            $this->quantity -= $quantity;
-            $this->save();
+        // ✅ CRITICAL FIX #1: Prevent negative stock with DB transaction
+        return \DB::transaction(function () use ($quantity) {
+            // Lock the row to prevent race condition
+            $stock = self::lockForUpdate()->find($this->stock_id);
+            
+            // Strict validation: MUST have enough available quantity
+            if ($stock->available_quantity < $quantity) {
+                throw new \Exception(
+                    "❌ INSUFFICIENT STOCK: Product '{$stock->product->name}' hanya tersedia {$stock->available_quantity} unit. "
+                    . "Tidak bisa mengurangi {$quantity} unit. Stock tidak boleh minus!"
+                );
+            }
+            
+            // Additional check: final quantity cannot be negative
+            $newQuantity = $stock->quantity - $quantity;
+            if ($newQuantity < 0) {
+                throw new \Exception(
+                    "❌ INVALID OPERATION: Stock akan menjadi minus ({$newQuantity}). Operasi dibatalkan!"
+                );
+            }
+            
+            $stock->quantity = $newQuantity;
+            $stock->save();
+            
+            // Refresh current instance
+            $this->refresh();
+            
             return true;
-        }
-        return false;
+        });
     }
 
     // Reserve stock for pending orders
     public function reserveStock(float $quantity): bool
     {
-        if ($this->available_quantity >= $quantity) {
-            $this->reserved_quantity += $quantity;
-            $this->save();
+        // ✅ CRITICAL FIX #4: Prevent race condition with DB lock
+        return \DB::transaction(function () use ($quantity) {
+            // Lock the row
+            $stock = self::lockForUpdate()->find($this->stock_id);
+            
+            // Validate available quantity
+            if ($stock->available_quantity < $quantity) {
+                throw new \Exception(
+                    "❌ INSUFFICIENT STOCK: Tidak bisa reserve {$quantity} unit. "
+                    . "Hanya tersedia {$stock->available_quantity} unit."
+                );
+            }
+            
+            $stock->reserved_quantity += $quantity;
+            $stock->save();
+            
+            // Refresh current instance
+            $this->refresh();
+            
             return true;
-        }
-        return false;
+        });
     }
 
     // Release reserved stock

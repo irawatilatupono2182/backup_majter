@@ -18,11 +18,31 @@ class DeliveryNoteResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
 
-    protected static ?string $navigationGroup = 'Sales';
+    protected static ?string $navigationGroup = '� Penjualan';
+    
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $navigationLabel = 'Surat Jalan (SJ)';
 
-    protected static ?int $navigationSort = 1;
+    public static function getNavigationBadge(): ?string
+    {
+        $companyId = session('selected_company_id');
+        if (!$companyId) return null;
+        
+        return static::getModel()::where('company_id', $companyId)
+            ->where('status', 'Draft')
+            ->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'info';
+    }
+
+    public static function getNavigationTooltip(): ?string
+    {
+        return 'Surat jalan pengiriman barang ke customer';
+    }
 
     public static function form(Form $form): Form
     {

@@ -4,7 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Models\DeliveryNote;
+use App\Models\PurchaseOrder;
+use App\Models\PurchasePayment;
 use App\Observers\DeliveryNoteObserver;
+use App\Observers\PurchaseOrderObserver;
+use App\Observers\PurchasePaymentObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register DeliveryNote Observer for automatic stock movement integration
         DeliveryNote::observe(DeliveryNoteObserver::class);
+        
+        // Register PurchaseOrder Observer for automatic payable creation
+        PurchaseOrder::observe(PurchaseOrderObserver::class);
+        
+        // Register PurchasePayment Observer for automatic payable update
+        PurchasePayment::observe(PurchasePaymentObserver::class);
 
         // Performance Optimizations
         if ($this->app->environment('production')) {

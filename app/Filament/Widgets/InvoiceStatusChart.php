@@ -10,6 +10,9 @@ class InvoiceStatusChart extends ChartWidget
     protected static ?string $heading = 'Status Invoice';
     protected static ?int $sort = 3;
     protected static string $color = 'info';
+    
+    protected static ?string $maxHeight = '280px';
+    protected int | string | array $columnSpan = 1;
 
     protected function getData(): array
     {

@@ -91,9 +91,9 @@ class User extends Authenticatable implements FilamentUser
     {
         // Set selected company in session when accessing panel
         if (!session('selected_company_id')) {
-            $defaultCompany = $this->companyRoles()->where('is_default', true)->first();
-            if ($defaultCompany) {
-                session(['selected_company_id' => $defaultCompany->company_id]);
+            $firstCompany = $this->companies()->first();
+            if ($firstCompany) {
+                session(['selected_company_id' => $firstCompany->company_id]);
             }
         }
         
