@@ -16,8 +16,8 @@ class InvoicePpnResource extends Resource
     protected static ?string $model = Invoice::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-check';
     protected static ?string $navigationLabel = ' Invoice PPN';
-    protected static ?string $navigationGroup = '� Penjualan';
-    protected static ?int $navigationSort = 4;
+    protected static ?string $navigationGroup = '💼 Penjualan';
+    protected static ?int $navigationSort = 5;
     protected static ?string $slug = 'invoice-ppn';
 
     public static function getNavigationTooltip(): ?string

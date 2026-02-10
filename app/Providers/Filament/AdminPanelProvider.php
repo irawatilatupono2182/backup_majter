@@ -49,10 +49,9 @@ class AdminPanelProvider extends PanelProvider
                 '🔔 Notifikasi',
                 '📦 Master Data',
                 '🛒 Pembelian',
-                '📋 Penjualan',  
-                '💰 Keuangan',
+                '� Penjualan',  
                 '🏭 Inventori',
-                '📊 Laporan',
+                '📈 Laporan',
                 '⚙️ Pengaturan',
             ])
             ->resources([

@@ -18,6 +18,8 @@ class CompanyResource extends Resource
 
     protected static ?string $navigationGroup = '📦 Master Data';
 
+    protected static bool $shouldRegisterNavigation = false; // Hidden per user request
+
     protected static ?int $navigationSort = 1;
 
     public static function getNavigationTooltip(): ?string

@@ -30,8 +30,8 @@ class StockResource extends Resource
 {
     protected static ?string $model = Stock::class;
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
-    protected static ?string $navigationLabel = 'Stok Barang';
-    protected static ?string $navigationGroup = '🏭 Inventori';
+    protected static ?string $navigationLabel = 'Barang';
+    protected static ?string $navigationGroup = '🛒 Pembelian';
     
     protected static ?int $navigationSort = 1;
 

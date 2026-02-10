@@ -29,6 +29,8 @@ class StockMovementResource extends Resource
     protected static ?string $navigationLabel = 'Mutasi Stok';
     protected static ?string $navigationGroup = '🏭 Inventori';
     
+    protected static bool $shouldRegisterNavigation = false; // Hidden per user request
+    
     protected static ?int $navigationSort = 2;
 
     public static function getNavigationTooltip(): ?string

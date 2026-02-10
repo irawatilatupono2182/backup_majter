@@ -18,9 +18,9 @@ class ReceivablesResource extends Resource
     protected static ?string $navigationLabel = 'Piutang Usaha (AR)';
     protected static ?string $pluralModelLabel = 'Piutang Usaha';
     protected static ?string $modelLabel = 'Piutang';
-    protected static ?string $navigationGroup = '💰 Keuangan';
+    protected static ?string $navigationGroup = '📈 Laporan';
     
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 3;
     protected static ?string $slug = 'receivables';
     
     public static function getNavigationTooltip(): ?string

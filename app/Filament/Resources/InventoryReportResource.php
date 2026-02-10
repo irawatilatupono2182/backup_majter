@@ -18,7 +18,7 @@ class InventoryReportResource extends Resource
     protected static ?string $model = Stock::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?string $navigationLabel = 'Laporan Inventory';
-    protected static ?string $navigationGroup = '� Laporan';
+    protected static ?string $navigationGroup = '📈 Laporan';
     
 
     protected static ?int $navigationSort = 2;

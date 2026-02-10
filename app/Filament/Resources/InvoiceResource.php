@@ -32,10 +32,10 @@ class InvoiceResource extends Resource
     protected static ?string $model = Invoice::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationLabel = 'Invoice (Semua)';
-    protected static ?string $navigationGroup = '� Penjualan';
+    protected static ?string $navigationGroup = '💼 Penjualan';
     
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
 
     public static function getNavigationBadge(): ?string
     {

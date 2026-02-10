@@ -21,11 +21,11 @@ class PriceQuotationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = '� Pembelian';
+    protected static ?string $navigationGroup = '💼 Penjualan';
     
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
 
-    protected static ?string $navigationLabel = 'Penawaran Harga (PH)';
+    protected static ?string $navigationLabel = 'Surat Penawaran';
 
 
     public static function getNavigationBadge(): ?string

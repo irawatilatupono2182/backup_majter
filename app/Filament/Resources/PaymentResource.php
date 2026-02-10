@@ -32,6 +32,8 @@ class PaymentResource extends Resource
     protected static ?string $navigationLabel = 'Pembayaran dari Customer';
     protected static ?string $navigationGroup = '💰 Keuangan';
     
+    protected static bool $shouldRegisterNavigation = false; // Hidden per user request
+    
     protected static ?int $navigationSort = 3;
 
     public static function getNavigationTooltip(): ?string

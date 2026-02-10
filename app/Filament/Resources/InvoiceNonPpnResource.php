@@ -16,10 +16,10 @@ class InvoiceNonPpnResource extends Resource
     protected static ?string $model = Invoice::class;
     protected static ?string $navigationIcon = 'heroicon-o-document';
     protected static ?string $navigationLabel = ' Invoice Non-PPN';
-    protected static ?string $navigationGroup = '� Penjualan';
+    protected static ?string $navigationGroup = '💼 Penjualan';
     
 
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 6;
     protected static ?string $slug = 'invoice-non-ppn';
 
     public static function getNavigationTooltip(): ?string

@@ -21,9 +21,9 @@ class PurchaseOrderResource extends Resource
 
     protected static ?string $navigationGroup = '🛒 Pembelian';
     
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 3;
 
-    protected static ?string $navigationLabel = ' Purchase Order (PO)';
+    protected static ?string $navigationLabel = 'Pembelian Barang (PO)';
 
     public static function getNavigationBadge(): ?string
     {
