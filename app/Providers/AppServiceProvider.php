@@ -30,13 +30,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register DeliveryNote Observer for automatic stock movement integration
-        DeliveryNote::observe(DeliveryNoteObserver::class);
+        // Temporarily disabled to debug bootstrap issue
+        // DeliveryNote::observe(DeliveryNoteObserver::class);
         
         // Register PurchaseOrder Observer for automatic payable creation
-        PurchaseOrder::observe(PurchaseOrderObserver::class);
+        // PurchaseOrder::observe(PurchaseOrderObserver::class);
         
         // Register PurchasePayment Observer for automatic payable update
-        PurchasePayment::observe(PurchasePaymentObserver::class);
+        // PurchasePayment::observe(PurchasePaymentObserver::class);
 
         // Performance Optimizations
         if ($this->app->environment('production')) {

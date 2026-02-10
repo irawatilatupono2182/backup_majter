@@ -30,7 +30,7 @@ class StockResource extends Resource
 {
     protected static ?string $model = Stock::class;
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
-    protected static ?string $navigationLabel = 'Barang';
+    protected static ?string $navigationLabel = 'Master Barang/Stock';
     protected static ?string $navigationGroup = '🛒 Pembelian';
     
     protected static ?int $navigationSort = 1;
@@ -61,22 +61,126 @@ class StockResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('Informasi Stok')
+                Section::make('Pilih atau Tambah Barang')
+                    ->description('Pilih barang yang sudah ada atau masukkan barang baru')
                     ->schema([
                         Hidden::make('company_id')
                             ->default(fn() => session('selected_company_id')),
 
-                        Select::make('product_id')
-                            ->label('Produk')
-                            ->relationship('product', 'name', function (Builder $query) {
+                        Select::make('existing_product')
+                            ->label('Pilih Barang yang Sudah Ada (Opsional)')
+                            ->options(function () {
                                 $companyId = session('selected_company_id');
-                                return $query->where('company_id', $companyId)
-                                    ->where('product_type', 'STOCK');
+                                $productType = session('stock_type_create');
+                                
+                                $query = Stock::where('company_id', $companyId)
+                                    ->select('product_code', 'product_name', 'product_type', 'unit', 'category', 'base_price')
+                                    ->groupBy('product_code', 'product_name', 'product_type', 'unit', 'category', 'base_price');
+                                
+                                if ($productType) {
+                                    $query->where('product_type', $productType);
+                                }
+                                
+                                return $query->get()
+                                    ->mapWithKeys(function ($item) {
+                                        $key = $item->product_code . '|' . $item->product_name;
+                                        $label = $item->product_code . ' - ' . $item->product_name . ' (' . $item->product_type . ')';
+                                        return [$key => $label];
+                                    });
                             })
                             ->searchable()
-                            ->preload()
-                            ->required(),
+                            ->live()
+                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                if ($state) {
+                                    [$code, $name] = explode('|', $state);
+                                    
+                                    // Get latest stock data for this product
+                                    $latestStock = Stock::where('company_id', session('selected_company_id'))
+                                        ->where('product_code', $code)
+                                        ->where('product_name', $name)
+                                        ->latest()
+                                        ->first();
+                                    
+                                    if ($latestStock) {
+                                        $set('product_code', $latestStock->product_code);
+                                        $set('product_name', $latestStock->product_name);
+                                        $set('product_type', $latestStock->product_type);
+                                        $set('unit', $latestStock->unit);
+                                        $set('category', $latestStock->category);
+                                        $set('base_price', $latestStock->base_price);
+                                        $set('minimum_stock', $latestStock->minimum_stock);
+                                        $set('quantity', $latestStock->quantity);
+                                        $set('unit_cost', $latestStock->unit_cost);
+                                    }
+                                } else {
+                                    // Clear fields when deselected
+                                    $set('product_code', null);
+                                    $set('product_name', null);
+                                    $set('product_type', session('stock_type_create', 'Local'));
+                                    $set('unit', null);
+                                    $set('category', null);
+                                    $set('base_price', null);
+                                }
+                            })
+                            ->helperText(function () {
+                                $type = session('stock_type_create');
+                                if ($type === 'Local') {
+                                    return '✅ Menampilkan barang LOKAL yang sudah ada';
+                                } elseif ($type === 'Import') {
+                                    return '📘 Menampilkan barang IMPORT yang sudah ada';
+                                }
+                                return '💡 Kosongkan jika ingin input barang baru';
+                            }),
+                    ])
+                    ->columns(1),
 
+                Section::make('Informasi Barang')
+                    ->schema([
+                        TextInput::make('product_code')
+                            ->label('Kode Barang')
+                            ->maxLength(100)
+                            ->required()
+                            ->unique(ignoreRecord: true)
+                            ->helperText('Kode unik untuk identifikasi barang'),
+
+                        TextInput::make('product_name')
+                            ->label('Nama Barang')
+                            ->required()
+                            ->maxLength(255),
+
+                        Select::make('product_type')
+                            ->label('Jenis Barang')
+                            ->options([
+                                'Local' => '🏭 Lokal',
+                                'Import' => '🌍 Import',
+                            ])
+                            ->default(fn() => session('stock_type_create', 'Local'))
+                            ->required()
+                            ->disabled(fn ($get) => $get('existing_product') !== null)
+                            ->dehydrated(),
+
+                        TextInput::make('unit')
+                            ->label('Satuan')
+                            ->required()
+                            ->default('pcs')
+                            ->helperText('Contoh: pcs, box, kg, meter, dll'),
+
+                        TextInput::make('category')
+                            ->label('Kategori')
+                            ->maxLength(100)
+                            ->helperText('Contoh: Elektronik, Furniture, dll'),
+
+                        TextInput::make('base_price')
+                            ->label('Harga Dasar')
+                            ->numeric()
+                            ->prefix('Rp')
+                            ->default(0)
+                            ->helperText('Harga jual dasar'),
+                    ])
+                    ->columns(2),
+
+                Section::make('Informasi Stok')
+                    ->schema([
                         TextInput::make('batch_number')
                             ->label('Nomor Batch')
                             ->helperText('Opsional, untuk tracking batch produk'),
@@ -121,13 +225,46 @@ class StockResource extends Resource
         return $table
             ->modifyQueryUsing(function (Builder $query) {
                 $companyId = session('selected_company_id');
-                return $query->where('company_id', $companyId)->with('product');
+                return $query->where('company_id', $companyId);
             })
             ->columns([
-                TextColumn::make('product.name')
-                    ->label('Produk')
+                TextColumn::make('product_code')
+                    ->label('Kode Barang')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable()
+                    ->weight('bold'),
+                
+                TextColumn::make('product_name')
+                    ->label('Nama Barang')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap(),
+                
+                TextColumn::make('product_type')
+                    ->label('Jenis')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'Local' => 'success',
+                        'Import' => 'info',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'Local' => '🏭 Lokal',
+                        'Import' => '🌍 Import',
+                        default => $state,
+                    }),
+                
+                TextColumn::make('category')
+                    ->label('Kategori')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                
+                TextColumn::make('unit')
+                    ->label('Satuan')
+                    ->badge()
+                    ->color('primary')
+                    ->toggleable(),
                 
                 // Anomaly Detection Column (NEW!)
                 TextColumn::make('anomaly_status')
@@ -135,43 +272,33 @@ class StockResource extends Resource
                     ->getStateUsing(function ($record) {
                         $anomalies = [];
                         
-                        // 1. Product tidak ada (orphaned stock)
-                        if (!$record->product) {
-                            return '🚨 Produk tidak ada';
-                        }
-                        
-                        // 2. Product type CATALOG tapi ada stock
-                        if ($record->product->product_type === 'CATALOG') {
-                            return '⚠️ Produk CATALOG';
-                        }
-                        
-                        // 3. Negative quantities
+                        // 1. Negative quantities
                         if ($record->quantity < 0 || $record->available_quantity < 0 || $record->reserved_quantity < 0) {
                             return '❌ Qty Negative';
                         }
                         
-                        // 4. Available > Total (impossible)
+                        // 2. Available > Total (impossible)
                         if ($record->available_quantity > $record->quantity) {
                             return '⚠️ Available > Total';
                         }
                         
-                        // 5. Reserved > Total (impossible)
+                        // 3. Reserved > Total (impossible)
                         if ($record->reserved_quantity > $record->quantity) {
                             return '⚠️ Reserved > Total';
                         }
                         
-                        // 6. Total != Available + Reserved
+                        // 4. Total != Available + Reserved
                         $calculated = $record->available_quantity + $record->reserved_quantity;
                         if ($record->quantity != $calculated) {
                             return '⚠️ Qty tidak balance';
                         }
                         
-                        // 7. Expired product
+                        // 5. Expired product
                         if ($record->isExpired()) {
                             return '🕐 Kadaluarsa';
                         }
                         
-                        // 8. Below minimum
+                        // 6. Below minimum
                         if ($record->isBelowMinimum()) {
                             return '🔔 Low Stock';
                         }
@@ -180,14 +307,6 @@ class StockResource extends Resource
                     })
                     ->badge()
                     ->color(function ($record) {
-                        if (!$record->product) {
-                            return 'danger';
-                        }
-                        
-                        if ($record->product->product_type === 'CATALOG') {
-                            return 'danger';
-                        }
-                        
                         if ($record->quantity < 0 || $record->available_quantity < 0 || $record->reserved_quantity < 0) {
                             return 'danger';
                         }
@@ -213,14 +332,6 @@ class StockResource extends Resource
                     })
                     ->sortable()
                     ->tooltip(function ($record) {
-                        if (!$record->product) {
-                            return 'CRITICAL: Stock record ini tidak memiliki produk. Harus dihapus atau diperbaiki.';
-                        }
-                        
-                        if ($record->product->product_type === 'CATALOG') {
-                            return 'WARNING: Produk CATALOG tidak seharusnya memiliki stock record. Hapus stock ini atau ubah product type.';
-                        }
-                        
                         if ($record->quantity < 0 || $record->available_quantity < 0 || $record->reserved_quantity < 0) {
                             return 'CRITICAL: Ada quantity yang negative. Data error, perlu dikoreksi.';
                         }
@@ -424,11 +535,25 @@ class StockResource extends Resource
                             ->whereNotNull('expiry_date');
                     }),
 
-                SelectFilter::make('product_id')
-                    ->label('Produk')
-                    ->relationship('product', 'name')
-                    ->searchable()
-                    ->preload(),
+                SelectFilter::make('product_type')
+                    ->label('Jenis Barang')
+                    ->options([
+                        'Local' => '🏭 Lokal',
+                        'Import' => '🌍 Import',
+                    ])
+                    ->multiple(),
+                
+                SelectFilter::make('category')
+                    ->label('Kategori')
+                    ->options(function () {
+                        $companyId = session('selected_company_id');
+                        return \App\Models\Stock::where('company_id', $companyId)
+                            ->whereNotNull('category')
+                            ->distinct()
+                            ->pluck('category', 'category')
+                            ->toArray();
+                    })
+                    ->multiple(),
 
                 SelectFilter::make('location')
                     ->label('Lokasi')
@@ -444,8 +569,6 @@ class StockResource extends Resource
                 SelectFilter::make('anomaly')
                     ->label('Status Anomali')
                     ->options([
-                        'orphaned' => '🚨 Produk tidak ada',
-                        'catalog' => '⚠️ Produk CATALOG',
                         'negative' => '❌ Qty Negative',
                         'available_exceeds' => '⚠️ Available > Total',
                         'reserved_exceeds' => '⚠️ Reserved > Total',
@@ -462,14 +585,6 @@ class StockResource extends Resource
                         $anomalyType = $data['value'];
 
                         switch ($anomalyType) {
-                            case 'orphaned':
-                                return $query->whereDoesntHave('product');
-                            
-                            case 'catalog':
-                                return $query->whereHas('product', function ($q) {
-                                    $q->where('product_type', 'CATALOG');
-                                });
-                            
                             case 'negative':
                                 return $query->where(function ($q) {
                                     $q->where('quantity', '<', 0)
@@ -495,10 +610,7 @@ class StockResource extends Resource
                                             ->where('minimum_stock', '>', 0);
                             
                             case 'normal':
-                                return $query->whereHas('product', function ($q) {
-                                    $q->where('product_type', 'STOCK');
-                                })
-                                ->where('quantity', '>=', 0)
+                                return $query->where('quantity', '>=', 0)
                                 ->where('available_quantity', '>=', 0)
                                 ->where('reserved_quantity', '>=', 0)
                                 ->whereColumn('available_quantity', '<=', 'quantity')

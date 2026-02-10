@@ -27,7 +27,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Performance optimization middleware
-        $middleware->append(\App\Http\Middleware\OptimizeMiddleware::class);
+        // Temporarily disabled to fix bootstrap issue
+        // $middleware->append(\App\Http\Middleware\OptimizeMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

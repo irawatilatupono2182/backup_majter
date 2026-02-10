@@ -47,7 +47,19 @@ class SupplierResource extends Resource
                                 'Local' => 'Local',
                                 'Import' => 'Import',
                             ])
-                            ->required(),
+                            ->default(fn() => session('supplier_type_create', 'Local'))
+                            ->required()
+                            ->helperText(function () {
+                                $type = session('supplier_type_create');
+                                if ($type === 'Local') {
+                                    return '✅ Supplier LOKAL dipilih';
+                                } elseif ($type === 'Import') {
+                                    return '📘 Supplier IMPORT dipilih';
+                                }
+                                return null;
+                            })
+                            ->disabled(fn() => session('supplier_type_create') !== null)
+                            ->dehydrated(),
                         Forms\Components\Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->default(true),

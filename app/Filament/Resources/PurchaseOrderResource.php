@@ -114,11 +114,29 @@ class PurchaseOrderResource extends Resource
                             }),
                         Forms\Components\Select::make('supplier_id')
                             ->label('Supplier')
-                            ->options(fn() => Supplier::where('company_id', session('selected_company_id'))
-                                ->where('is_active', true)
-                                ->pluck('name', 'supplier_id'))
+                            ->options(function() {
+                                $poType = session('po_type_create'); // Get PO type from session
+                                $query = Supplier::where('company_id', session('selected_company_id'))
+                                    ->where('is_active', true);
+                                
+                                // Filter supplier by type if selected
+                                if ($poType) {
+                                    $query->where('type', $poType);
+                                }
+                                
+                                return $query->pluck('name', 'supplier_id');
+                            })
                             ->required()
-                            ->searchable(),
+                            ->searchable()
+                            ->helperText(function () {
+                                $type = session('po_type_create');
+                                if ($type === 'Local') {
+                                    return '✅ Menampilkan supplier LOKAL';
+                                } elseif ($type === 'Import') {
+                                    return '📘 Menampilkan supplier IMPORT';
+                                }
+                                return null;
+                            }),
                         Forms\Components\Select::make('type')
                             ->label('Jenis')
                             ->options([
@@ -156,9 +174,18 @@ class PurchaseOrderResource extends Resource
                             ->schema([
                                 Forms\Components\Select::make('product_id')
                                     ->label('Produk')
-                                    ->options(fn() => Product::where('company_id', session('selected_company_id'))
-                                        ->where('is_active', true)
-                                        ->pluck('name', 'product_id'))
+                                    ->options(function() {
+                                        $poType = session('po_type_create');
+                                        $query = Product::where('company_id', session('selected_company_id'))
+                                            ->where('is_active', true);
+                                        
+                                        // Filter products by type if PO type is selected
+                                        if ($poType) {
+                                            $query->where('product_type', $poType);
+                                        }
+                                        
+                                        return $query->pluck('name', 'product_id');
+                                    })
                                     ->required()
                                     ->searchable()
                                     ->reactive()

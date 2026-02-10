@@ -21,7 +21,13 @@ class Stock extends Model
 
     protected $fillable = [
         'company_id',
-        'product_id',
+        'product_id', // Keep for backward compatibility
+        'product_code',
+        'product_name',
+        'product_type',
+        'unit',
+        'category',
+        'base_price',
         'batch_number',
         'quantity',
         'reserved_quantity',

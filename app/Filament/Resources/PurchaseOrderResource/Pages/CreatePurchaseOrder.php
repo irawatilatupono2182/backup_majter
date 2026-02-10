@@ -10,10 +10,28 @@ class CreatePurchaseOrder extends CreateRecord
 {
     protected static string $resource = PurchaseOrderResource::class;
 
+    public function getTitle(): string
+    {
+        $type = session('po_type_create');
+        if ($type === 'Local') {
+            return 'Buat PO Lokal';
+        } elseif ($type === 'Import') {
+            return 'Buat PO Import';
+        }
+        return 'Buat Purchase Order';
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         // Generate unique PO number
         $data['po_number'] = $this->generateUniquePONumber();
+        
+        // Store PO type in notes if selected from popup (untuk tracking saja)
+        if (session('po_type_create')) {
+            $poType = session('po_type_create');
+            $typeLabel = $poType === 'Local' ? 'Pembelian Lokal' : 'Pembelian Import';
+            $data['notes'] = ($data['notes'] ?? '') . "\n[Jenis: {$typeLabel}]";
+        }
         
         // Auto-calculate subtotal for each item
         if (isset($data['items'])) {
@@ -25,6 +43,20 @@ class CreatePurchaseOrder extends CreateRecord
         }
 
         return $data;
+    }
+    
+    protected function getRedirectUrl(): string
+    {
+        // Clear session after create
+        session()->forget('po_type_create');
+        
+        return $this->getResource()::getUrl('index');
+    }
+    
+    protected function afterCreate(): void
+    {
+        // Clear session
+        session()->forget('po_type_create');
     }
 
     /**

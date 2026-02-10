@@ -60,34 +60,41 @@ class AdminPanelProvider extends PanelProvider
                 
                 // Master Data
                 \App\Filament\Resources\CompanyResource::class,
-                \App\Filament\Resources\CustomerResource::class,
-                \App\Filament\Resources\SupplierResource::class,
                 \App\Filament\Resources\ProductResource::class,
                 
                 // Purchasing
-                \App\Filament\Resources\PriceQuotationResource::class,
+                \App\Filament\Resources\StockResource::class,
+                \App\Filament\Resources\SupplierResource::class,
                 \App\Filament\Resources\PurchaseOrderResource::class,
                 \App\Filament\Resources\PurchasePaymentResource::class,
                 
+                // Purchasing - Lokal/Import resources (hidden, but still accessible)
+                // TEMPORARILY DISABLED TO DEBUG BOOTSTRAP ISSUE
+                // \App\Filament\Resources\StockLokalResource::class,
+                // \App\Filament\Resources\StockImportResource::class,
+                // \App\Filament\Resources\SupplierLokalResource::class,
+                // \App\Filament\Resources\SupplierImportResource::class,
+                // \App\Filament\Resources\PurchaseOrderLokalResource::class,
+                // \App\Filament\Resources\PurchaseOrderImportResource::class,
+                
                 // Penjualan (Sales)
+                \App\Filament\Resources\CustomerResource::class,
+                \App\Filament\Resources\PriceQuotationResource::class,
                 \App\Filament\Resources\DeliveryNoteResource::class,
                 \App\Filament\Resources\InvoiceResource::class,
                 \App\Filament\Resources\InvoicePpnResource::class,
                 \App\Filament\Resources\InvoiceNonPpnResource::class,
                 
-                // Keuangan (Finance)
+                // Laporan (Reports)
+                \App\Filament\Resources\SalesReportResource::class,
+                \App\Filament\Resources\InventoryReportResource::class,
                 \App\Filament\Resources\ReceivablesResource::class,
                 \App\Filament\Resources\PayableResource::class,
                 \App\Filament\Resources\PaymentResource::class,
                 \App\Filament\Resources\PayablePaymentResource::class,
                 
                 // Inventory
-                \App\Filament\Resources\StockResource::class,
                 \App\Filament\Resources\StockMovementResource::class,
-                
-                // Reports
-                \App\Filament\Resources\SalesReportResource::class,
-                \App\Filament\Resources\InventoryReportResource::class,
                 
                 // Admin/Pengaturan
                 \App\Filament\Resources\UserResource::class,
