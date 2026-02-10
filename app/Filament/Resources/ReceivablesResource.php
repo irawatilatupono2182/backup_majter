@@ -23,6 +23,12 @@ class ReceivablesResource extends Resource
     protected static ?int $navigationSort = 3;
     protected static ?string $slug = 'receivables';
     
+    // Disable navigation - fitur sudah ada di Laporan Penjualan
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+    
     public static function getNavigationTooltip(): ?string
     {
         return 'Tagihan yang belum dibayar oleh customer (piutang)';

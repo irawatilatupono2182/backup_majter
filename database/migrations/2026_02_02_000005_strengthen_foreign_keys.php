@@ -13,7 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Disable foreign key checks temporarily
+        // Skip this migration for SQLite - it uses MySQL-specific syntax
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            return;
+        }
+        
+        // Disable foreign key checks temporarily (MySQL only)
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         
         // 1. Check and add missing foreign keys to stock_movements
@@ -47,7 +52,11 @@ return new class extends Migration
             Schema::table('payments', function (Blueprint $table) {
                 // Prevent duplicate payment with same reference number for same invoice
                 $indexExists = DB::select("
-                    SHOW INDEX FROM payments WHERE Key_name = 'uk_invoice_reference'
+                    SELECT INDEX_NAME 
+                    FROM information_schema.STATISTICS 
+                    WHERE TABLE_SCHEMA = DATABASE()
+                    AND TABLE_NAME = 'payments'
+                    AND INDEX_NAME = 'uk_invoice_reference'
                 ");
                 
                 if (empty($indexExists)) {
@@ -106,24 +115,36 @@ return new class extends Migration
         // 5. Add ON DELETE RESTRICT to critical relationships
         // This prevents accidental deletion of important data
         $criticalTables = [
-            'invoices' => 'customer_id',
-            'purchase_orders' => 'supplier_id',
-            'delivery_notes' => 'customer_id',
+            'invoices' => ['customer_id', 'customers'],
+            'purchase_orders' => ['supplier_id', 'suppliers'],
+            'delivery_notes' => ['customer_id', 'customers'],
         ];
         
-        foreach ($criticalTables as $table => $column) {
+        foreach ($criticalTables as $table => [$column, $referencedTable]) {
             if (Schema::hasTable($table)) {
                 try {
-                    // Drop existing foreign key if exists
                     $fkName = "{$table}_{$column}_foreign";
-                    DB::statement("ALTER TABLE {$table} DROP FOREIGN KEY IF EXISTS {$fkName}");
+                    
+                    // Check if FK exists first
+                    $fkExists = DB::select("
+                        SELECT CONSTRAINT_NAME 
+                        FROM information_schema.TABLE_CONSTRAINTS 
+                        WHERE TABLE_SCHEMA = DATABASE()
+                        AND TABLE_NAME = '{$table}'
+                        AND CONSTRAINT_NAME = '{$fkName}'
+                        AND CONSTRAINT_TYPE = 'FOREIGN KEY'
+                    ");
+                    
+                    // Drop existing foreign key if exists
+                    if (!empty($fkExists)) {
+                        DB::statement("ALTER TABLE {$table} DROP FOREIGN KEY {$fkName}");
+                    }
                     
                     // Add new foreign key with RESTRICT
-                    Schema::table($table, function (Blueprint $tableSchema) use ($column) {
-                        $reference = str_replace('_id', 's', $column); // customer_id -> customers
+                    Schema::table($table, function (Blueprint $tableSchema) use ($column, $referencedTable) {
                         $tableSchema->foreign($column)
                             ->references($column)
-                            ->on($reference)
+                            ->on($referencedTable)
                             ->onDelete('restrict')
                             ->onUpdate('cascade');
                     });
@@ -140,23 +161,44 @@ return new class extends Migration
 
     public function down(): void
     {
-        // This is a complex migration, rollback carefully
+        // Skip this migration for SQLite - it uses MySQL-specific syntax
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            return;
+        }
+        
+        // This is a complex migration, rollback carefully  
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         
         // Remove constraints added
         if (Schema::hasTable('stocks')) {
             try {
-                DB::statement('ALTER TABLE stocks DROP CHECK IF EXISTS chk_quantity_non_negative');
-                DB::statement('ALTER TABLE stocks DROP CHECK IF EXISTS chk_available_calculation');
+                // Check and drop constraints if they exist
+                $constraints = DB::select("
+                    SELECT CONSTRAINT_NAME 
+                    FROM information_schema.TABLE_CONSTRAINTS 
+                    WHERE TABLE_SCHEMA = DATABASE()
+                    AND TABLE_NAME = 'stocks'
+                    AND CONSTRAINT_TYPE = 'CHECK'
+                ");
+                
+                foreach ($constraints as $constraint) {
+                    if (in_array($constraint->CONSTRAINT_NAME, ['chk_quantity_non_negative', 'chk_available_calculation'])) {
+                        DB::statement("ALTER TABLE stocks DROP CHECK {$constraint->CONSTRAINT_NAME}");
+                    }
+                }
             } catch (\Exception $e) {
                 // Ignore if not exists
             }
         }
         
         if (Schema::hasTable('payments')) {
-            Schema::table('payments', function (Blueprint $table) {
-                $table->dropUnique('uk_invoice_reference');
-            });
+            try {
+                Schema::table('payments', function (Blueprint $table) {
+                    $table->dropUnique('uk_invoice_reference');
+                });
+            } catch (\Exception $e) {
+                // Ignore if not exists
+            }
         }
         
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

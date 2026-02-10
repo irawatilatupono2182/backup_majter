@@ -87,6 +87,7 @@ class AdminPanelProvider extends PanelProvider
                 
                 // Laporan (Reports)
                 \App\Filament\Resources\SalesReportResource::class,
+                \App\Filament\Resources\PurchaseReportResource::class,
                 \App\Filament\Resources\InventoryReportResource::class,
                 \App\Filament\Resources\ReceivablesResource::class,
                 \App\Filament\Resources\PayableResource::class,

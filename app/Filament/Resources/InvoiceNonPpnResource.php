@@ -22,6 +22,8 @@ class InvoiceNonPpnResource extends Resource
     protected static ?int $navigationSort = 6;
     protected static ?string $slug = 'invoice-non-ppn';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function getNavigationTooltip(): ?string
     {
         return 'Invoice tanpa PPN';

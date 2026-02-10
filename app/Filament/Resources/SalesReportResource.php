@@ -190,6 +190,7 @@ class SalesReportResource extends Resource
     {
         return [
             'index' => Pages\ListSalesReports::route('/'),
+            'piutang' => Pages\AccountsReceivable::route('/piutang'),
         ];
     }
 

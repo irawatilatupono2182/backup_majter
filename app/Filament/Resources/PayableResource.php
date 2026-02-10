@@ -33,6 +33,12 @@ class PayableResource extends Resource
     
     protected static ?int $navigationSort = 4;
     
+    // Disabled - fitur sudah ada di Laporan Pembelian (tab Hutang Usaha)
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+    
     public static function getNavigationBadge(): ?string
     {
         $companyId = session('selected_company_id');

@@ -20,6 +20,8 @@ class InvoicePpnResource extends Resource
     protected static ?int $navigationSort = 5;
     protected static ?string $slug = 'invoice-ppn';
 
+    protected static bool $shouldRegisterNavigation = false;
+
     public static function getNavigationTooltip(): ?string
     {
         return 'Invoice dengan PPN 11%';

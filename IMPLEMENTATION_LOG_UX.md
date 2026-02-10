@@ -70,7 +70,8 @@ Keuangan
 └─ 📋 Mutasi Stok
 
 📊 LAPORAN
-├─ 📈 Laporan Penjualan
+├─ 📈 Laporan Penjualan (dengan tab Piutang Usaha)
+├─ 🛒 Laporan Pembelian (dengan tab Hutang Usaha)
 └─ 📦 Laporan Inventory
 
 📋 MASTER DATA

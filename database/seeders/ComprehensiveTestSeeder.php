@@ -258,6 +258,12 @@ class ComprehensiveTestSeeder extends Seeder
                 'stock_id' => Str::uuid(),
                 'company_id' => $this->company->company_id,
                 'product_id' => $product->product_id,
+                'product_code' => $product->product_code,
+                'product_name' => $product->name,
+                'product_type' => $index % 2 === 0 ? 'Local' : 'Import',
+                'unit' => $product->unit,
+                'category' => $product->category,
+                'base_price' => $product->base_price,
                 'batch_number' => 'BATCH-' . now()->format('Ymd') . '-' . str_pad($index + 1, 4, '0', STR_PAD_LEFT),
                 'quantity' => $quantity,
                 'reserved_quantity' => 0,
@@ -265,6 +271,7 @@ class ComprehensiveTestSeeder extends Seeder
                 'minimum_stock' => $minimum,
                 'unit_cost' => $product->base_price,
                 'expiry_date' => $expiryDate,
+                'location' => fake()->randomElement(['Gudang A', 'Gudang B', 'Gudang C']),
                 'created_by' => $this->user->id,
             ]);
         }

@@ -125,12 +125,20 @@ class TransactionSeeder extends Seeder
                 'stock_id' => Str::uuid(),
                 'company_id' => $companyId,
                 'product_id' => $product->product_id,
+                'product_code' => $product->product_code,
+                'product_name' => $product->name,
+                'product_type' => $index === 0 ? 'Import' : 'Local',
+                'unit' => $product->unit,
+                'category' => $product->category,
+                'base_price' => $product->base_price,
                 'batch_number' => 'BATCH-' . date('Ymd') . '-' . str_pad($index + 1, 3, '0', STR_PAD_LEFT),
                 'quantity' => $quantities,
+                'available_quantity' => $quantities,
+                'reserved_quantity' => 0,
+                'minimum_stock' => 5,
                 'unit_cost' => $unitCosts,
                 'expiry_date' => $product->category === 'Elektronik' ? now()->addYears(2) : null,
-                'purchase_date' => now()->subDays(5),
-                'is_active' => true,
+                'location' => 'Gudang Utama',
             ]);
 
             // Create stock movement for purchase

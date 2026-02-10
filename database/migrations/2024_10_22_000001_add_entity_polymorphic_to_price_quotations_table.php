@@ -40,9 +40,11 @@ return new class extends Migration
             WHERE supplier_id IS NOT NULL
         ");
         
-        // Now make supplier_id nullable (after data migration)
-        // Using raw SQL to avoid issues with existing NULL values
-        DB::statement('ALTER TABLE `price_quotations` MODIFY `supplier_id` char(36) NULL');
+        // Make supplier_id nullable using Laravel's schema builder
+        // This works across all database drivers including SQLite
+        Schema::table('price_quotations', function (Blueprint $table) {
+            $table->uuid('supplier_id')->nullable()->change();
+        });
     }
 
     /**

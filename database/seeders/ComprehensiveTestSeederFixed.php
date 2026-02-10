@@ -147,6 +147,7 @@ class ComprehensiveTestSeederFixed extends Seeder
                 'billing_schedule' => 'Setiap tanggal 5',
                 'is_ppn' => true,
                 'is_active' => true,
+                'credit_limit' => 100000000,
             ]),
             Customer::create([
                 'company_id' => $this->company->company_id,
@@ -160,6 +161,7 @@ class ComprehensiveTestSeederFixed extends Seeder
                 'billing_schedule' => 'Setiap minggu ke-2',
                 'is_ppn' => false,
                 'is_active' => true,
+                'credit_limit' => 50000000,
             ]),
             Customer::create([
                 'company_id' => $this->company->company_id,
@@ -173,6 +175,7 @@ class ComprehensiveTestSeederFixed extends Seeder
                 'npwp' => '98.765.432.1-098.000',
                 'is_ppn' => true,
                 'is_active' => false,
+                'credit_limit' => 25000000,
             ]),
         ];
     }
@@ -410,9 +413,16 @@ class ComprehensiveTestSeederFixed extends Seeder
     {
         $this->command->info('Creating initial stock...');
         
+        // Stock untuk Laptop Dell Latitude
         Stock::create([
             'company_id' => $this->company->company_id,
             'product_id' => $products['stock'][0]->product_id,
+            'product_code' => $products['stock'][0]->product_code,
+            'product_name' => $products['stock'][0]->name,
+            'product_type' => 'Local',
+            'unit' => $products['stock'][0]->unit,
+            'category' => $products['stock'][0]->category,
+            'base_price' => $products['stock'][0]->base_price,
             'batch_number' => 'BATCH-001',
             'quantity' => 50,
             'available_quantity' => 50,
@@ -422,9 +432,16 @@ class ComprehensiveTestSeederFixed extends Seeder
             'location' => 'Gudang A',
         ]);
         
+        // Stock untuk Mouse Wireless Logitech
         Stock::create([
             'company_id' => $this->company->company_id,
             'product_id' => $products['stock'][1]->product_id,
+            'product_code' => $products['stock'][1]->product_code,
+            'product_name' => $products['stock'][1]->name,
+            'product_type' => 'Local',
+            'unit' => $products['stock'][1]->unit,
+            'category' => $products['stock'][1]->category,
+            'base_price' => $products['stock'][1]->base_price,
             'batch_number' => 'BATCH-002',
             'quantity' => 100,
             'available_quantity' => 100,
@@ -434,9 +451,16 @@ class ComprehensiveTestSeederFixed extends Seeder
             'location' => 'Gudang A',
         ]);
         
+        // Stock untuk Keyboard Mechanical
         Stock::create([
             'company_id' => $this->company->company_id,
             'product_id' => $products['stock'][2]->product_id,
+            'product_code' => $products['stock'][2]->product_code,
+            'product_name' => $products['stock'][2]->name,
+            'product_type' => 'Import',
+            'unit' => $products['stock'][2]->unit,
+            'category' => $products['stock'][2]->category,
+            'base_price' => $products['stock'][2]->base_price,
             'batch_number' => 'BATCH-003',
             'quantity' => 75,
             'available_quantity' => 75,
@@ -446,10 +470,16 @@ class ComprehensiveTestSeederFixed extends Seeder
             'location' => 'Gudang B',
         ]);
         
-        // Low stock (untuk testing alert)
+        // Low stock (untuk testing alert) - Monitor 24 inch
         Stock::create([
             'company_id' => $this->company->company_id,
             'product_id' => $products['stock'][3]->product_id,
+            'product_code' => $products['stock'][3]->product_code,
+            'product_name' => $products['stock'][3]->name,
+            'product_type' => 'Local',
+            'unit' => $products['stock'][3]->unit,
+            'category' => $products['stock'][3]->category,
+            'base_price' => $products['stock'][3]->base_price,
             'batch_number' => 'BATCH-004',
             'quantity' => 5,
             'available_quantity' => 5,
@@ -459,10 +489,16 @@ class ComprehensiveTestSeederFixed extends Seeder
             'location' => 'Gudang A',
         ]);
         
-        // Stock dengan expiry date
+        // Stock dengan expiry date - Tinta Printer
         Stock::create([
             'company_id' => $this->company->company_id,
             'product_id' => $products['stock'][4]->product_id,
+            'product_code' => $products['stock'][4]->product_code,
+            'product_name' => $products['stock'][4]->name,
+            'product_type' => 'Import',
+            'unit' => $products['stock'][4]->unit,
+            'category' => $products['stock'][4]->category,
+            'base_price' => $products['stock'][4]->base_price,
             'batch_number' => 'BATCH-EXP-001',
             'quantity' => 30,
             'available_quantity' => 30,

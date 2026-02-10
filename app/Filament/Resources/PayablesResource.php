@@ -27,6 +27,12 @@ class PayablesResource extends Resource
     
     protected static ?int $navigationSort = 99;
     
+    // Disabled - fitur sudah ada di Laporan Pembelian
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
+    
     protected static bool $shouldRegisterNavigation = false; // Hidden dari menu
     
     public static function getNavigationTooltip(): ?string
