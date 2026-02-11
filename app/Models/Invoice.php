@@ -24,6 +24,7 @@ class Invoice extends Model
         'company_id',
         'customer_id',
         'sj_id',
+        'nota_menyusul_id',
         'invoice_number',
         'po_number',
         'type',
@@ -125,6 +126,16 @@ class Invoice extends Model
     public function deliveryNote(): BelongsTo
     {
         return $this->belongsTo(DeliveryNote::class, 'sj_id', 'sj_id');
+    }
+
+    public function notaMenyusul(): BelongsTo
+    {
+        return $this->belongsTo(NotaMenyusul::class, 'nota_menyusul_id', 'nm_id');
+    }
+
+    public function isConvertedFromNota(): bool
+    {
+        return !is_null($this->nota_menyusul_id);
     }
 
     public function createdBy(): BelongsTo

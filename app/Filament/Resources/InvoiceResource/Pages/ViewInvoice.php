@@ -64,11 +64,14 @@ class ViewInvoice extends ViewRecord
                             ->label('TOP')
                             ->suffix(' Hari')
                             ->default('30'),
-                        TextEntry::make('ppn_included')
-                            ->label('PPN')
-                            ->formatStateUsing(fn ($state) => $state ? 'Ya (11%)' : 'Tidak')
+                        TextEntry::make('type')
+                            ->label('Jenis Invoice')
                             ->badge()
-                            ->color(fn ($state) => $state ? 'success' : 'gray'),
+                            ->color(fn (string $state): string => match ($state) {
+                                'PPN' => 'success',
+                                'Non-PPN' => 'gray',
+                                default => 'warning',
+                            }),
                         TextEntry::make('notes')
                             ->label('Catatan')
                             ->columnSpanFull(),
@@ -77,9 +80,8 @@ class ViewInvoice extends ViewRecord
 
                 Section::make('Item Invoice')
                     ->schema([
-                        TextEntry::make('items')
+                        TextEntry::make('invoice_number')
                             ->label('')
-                            ->listWithLineBreaks()
                             ->formatStateUsing(function ($record) {
                                 return $record->items->map(function ($item) {
                                     $text = sprintf(
@@ -101,14 +103,15 @@ class ViewInvoice extends ViewRecord
 
                 Section::make('Total')
                     ->schema([
-                        TextEntry::make('subtotal_amount')
+                        TextEntry::make('total_amount')
                             ->label('Subtotal')
                             ->money('IDR'),
                         TextEntry::make('ppn_amount')
                             ->label('PPN (11%)')
-                            ->money('IDR'),
-                        TextEntry::make('total_amount')
-                            ->label('Total')
+                            ->money('IDR')
+                            ->visible(fn ($record) => $record->type === 'PPN'),
+                        TextEntry::make('grand_total')
+                            ->label('Grand Total')
                             ->money('IDR')
                             ->weight('bold'),
                         TextEntry::make('status')

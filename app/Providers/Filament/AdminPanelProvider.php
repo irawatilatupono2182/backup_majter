@@ -84,6 +84,8 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Resources\InvoiceResource::class,
                 \App\Filament\Resources\InvoicePpnResource::class,
                 \App\Filament\Resources\InvoiceNonPpnResource::class,
+                \App\Filament\Resources\NotaMenyusulResource::class,
+                \App\Filament\Resources\KeteranganLainResource::class,
                 
                 // Laporan (Reports)
                 \App\Filament\Resources\SalesReportResource::class,

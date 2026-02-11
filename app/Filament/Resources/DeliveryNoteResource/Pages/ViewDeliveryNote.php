@@ -12,6 +12,57 @@ class ViewDeliveryNote extends ViewRecord
 {
     protected static string $resource = DeliveryNoteResource::class;
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\EditAction::make(),
+            
+            // Smart Generate Actions
+            Actions\Action::make('generate_invoice')
+                ->label('📄 Generate Invoice')
+                ->icon('heroicon-o-document-text')
+                ->color('primary')
+                ->visible(fn ($record) => !$record->invoices()->exists())
+                ->url(fn ($record) => route('filament.admin.resources.invoices.create', [
+                    'delivery_note_id' => $record->sj_id,
+                ]))
+                ->openUrlInNewTab(),
+            
+            Actions\Action::make('generate_nota')
+                ->label('📝 Generate Nota Menyusul')
+                ->icon('heroicon-o-document-duplicate')
+                ->color('success')
+                ->url(fn ($record) => route('filament.admin.resources.nota-menyusuls.create', [
+                    'delivery_note_id' => $record->sj_id,
+                ]))
+                ->openUrlInNewTab(),
+            
+            Actions\Action::make('generate_keterangan')
+                ->label('📑 Generate Keterangan Lain')
+                ->icon('heroicon-o-document-plus')
+                ->color('warning')
+                ->url(fn ($record) => route('filament.admin.resources.keterangan-lains.create', [
+                    'delivery_note_id' => $record->sj_id,
+                ]))
+                ->openUrlInNewTab(),
+            
+            // PDF Actions
+            Actions\Action::make('download_pdf')
+                ->label('Download PDF')
+                ->icon('heroicon-o-document-arrow-down')
+                ->url(fn($record) => route('pdf.delivery-note.download', $record))
+                ->openUrlInNewTab()
+                ->outlined(),
+            
+            Actions\Action::make('preview_pdf')
+                ->label('Preview PDF')
+                ->icon('heroicon-o-eye')
+                ->url(fn($record) => route('pdf.delivery-note.preview', $record))
+                ->openUrlInNewTab()
+                ->outlined(),
+        ];
+    }
+
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
@@ -186,27 +237,5 @@ class ViewDeliveryNote extends ViewRecord
                     ->collapsed(false)
                     ->visible(fn($record) => in_array($record->status, ['Sent', 'Completed'])),
             ]);
-    }
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\EditAction::make(),
-            Actions\Action::make('download_pdf')
-                ->label('Download PDF')
-                ->icon('heroicon-o-document-arrow-down')
-                ->url(fn() => route('pdf.delivery-note.download', $this->record))
-                ->openUrlInNewTab(),
-            Actions\Action::make('preview_pdf')
-                ->label('Preview PDF')
-                ->icon('heroicon-o-eye')
-                ->url(fn() => route('pdf.delivery-note.preview', $this->record))
-                ->openUrlInNewTab(),
-            Actions\Action::make('create_invoice')
-                ->label('Buat Invoice')
-                ->icon('heroicon-o-document-text')
-                ->url(fn() => route('filament.admin.resources.invoices.create', ['delivery_note_id' => $this->record->delivery_note_id]))
-                ->visible(fn() => $this->record->status === 'delivered' && !$this->record->invoice),
-        ];
     }
 }
