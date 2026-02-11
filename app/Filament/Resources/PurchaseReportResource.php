@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -109,36 +110,66 @@ class PurchaseReportResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
-                TextColumn::make('items_sum_subtotal')
+                TextColumn::make('subtotal_display')
                     ->label('Subtotal')
                     ->money('IDR')
-                    ->getStateUsing(function ($record) {
+                    ->state(function ($record) {
                         return $record->items->sum('subtotal');
                     })
-                    ->summarize([
-                        Sum::make()->money('IDR')->label('Total Subtotal')
-                    ]),
+                    ->summarize(
+                        Summarizer::make()
+                            ->label('Total Subtotal')
+                            ->money('IDR')
+                            ->using(function (): float {
+                                return \App\Models\PurchaseReport::query()
+                                    ->where('company_id', session('selected_company_id'))
+                                    ->with('items')
+                                    ->get()
+                                    ->sum(fn($record) => $record->items->sum('subtotal'));
+                            })
+                    ),
 
-                TextColumn::make('ppn_amount')
+                TextColumn::make('ppn_display')
                     ->label('PPN')
                     ->money('IDR')
-                    ->getStateUsing(function ($record) {
+                    ->state(function ($record) {
                         $subtotal = $record->items->sum('subtotal');
                         return $record->type === 'PPN' ? $subtotal * 0.11 : 0;
                     })
-                    ->summarize([
-                        Sum::make()->money('IDR')->label('Total PPN')
-                    ])
+                    ->summarize(
+                        Summarizer::make()
+                            ->label('Total PPN')
+                            ->money('IDR')
+                            ->using(function (): float {
+                                return \App\Models\PurchaseReport::query()
+                                    ->where('company_id', session('selected_company_id'))
+                                    ->with('items')
+                                    ->get()
+                                    ->sum(function($record) {
+                                        $subtotal = $record->items->sum('subtotal');
+                                        return $record->type === 'PPN' ? $subtotal * 0.11 : 0;
+                                    });
+                            })
+                    )
                     ->toggleable(),
 
-                TextColumn::make('grand_total_calculated')
+                TextColumn::make('grand_total_display')
                     ->label('Grand Total')
                     ->money('IDR')
-                    ->getStateUsing(fn($record) => $record->getGrandTotal())
+                    ->state(fn($record) => $record->getGrandTotal())
                     ->weight('bold')
-                    ->summarize([
-                        Sum::make()->money('IDR')->label('Total Pembelian')
-                    ]),
+                    ->summarize(
+                        Summarizer::make()
+                            ->label('Total Pembelian')
+                            ->money('IDR')
+                            ->using(function (): float {
+                                return \App\Models\PurchaseReport::query()
+                                    ->where('company_id', session('selected_company_id'))
+                                    ->with('items')
+                                    ->get()
+                                    ->sum(fn($record) => $record->getGrandTotal());
+                            })
+                    ),
 
                 TextColumn::make('status')
                     ->label('Status PO')
@@ -166,11 +197,11 @@ class PurchaseReportResource extends Resource
                 TextColumn::make('payment_info')
                     ->label('Pembayaran')
                     ->getStateUsing(function ($record) {
-                        $payable = \App\Models\Payable::where('po_id', $record->po_id)->first();
+                        $payable = \App\Models\Payable::where('purchase_order_id', $record->po_id)->first();
                         if (!$payable) return 'Belum Ada Data';
                         
                         $paid = $payable->paid_amount ?? 0;
-                        $total = $payable->total_amount ?? 0;
+                        $total = $payable->amount ?? 0;
                         $remaining = $total - $paid;
                         
                         if ($payable->status === 'paid') {
@@ -188,7 +219,7 @@ class PurchaseReportResource extends Resource
                     })
                     ->badge()
                     ->color(function ($record) {
-                        $payable = \App\Models\Payable::where('po_id', $record->po_id)->first();
+                        $payable = \App\Models\Payable::where('purchase_order_id', $record->po_id)->first();
                         if (!$payable) return 'gray';
                         
                         if ($payable->status === 'paid') return 'success';
@@ -197,7 +228,7 @@ class PurchaseReportResource extends Resource
                         return 'gray';
                     })
                     ->description(function ($record) {
-                        $payable = \App\Models\Payable::where('po_id', $record->po_id)->first();
+                        $payable = \App\Models\Payable::where('purchase_order_id', $record->po_id)->first();
                         if (!$payable || !$payable->due_date) return null;
                         
                         return '📅 Jatuh tempo: ' . $payable->due_date->format('d/m/Y');
