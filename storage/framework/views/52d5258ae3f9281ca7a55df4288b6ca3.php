@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <title>Purchase Order - {{ $purchaseOrder->po_number }}</title>
+    <title>Purchase Order - <?php echo e($purchaseOrder->po_number); ?></title>
     <style>
         @page {
             margin: 15mm 15mm 20mm 15mm;
@@ -176,9 +176,9 @@
 </head>
 <body>
     <div class="header">
-        <h2>{{ $purchaseOrder->company->name }}</h2>
-        <p>{{ $purchaseOrder->company->address }}</p>
-        <p>Telp: {{ $purchaseOrder->company->phone }} | Email: {{ $purchaseOrder->company->email }}</p>
+        <h2><?php echo e($purchaseOrder->company->name); ?></h2>
+        <p><?php echo e($purchaseOrder->company->address); ?></p>
+        <p>Telp: <?php echo e($purchaseOrder->company->phone); ?> | Email: <?php echo e($purchaseOrder->company->email); ?></p>
     </div>
 
     <div class="document-info">
@@ -186,19 +186,19 @@
         <table class="info-table">
             <tr>
                 <td width="120">Nomor PO</td>
-                <td>: {{ $purchaseOrder->po_number }}</td>
+                <td>: <?php echo e($purchaseOrder->po_number); ?></td>
                 <td width="120">Tanggal PO</td>
-                <td>: {{ $purchaseOrder->order_date ? $purchaseOrder->order_date->format('d/m/Y') : '-' }}</td>
+                <td>: <?php echo e($purchaseOrder->order_date ? $purchaseOrder->order_date->format('d/m/Y') : '-'); ?></td>
             </tr>
             <tr>
                 <td>Expected Delivery</td>
-                <td>: {{ $purchaseOrder->expected_delivery ? $purchaseOrder->expected_delivery->format('d/m/Y') : '-' }}</td>
+                <td>: <?php echo e($purchaseOrder->expected_delivery ? $purchaseOrder->expected_delivery->format('d/m/Y') : '-'); ?></td>
                 <td>Status</td>
-                <td>: {{ ucfirst($purchaseOrder->status) }}</td>
+                <td>: <?php echo e(ucfirst($purchaseOrder->status)); ?></td>
             </tr>
             <tr>
                 <td>Jenis</td>
-                <td>: {{ $purchaseOrder->type === 'PPN' ? 'PPN' : 'Non-PPN' }}</td>
+                <td>: <?php echo e($purchaseOrder->type === 'PPN' ? 'PPN' : 'Non-PPN'); ?></td>
                 <td></td>
                 <td></td>
             </tr>
@@ -210,22 +210,22 @@
         <table class="info-table">
             <tr>
                 <td width="100"><strong>Nama</strong></td>
-                <td>: {{ $purchaseOrder->supplier->name }}</td>
+                <td>: <?php echo e($purchaseOrder->supplier->name); ?></td>
             </tr>
             <tr>
                 <td><strong>Alamat</strong></td>
-                <td>: {{ $purchaseOrder->supplier->address }}</td>
+                <td>: <?php echo e($purchaseOrder->supplier->address); ?></td>
             </tr>
             <tr>
                 <td><strong>Telepon</strong></td>
-                <td>: {{ $purchaseOrder->supplier->phone }}</td>
+                <td>: <?php echo e($purchaseOrder->supplier->phone); ?></td>
             </tr>
-            @if($purchaseOrder->supplier->email)
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($purchaseOrder->supplier->email): ?>
             <tr>
                 <td><strong>Email</strong></td>
-                <td>: {{ $purchaseOrder->supplier->email }}</td>
+                <td>: <?php echo e($purchaseOrder->supplier->email); ?></td>
             </tr>
-            @endif
+            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         </table>
     </div>
 
@@ -242,17 +242,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($purchaseOrder->items as $index => $item)
+            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $purchaseOrder->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <tr>
-                <td class="text-center">{{ $index + 1 }}</td>
-                <td>{{ $item->product->name }}</td>
-                <td class="text-center">{{ $item->unit }}</td>
-                <td class="text-center">{{ number_format($item->qty_ordered, 2) }}</td>
-                <td class="text-right">Rp {{ number_format($item->unit_price, 0, ',', '.') }}</td>
-                <td class="text-right">{{ number_format($item->discount_percent, 2) }}%</td>
-                <td class="text-right">Rp {{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                <td class="text-center"><?php echo e($index + 1); ?></td>
+                <td><?php echo e($item->product->name); ?></td>
+                <td class="text-center"><?php echo e($item->unit); ?></td>
+                <td class="text-center"><?php echo e(number_format($item->qty_ordered, 2)); ?></td>
+                <td class="text-right">Rp <?php echo e(number_format($item->unit_price, 0, ',', '.')); ?></td>
+                <td class="text-right"><?php echo e(number_format($item->discount_percent, 2)); ?>%</td>
+                <td class="text-right">Rp <?php echo e(number_format($item->subtotal, 0, ',', '.')); ?></td>
             </tr>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
         </tbody>
     </table>
 
@@ -261,37 +261,37 @@
             <table class="total-table">
                 <tr>
                     <td>Subtotal</td>
-                    <td class="text-right">Rp {{ number_format($purchaseOrder->getTotalAmount(), 0, ',', '.') }}</td>
+                    <td class="text-right">Rp <?php echo e(number_format($purchaseOrder->getTotalAmount(), 0, ',', '.')); ?></td>
                 </tr>
-                @if($purchaseOrder->isPPN())
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($purchaseOrder->isPPN()): ?>
                 <tr>
                     <td>PPN (11%)</td>
-                    <td class="text-right">Rp {{ number_format($purchaseOrder->getPPNAmount(), 0, ',', '.') }}</td>
+                    <td class="text-right">Rp <?php echo e(number_format($purchaseOrder->getPPNAmount(), 0, ',', '.')); ?></td>
                 </tr>
-                @endif
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 <tr class="total-row">
                     <td><strong>Grand Total</strong></td>
-                    <td class="text-right"><strong>Rp {{ number_format($purchaseOrder->getGrandTotal(), 0, ',', '.') }}</strong></td>
+                    <td class="text-right"><strong>Rp <?php echo e(number_format($purchaseOrder->getGrandTotal(), 0, ',', '.')); ?></strong></td>
                 </tr>
             </table>
         </div>
     </div>
 
-    @if($purchaseOrder->notes)
+    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($purchaseOrder->notes): ?>
     <div class="notes-section">
         <strong>Catatan:</strong>
-        <div style="padding: 5px 0;">{{ $purchaseOrder->notes }}</div>
+        <div style="padding: 5px 0;"><?php echo e($purchaseOrder->notes); ?></div>
     </div>
-    @endif
+    <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     <div class="signature-section">
         <div class="signature-wrapper">
             <p>Hormat kami,</p>
             <div class="signature-space"></div>
             <div class="signature-line">
-                <strong>{{ $purchaseOrder->company->name }}</strong>
+                <strong><?php echo e($purchaseOrder->company->name); ?></strong>
             </div>
         </div>
     </div>
 </body>
-</html>
+</html><?php /**PATH C:\laragon\www\adamjaya\resources\views/pdf/purchase-order.blade.php ENDPATH**/ ?>

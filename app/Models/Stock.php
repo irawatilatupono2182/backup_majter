@@ -73,6 +73,54 @@ class Stock extends Model
             ->where('company_id', $this->company_id);
     }
 
+    // Get latest supplier for this product (via latest purchase order)
+    public function latestSupplier()
+    {
+        return $this->hasOneThrough(
+            Supplier::class,
+            PurchaseOrder::class,
+            'po_id', // Foreign key on purchase_orders table
+            'supplier_id', // Foreign key on suppliers table
+            'product_code', // Local key on stocks table
+            'supplier_id' // Local key on purchase_orders table
+        )
+        ->join('purchase_order_items', 'purchase_orders.po_id', '=', 'purchase_order_items.po_id')
+        ->join('products', 'purchase_order_items.product_id', '=', 'products.product_id')
+        ->where('products.product_code', $this->product_code)
+        ->where('purchase_orders.company_id', $this->company_id)
+        ->latest('purchase_orders.po_date')
+        ->limit(1);
+    }
+
+    // Get latest supplier info without relationship (for display)
+    public function getLatestSupplierAttribute()
+    {
+        $latestPO = PurchaseOrder::query()
+            ->join('purchase_order_items', 'purchase_orders.po_id', '=', 'purchase_order_items.po_id')
+            ->join('products', 'purchase_order_items.product_id', '=', 'products.product_id')
+            ->where('products.product_code', $this->product_code)
+            ->where('purchase_orders.company_id', $this->company_id)
+            ->with('supplier')
+            ->latest('purchase_orders.order_date')
+            ->first();
+
+        return $latestPO?->supplier;
+    }
+
+    // Get all suppliers that have supplied this product
+    public function getAllSuppliers()
+    {
+        return Supplier::query()
+            ->join('purchase_orders', 'suppliers.supplier_id', '=', 'purchase_orders.supplier_id')
+            ->join('purchase_order_items', 'purchase_orders.po_id', '=', 'purchase_order_items.po_id')
+            ->join('products', 'purchase_order_items.product_id', '=', 'products.product_id')
+            ->where('products.product_code', $this->product_code)
+            ->where('suppliers.company_id', $this->company_id)
+            ->select('suppliers.*')
+            ->distinct()
+            ->get();
+    }
+
     // Update available quantity whenever quantity or reserved_quantity changes
     protected static function booted()
     {

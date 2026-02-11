@@ -290,6 +290,37 @@ class StockResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 
+                TextColumn::make('latest_supplier')
+                    ->label('Supplier Terakhir')
+                    ->getStateUsing(function ($record) {
+                        $supplier = $record->latest_supplier;
+                        return $supplier ? $supplier->name : '-';
+                    })
+                    ->description(function ($record) {
+                        $supplier = $record->latest_supplier;
+                        if (!$supplier) return null;
+                        
+                        // Get latest PO info
+                        $latestPO = \App\Models\PurchaseOrder::query()
+                            ->join('purchase_order_items', 'purchase_orders.po_id', '=', 'purchase_order_items.po_id')
+                            ->join('products', 'purchase_order_items.product_id', '=', 'products.product_id')
+                            ->where('products.product_code', $record->product_code)
+                            ->where('purchase_orders.company_id', $record->company_id)
+                            ->where('purchase_orders.supplier_id', $supplier->supplier_id)
+                            ->latest('purchase_orders.order_date')
+                            ->first();
+                        
+                        return $latestPO ? 'PO: ' . $latestPO->po_number . ' (' . $latestPO->order_date->format('d/m/Y') . ')' : null;
+                    })
+                    ->searchable(query: function (Builder $query, string $search): Builder {
+                        return $query->whereHas('product', function ($q) use ($search) {
+                            $q->whereHas('purchaseOrderItems.purchaseOrder.supplier', function ($sq) use ($search) {
+                                $sq->where('name', 'like', "%{$search}%");
+                            });
+                        });
+                    })
+                    ->toggleable(),
+                
                 TextColumn::make('unit')
                     ->label('Satuan')
                     ->badge()

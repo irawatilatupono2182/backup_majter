@@ -73,25 +73,39 @@ class PurchaseReportResource extends Resource
                 TextColumn::make('order_date')
                     ->label('Tanggal')
                     ->date('d/m/Y')
-                    ->sortable(),
+                    ->sortable()
+                    ->description(function ($record) {
+                        $daysAgo = now()->diffInDays($record->order_date);
+                        return $daysAgo > 0 ? "🕐 {$daysAgo} hari lalu" : '🆕 Hari ini';
+                    }),
 
                 TextColumn::make('po_number')
                     ->label('Nomor PO')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable()
+                    ->weight('bold')
+                    ->description(function ($record) {
+                        $totalItems = $record->items->count();
+                        $totalQty = $record->items->sum('qty_ordered');
+                        return "📦 {$totalItems} item ({$totalQty} unit)";
+                    }),
 
                 TextColumn::make('supplier.name')
                     ->label('Supplier')
                     ->searchable()
                     ->sortable()
                     ->description(function ($record) {
-                        return $record->type === 'PPN' ? '✅ PPN' : '❌ Non-PPN';
+                        $supplierType = $record->supplier && $record->supplier->type === 'Local' ? '🏭 Lokal' : '🌍 Import';
+                        $ppnType = $record->type === 'PPN' ? '✅ PPN' : '❌ Non-PPN';
+                        return "{$supplierType} | {$ppnType}";
                     }),
 
                 TextColumn::make('type')
                     ->label('Jenis')
                     ->badge()
                     ->color(fn ($state) => $state === 'PPN' ? 'success' : 'gray')
+                    ->formatStateUsing(fn ($state) => $state === 'PPN' ? '✅ PPN' : '❌ Non-PPN')
                     ->sortable()
                     ->toggleable(),
 
@@ -100,41 +114,94 @@ class PurchaseReportResource extends Resource
                     ->money('IDR')
                     ->getStateUsing(function ($record) {
                         return $record->items->sum('subtotal');
-                    }),
+                    })
+                    ->summarize([
+                        Sum::make()->money('IDR')->label('Total Subtotal')
+                    ]),
+
+                TextColumn::make('ppn_amount')
+                    ->label('PPN')
+                    ->money('IDR')
+                    ->getStateUsing(function ($record) {
+                        $subtotal = $record->items->sum('subtotal');
+                        return $record->type === 'PPN' ? $subtotal * 0.11 : 0;
+                    })
+                    ->summarize([
+                        Sum::make()->money('IDR')->label('Total PPN')
+                    ])
+                    ->toggleable(),
 
                 TextColumn::make('grand_total_calculated')
                     ->label('Grand Total')
                     ->money('IDR')
-                    ->getStateUsing(fn($record) => $record->getGrandTotal()),
+                    ->getStateUsing(fn($record) => $record->getGrandTotal())
+                    ->weight('bold')
+                    ->summarize([
+                        Sum::make()->money('IDR')->label('Total Pembelian')
+                    ]),
 
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label('Status PO')
                     ->badge()
-                    ->colors([
-                        'success' => ['Confirmed', 'Completed'],
-                        'info' => 'Received',
-                        'danger' => 'Cancelled',
-                        'warning' => 'Pending',
-                    ])
-                    ->sortable(),
-
-                TextColumn::make('payment_status')
-                    ->label('Status Pembayaran')
-                    ->badge()
-                    ->colors([
-                        'success' => 'paid',
-                        'warning' => 'partial',
-                        'danger' => 'unpaid',
-                    ])
-                    ->formatStateUsing(function ($state) {
-                        $labels = [
-                            'paid' => 'Lunas',
-                            'partial' => 'Sebagian',
-                            'unpaid' => 'Belum Lunas',
-                        ];
-                        return $labels[$state] ?? '-';
+                    ->color(function ($state) {
+                        return match($state) {
+                            'Completed' => 'success',
+                            'Confirmed' => 'info',
+                            'Received' => 'warning',
+                            'Cancelled' => 'danger',
+                            default => 'gray'
+                        };
+                    })
+                    ->icon(function ($state) {
+                        return match($state) {
+                            'Completed' => 'heroicon-o-check-circle',
+                            'Confirmed' => 'heroicon-o-clock',
+                            'Received' => 'heroicon-o-truck',
+                            'Cancelled' => 'heroicon-o-x-circle',
+                            default => 'heroicon-o-question-mark-circle'
+                        };
                     })
                     ->sortable(),
+
+                TextColumn::make('payment_info')
+                    ->label('Pembayaran')
+                    ->getStateUsing(function ($record) {
+                        $payable = \App\Models\Payable::where('po_id', $record->po_id)->first();
+                        if (!$payable) return 'Belum Ada Data';
+                        
+                        $paid = $payable->paid_amount ?? 0;
+                        $total = $payable->total_amount ?? 0;
+                        $remaining = $total - $paid;
+                        
+                        if ($payable->status === 'paid') {
+                            return '✅ Lunas';
+                        } elseif ($payable->status === 'partial') {
+                            $percentage = $total > 0 ? round(($paid / $total) * 100) : 0;
+                            return "⚠️ {$percentage}% (Sisa: Rp " . number_format($remaining, 0, ',', '.') . ')';
+                        } else {
+                            if ($payable->due_date && $payable->due_date < now()) {
+                                $daysOverdue = now()->diffInDays($payable->due_date);
+                                return "🚨 Jatuh Tempo ({$daysOverdue} hari)";
+                            }
+                            return '⏳ Belum Lunas';
+                        }
+                    })
+                    ->badge()
+                    ->color(function ($record) {
+                        $payable = \App\Models\Payable::where('po_id', $record->po_id)->first();
+                        if (!$payable) return 'gray';
+                        
+                        if ($payable->status === 'paid') return 'success';
+                        if ($payable->status === 'partial') return 'warning';
+                        if ($payable->due_date && $payable->due_date < now()) return 'danger';
+                        return 'gray';
+                    })
+                    ->description(function ($record) {
+                        $payable = \App\Models\Payable::where('po_id', $record->po_id)->first();
+                        if (!$payable || !$payable->due_date) return null;
+                        
+                        return '📅 Jatuh tempo: ' . $payable->due_date->format('d/m/Y');
+                    }),
             ])
             ->defaultSort('order_date', 'desc')
             ->filters([
