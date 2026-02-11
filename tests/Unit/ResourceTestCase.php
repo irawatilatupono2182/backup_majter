@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Company;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Spatie\Permission\Models\Role;
 
 /**
  * Base Test Case for Filament Resource Testing
@@ -31,10 +32,12 @@ abstract class ResourceTestCase extends TestCase
     {
         parent::setUp();
         
+        // Create super_admin role
+        Role::create(['name' => 'super_admin']);
+        
         // Create test company
         $this->testCompany = Company::factory()->create([
-            'company_name' => 'Test Company',
-            'is_active' => true,
+            'name' => 'Test Company',
         ]);
 
         // Create test user with super admin role
@@ -64,7 +67,7 @@ abstract class ResourceTestCase extends TestCase
     /**
      * Assert that a model exists in database with specific attributes
      */
-    protected function assertModelExists(string $modelClass, array $attributes): void
+    protected function assertModelExistsInDatabase(string $modelClass, array $attributes): void
     {
         $this->assertDatabaseHas((new $modelClass)->getTable(), $attributes);
     }
@@ -72,7 +75,7 @@ abstract class ResourceTestCase extends TestCase
     /**
      * Assert that a model does not exist in database
      */
-    protected function assertModelNotExists(string $modelClass, array $attributes): void
+    protected function assertModelNotExistsInDatabase(string $modelClass, array $attributes): void
     {
         $this->assertDatabaseMissing((new $modelClass)->getTable(), $attributes);
     }
