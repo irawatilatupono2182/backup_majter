@@ -1,6 +1,30 @@
 # Si-Majter ERP System
 
-Sistem ERP (Enterprise Resource Planning) yang dirancang khusus untuk mengelola inventori dan penjualan dengan dukungan multi-perusahaan. Dibangun menggunakan Laravel 12 dan Filament 3 sebagai admin panel.
+## 📖 Apa Itu Repository Ini? / What Is This Repository?
+
+**Bahasa Indonesia:**  
+Si-Majter adalah **Sistem ERP (Enterprise Resource Planning)** lengkap yang dirancang khusus untuk mengelola **inventori dan penjualan** dengan dukungan multi-perusahaan. Sistem ini mengotomatisasi seluruh proses bisnis dari pembelian (Penawaran Harga → Purchase Order → Penerimaan Barang) hingga penjualan (Surat Jalan → Invoice → Pembayaran).
+
+**English:**  
+Si-Majter is a comprehensive **ERP (Enterprise Resource Planning) System** specifically designed for **inventory and sales management** with multi-company support. It automates the complete business process from purchasing (Price Quotation → Purchase Order → Goods Receipt) to sales (Delivery Note → Invoice → Payment).
+
+### Teknologi Utama / Tech Stack
+- **Framework:** Laravel 12 (PHP 8.3+)
+- **Admin Panel:** Filament 3
+- **Database:** MySQL 8.0+
+- **PDF Generation:** DomPDF
+- **Export:** Maatwebsite Excel
+
+### Fitur Utama / Key Features
+✅ **Multi-Company Management** - Manajemen multi-perusahaan dengan isolasi data  
+✅ **Inventory Management** - Pelacakan stok real-time dengan metode FIFO  
+✅ **Purchasing Flow** - PH (Price Quotation) → PO (Purchase Order) → Stock In  
+✅ **Sales Flow** - SJ (Delivery Note) → Invoice → Payment  
+✅ **PDF Generation** - Cetak otomatis semua dokumen bisnis  
+✅ **Role-Based Access** - 4 level akses (Super Admin, Admin, Finance, Warehouse, Viewer)  
+✅ **Comprehensive Reports** - Laporan penjualan dengan export Excel/CSV  
+
+---
 
 ## 🚀 Features
 
