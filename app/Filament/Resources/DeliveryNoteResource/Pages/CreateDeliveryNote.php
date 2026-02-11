@@ -16,10 +16,27 @@ class CreateDeliveryNote extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        // Set type based on session if not already set by customer
+        $type = session('sj_type_create');
+        if ($type && empty($data['type'])) {
+            $data['type'] = $type;
+        }
+
         // Generate unique SJ number with database lock
         $data['sj_number'] = $this->generateUniqueSJNumber();
         
         return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        session()->forget('sj_type_create');
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        session()->forget('sj_type_create');
+        return $this->getResource()::getUrl('index');
     }
 
     /**

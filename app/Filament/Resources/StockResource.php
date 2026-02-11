@@ -90,7 +90,7 @@ class StockResource extends Resource
                             })
                             ->searchable()
                             ->live()
-                            ->afterStateUpdated(function ($state, Forms\Set $set) {
+                            ->afterStateUpdated(function ($state, $set) {
                                 if ($state) {
                                     [$code, $name] = explode('|', $state);
                                     
@@ -159,16 +159,46 @@ class StockResource extends Resource
                             ->disabled(fn ($get) => $get('existing_product') !== null)
                             ->dehydrated(),
 
-                        TextInput::make('unit')
+                        Select::make('unit')
                             ->label('Satuan')
                             ->required()
+                            ->options([
+                                'pcs' => 'pcs (Piece/Buah)',
+                                'box' => 'box (Kotak)',
+                                'pack' => 'pack (Pak)',
+                                'kg' => 'kg (Kilogram)',
+                                'gram' => 'gram',
+                                'liter' => 'liter',
+                                'ml' => 'ml (Mililiter)',
+                                'meter' => 'meter',
+                                'cm' => 'cm (Centimeter)',
+                                'roll' => 'roll (Gulung)',
+                                'set' => 'set',
+                                'unit' => 'unit',
+                                'dozen' => 'dozen (Lusin)',
+                            ])
                             ->default('pcs')
-                            ->helperText('Contoh: pcs, box, kg, meter, dll'),
+                            ->searchable()
+                            ->native(false)
+                            ->helperText('Pilih satuan atau ketik untuk mencari'),
 
-                        TextInput::make('category')
+                        Select::make('category')
                             ->label('Kategori')
-                            ->maxLength(100)
-                            ->helperText('Contoh: Elektronik, Furniture, dll'),
+                            ->options([
+                                'Elektronik' => 'Elektronik',
+                                'Furniture' => 'Furniture',
+                                'Alat Tulis' => 'Alat Tulis',
+                                'Makanan & Minuman' => 'Makanan & Minuman',
+                                'Pakaian' => 'Pakaian',
+                                'Kesehatan' => 'Kesehatan',
+                                'Otomotif' => 'Otomotif',
+                                'Bahan Bangunan' => 'Bahan Bangunan',
+                                'Peralatan Rumah Tangga' => 'Peralatan Rumah Tangga',
+                                'Lainnya' => 'Lainnya',
+                            ])
+                            ->searchable()
+                            ->native(false)
+                            ->helperText('Pilih kategori atau kosongkan jika tidak ada'),
 
                         TextInput::make('base_price')
                             ->label('Harga Dasar')

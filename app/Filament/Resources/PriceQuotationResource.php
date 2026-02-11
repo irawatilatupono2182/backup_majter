@@ -124,7 +124,12 @@ class PriceQuotationResource extends Resource
                                 'Non-PPN' => 'Non-PPN',
                             ])
                             ->required()
-                            ->default('PPN'),
+                            ->default(function () {
+                                $type = session('quotation_type_create');
+                                return $type ?: 'PPN';
+                            })
+                            ->disabled(fn ($context) => $context === 'create' && session('quotation_type_create') !== null)
+                            ->dehydrated(),
                         Forms\Components\DatePicker::make('quotation_date')
                             ->label('Tanggal PH')
                             ->required()

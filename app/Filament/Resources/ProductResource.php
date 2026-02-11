@@ -53,14 +53,45 @@ class ProductResource extends Resource
                         Forms\Components\Textarea::make('description')
                             ->label('Deskripsi')
                             ->rows(3),
-                        Forms\Components\TextInput::make('unit')
+                        Forms\Components\Select::make('unit')
                             ->label('Satuan')
                             ->required()
-                            ->placeholder('pcs, kg, liter, dll')
-                            ->maxLength(20),
-                        Forms\Components\TextInput::make('category')
+                            ->options([
+                                'pcs' => 'pcs (Piece/Buah)',
+                                'box' => 'box (Kotak)',
+                                'pack' => 'pack (Pak)',
+                                'kg' => 'kg (Kilogram)',
+                                'gram' => 'gram',
+                                'liter' => 'liter',
+                                'ml' => 'ml (Mililiter)',
+                                'meter' => 'meter',
+                                'cm' => 'cm (Centimeter)',
+                                'roll' => 'roll (Gulung)',
+                                'set' => 'set',
+                                'unit' => 'unit',
+                                'dozen' => 'dozen (Lusin)',
+                            ])
+                            ->searchable()
+                            ->native(false)
+                            ->helperText('Pilih satuan atau ketik untuk mencari'),
+                        Forms\Components\Select::make('category')
                             ->label('Kategori')
-                            ->maxLength(100),
+                            ->options([
+                                'Elektronik' => 'Elektronik',
+                                'Furniture' => 'Furniture',
+                                'Alat Tulis' => 'Alat Tulis',
+                                'Makanan & Minuman' => 'Makanan & Minuman',
+                                'Pakaian' => 'Pakaian',
+                                'Kesehatan' => 'Kesehatan',
+                                'Otomotif' => 'Otomotif',
+                                'Bahan Bangunan' => 'Bahan Bangunan',
+                                'Peralatan Rumah Tangga' => 'Peralatan Rumah Tangga',
+                                'Lainnya' => 'Lainnya',
+                            ])
+                            ->searchable()
+                            ->native(false)
+                            ->allowHtml()
+                            ->helperText('Pilih kategori atau kosongkan jika tidak ada'),
                         Forms\Components\Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->default(true),

@@ -85,8 +85,13 @@ class DeliveryNoteResource extends Resource
                                 'Supplier' => 'Supplier',
                             ])
                             ->required()
-                            ->default('PPN')
-                            ->disabled(fn(Forms\Get $get) => !empty($get('customer_id')))
+                            ->default(function () {
+                                $type = session('sj_type_create');
+                                return $type ?: 'PPN';
+                            })
+                            ->disabled(fn(Forms\Get $get, $context) => 
+                                $context === 'create' && (session('sj_type_create') !== null || !empty($get('customer_id')))
+                            )
                             ->dehydrated()
                             ->helperText('💡 Jenis otomatis mengikuti status PPN customer'),
                         Forms\Components\DatePicker::make('delivery_date')
@@ -148,19 +153,29 @@ class DeliveryNoteResource extends Resource
                                     ->options(function () {
                                         $companyId = session('selected_company_id');
                                         
-                                        // Get products with available stock or CATALOG products
+                                        // Get all active products (CATALOG and STOCK) with stock info
                                         return Product::where('company_id', $companyId)
                                             ->where('is_active', true)
-                                            ->where(function ($query) use ($companyId) {
-                                                // CATALOG products (always available)
-                                                $query->where('product_type', 'CATALOG')
-                                                    // OR STOCK products with available quantity > 0
-                                                    ->orWhereHas('stock', function ($q) use ($companyId) {
-                                                        $q->where('company_id', $companyId)
-                                                          ->where('available_quantity', '>', 0);
-                                                    });
-                                            })
-                                            ->pluck('name', 'product_id');
+                                            ->with('stock') // Eager load stock relation
+                                            ->orderBy('name')
+                                            ->get()
+                                            ->mapWithKeys(function ($product) {
+                                                $label = $product->name;
+                                                
+                                                // Add stock info to label for STOCK products
+                                                if ($product->product_type === 'STOCK') {
+                                                    if ($product->stock) {
+                                                        $available = $product->stock->available_quantity;
+                                                        $label .= " (Stock: {$available})";
+                                                    } else {
+                                                        $label .= " (Stock: Belum ada record)";
+                                                    }
+                                                } else {
+                                                    $label .= " (CATALOG)";
+                                                }
+                                                
+                                                return [$product->product_id => $label];
+                                            });
                                     })
                                     ->required()
                                     ->searchable()
@@ -172,7 +187,7 @@ class DeliveryNoteResource extends Resource
                                             $set('unit_price', $product ? $product->base_price : 0);
                                         }
                                     })
-                                    ->helperText('💡 Hanya menampilkan produk CATALOG atau produk STOCK yang tersedia'),
+                                    ->helperText('💡 Menampilkan semua produk aktif (CATALOG dan STOCK). Perhatikan jumlah stok yang tersedia!'),
                                 Forms\Components\TextInput::make('qty')
                                     ->label('Qty')
                                     ->numeric()

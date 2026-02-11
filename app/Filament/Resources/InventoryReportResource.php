@@ -62,22 +62,38 @@ class InventoryReportResource extends Resource
                 return $query->where('stocks.company_id', $companyId);
             })
             ->description(function () use ($totalStockIn, $totalStockOut, $companyId) {
+                // Total jenis barang (distinct products)
+                $totalProducts = \App\Models\Stock::where('company_id', $companyId)
+                    ->distinct('product_id')
+                    ->count('product_id');
+                
+                // Total stok items (bisa dimunculkan stock)
+                $totalStockItems = \App\Models\Stock::where('company_id', $companyId)->count();
+                
+                // Total quantity
                 $totalStock = \App\Models\Stock::where('company_id', $companyId)->sum('quantity') ?? 0;
                 $totalAvailable = \App\Models\Stock::where('company_id', $companyId)->sum('available_quantity') ?? 0;
-                $totalUnitCost = \App\Models\Stock::where('company_id', $companyId)->sum('unit_cost') ?? 0;
+                $totalReserved = \App\Models\Stock::where('company_id', $companyId)->sum('reserved_quantity') ?? 0;
+                
+                // Total nilai inventory
                 $totalValue = \App\Models\Stock::where('company_id', $companyId)
                     ->get()
                     ->sum(function ($stock) {
                         return $stock->quantity * ($stock->unit_cost ?? 0);
                     });
                 
-                return "📊 **SUMMARY INVENTORY** | " .
-                       "Total Stok: **" . number_format($totalStock, 0) . "** unit | " .
-                       "Total Tersedia: **" . number_format($totalAvailable, 0) . "** unit | " .
-                       "Total Barang Masuk: **" . number_format($totalStockIn, 0) . "** unit | " .
-                       "Total Barang Keluar: **" . number_format($totalStockOut, 0) . "** unit | " .
-                       "Total Harga Satuan: **Rp " . number_format($totalUnitCost, 0) . "** | " .
-                       "Total Nilai Inventory: **Rp " . number_format($totalValue, 0) . "**";
+                return "📊 **RINGKASAN INVENTORY**\n\n" .
+                       "**Informasi Produk:** " .
+                       number_format($totalProducts, 0) . " jenis barang | " .
+                       number_format($totalStockItems, 0) . " total record\n\n" .
+                       "**Status Stok:** " .
+                       "Total: " . number_format($totalStock, 0) . " unit | " .
+                       "Tersedia: " . number_format($totalAvailable, 0) . " unit | " .
+                       "Direservasi: " . number_format($totalReserved, 0) . " unit\n\n" .
+                       "**Pergerakan Barang:** " .
+                       "Masuk: " . number_format($totalStockIn, 0) . " unit | " .
+                       "Keluar: " . number_format($totalStockOut, 0) . " unit\n\n" .
+                       "**Nilai Inventory:** Rp " . number_format($totalValue, 0);
             })
             ->columns([
                 TextColumn::make('product.name')

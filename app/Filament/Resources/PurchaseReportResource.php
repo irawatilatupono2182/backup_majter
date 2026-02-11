@@ -100,16 +100,12 @@ class PurchaseReportResource extends Resource
                     ->money('IDR')
                     ->getStateUsing(function ($record) {
                         return $record->items->sum('subtotal');
-                    })
-                    ->sortable()
-                    ->summarize(Sum::make()->money('IDR')),
+                    }),
 
                 TextColumn::make('grand_total_calculated')
                     ->label('Grand Total')
                     ->money('IDR')
-                    ->getStateUsing(fn($record) => $record->getGrandTotal())
-                    ->sortable()
-                    ->summarize(Sum::make()->money('IDR')),
+                    ->getStateUsing(fn($record) => $record->getGrandTotal()),
 
                 TextColumn::make('status')
                     ->label('Status')

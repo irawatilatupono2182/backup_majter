@@ -46,7 +46,12 @@ class CustomerResource extends Resource
                             ->maxLength(100),
                         Forms\Components\Toggle::make('is_ppn')
                             ->label('Customer PPN')
-                            ->default(false),
+                            ->default(function () {
+                                $type = session('customer_type_create');
+                                return $type === 'PPN';
+                            })
+                            ->disabled(fn ($context) => $context === 'create' && session('customer_type_create') !== null)
+                            ->dehydrated(),
                         Forms\Components\Toggle::make('is_active')
                             ->label('Status Aktif')
                             ->default(true),

@@ -12,6 +12,12 @@ class EditProduct extends EditRecord
 {
     protected static string $resource = ProductResource::class;
 
+    // Fix error 500: Redirect ke list page setelah edit
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

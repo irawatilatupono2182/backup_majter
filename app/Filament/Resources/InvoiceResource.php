@@ -69,6 +69,12 @@ class InvoiceResource extends Resource
                         Hidden::make('created_by')
                             ->default(fn() => auth()->id()),
 
+                        Hidden::make('type')
+                            ->default(function () {
+                                $type = session('invoice_type_create');
+                                return $type ?: 'PPN';
+                            }),
+
                         TextInput::make('invoice_number')
                             ->label('Nomor Invoice')
                             ->disabled()
@@ -83,6 +89,19 @@ class InvoiceResource extends Resource
                             ->preload()
                             ->required()
                             ->reactive()
+                            ->options(function () {
+                                $type = session('invoice_type_create');
+                                $companyId = session('selected_company_id');
+                                
+                                $query = \App\Models\DeliveryNote::where('company_id', $companyId);
+                                
+                                // Filter by type jika ada di session
+                                if ($type) {
+                                    $query->where('type', $type);
+                                }
+                                
+                                return $query->pluck('sj_number', 'sj_id');
+                            })
                             ->afterStateUpdated(function (Set $set, Get $get, $state) {
                                 if ($state) {
                                     $deliveryNote = DeliveryNote::find($state);

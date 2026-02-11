@@ -11,6 +11,12 @@ class CreatePriceQuotation extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        // Set type based on session
+        $type = session('quotation_type_create');
+        if ($type) {
+            $data['type'] = $type;
+        }
+
         // Auto-calculate subtotal for each item
         if (isset($data['items'])) {
             foreach ($data['items'] as &$item) {
@@ -21,5 +27,16 @@ class CreatePriceQuotation extends CreateRecord
         }
 
         return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        session()->forget('quotation_type_create');
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        session()->forget('quotation_type_create');
+        return $this->getResource()::getUrl('index');
     }
 }
