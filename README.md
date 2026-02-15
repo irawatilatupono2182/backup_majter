@@ -144,6 +144,18 @@ Setelah menjalankan `php artisan db:seed`, Anda dapat login menggunakan:
 | Warehouse | warehouse@adamjaya.com | password | Inventory modules |
 | Viewer | viewer@adamjaya.com | password | Read-only access |
 
+## 🎨 HTML Prototype
+
+Prototype HTML statis dari sistem tersedia di folder `prototype/`. Prototype ini menampilkan struktur menu lengkap dan UI design sistem.
+
+### Akses Prototype:
+- **Local**: Buka file `prototype/index.html` di browser atau gunakan PHP built-in server
+- **GitHub Pages**: [https://irawatilatupono2182.github.io/backup_majter/](https://irawatilatupono2182.github.io/backup_majter/)
+
+Prototype dipublikasikan otomatis ke GitHub Pages melalui GitHub Actions setiap kali ada perubahan di folder `prototype/` yang dipush ke branch utama.
+
+Untuk dokumentasi lengkap, lihat [prototype/PROTOTYPE_GUIDE.md](prototype/PROTOTYPE_GUIDE.md).
+
 ## 🏗 Database Schema
 
 Database menggunakan UUID sebagai primary key dan mendukung soft delete. Dokumentasi lengkap tersedia di `database_schema_documentation.md`.
