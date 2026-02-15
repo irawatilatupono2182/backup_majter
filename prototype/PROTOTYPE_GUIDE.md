@@ -62,6 +62,26 @@ php -S localhost:8000
 ```
 Akses: `http://localhost:8000`
 
+### Metode 3: GitHub Pages (Public Access)
+
+Prototype ini juga dipublikasikan sebagai static page menggunakan GitHub Pages. Untuk mengakses:
+
+**URL GitHub Pages:**
+```
+https://irawatilatupono2182.github.io/backup_majter/
+```
+
+**Cara Kerja:**
+- Setiap kali ada perubahan di folder `prototype/` yang dipush ke branch `main` atau `master`, GitHub Actions akan otomatis deploy ulang ke GitHub Pages
+- Workflow GitHub Actions ada di `.github/workflows/deploy-prototype.yml`
+- Semua file HTML, CSS, JS, dan assets di folder prototype akan dipublikasikan
+
+**Keuntungan GitHub Pages:**
+- ✅ Dapat diakses dari mana saja (tidak perlu local server)
+- ✅ URL public untuk demo ke client atau stakeholder
+- ✅ Otomatis update ketika ada perubahan
+- ✅ Gratis dan reliable (hosted by GitHub)
+
 ## 📊 MENU YANG TERSEDIA
 
 ### ✅ Halaman yang Sudah Dibuat:
