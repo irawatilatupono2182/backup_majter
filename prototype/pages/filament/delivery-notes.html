@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚚 Surat Jalan - Adam Jaya</title>
+    <link rel="stylesheet" href="../../assets/css/filament-style.css">
+    <style>
+        .tab-button {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all 0.2s;
+            margin-bottom: -2px;
+        }
+        .tab-button:hover {
+            color: var(--primary-600);
+            background: var(--gray-100);
+        }
+        .tab-button.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-600);
+            background: white;
+        }
+        .type-selection-card {
+            padding: 2rem 1.5rem;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .type-selection-card:hover {
+            border-color: var(--primary-600);
+            background: var(--primary-50);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .items-section {
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+        }
+        .items-header {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item-row {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 80px;
+            gap: 1rem;
+            align-items: center;
+        }
+        .item-row:last-child {
+            border-bottom: none;
+        }
+        .pdf-preview-btn {
+            background: var(--danger-600);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .pdf-preview-btn:hover {
+            background: var(--danger-700);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px -1px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="filament-app">
+        <aside class="filament-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">Adam Jaya</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <a href="../../index.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">💼 Penjualan</div>
+                    <a href="customers.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Customers</span>
+                    </a>
+                    <a href="price-quotations.html" class="nav-item">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-label">Surat Penawaran</span>
+                    </a>
+                    <a href="delivery-notes.html" class="nav-item active">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-label">Surat Jalan</span>
+                        <span class="nav-badge badge-info">4</span>
+                    </a>
+                    <a href="invoices.html" class="nav-item">
+                        <span class="nav-icon">💰</span>
+                        <span class="nav-label">Invoice</span>
+                    </a>
+                    <a href="nota-menyusuls.html" class="nav-item">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-label">Nota Menyusul</span>
+                    </a>
+                    <a href="keterangan-lains.html" class="nav-item">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-label">Keterangan Lain</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">🛒 Pembelian</div>
+                    <a href="stocks.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Master Barang/Stock</span>
+                    </a>
+                    <a href="suppliers.html" class="nav-item">
+                        <span class="nav-icon">🏭</span>
+                        <span class="nav-label">Suppliers</span>
+                    </a>
+                    <a href="purchase-orders.html" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Pembelian Barang (PO)</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="filament-main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <a href="../../index.html" class="breadcrumb-item">Dashboard</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Penjualan</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Surat Jalan</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-menu">
+                        <button class="user-avatar">SA</button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Super Admin</div>
+                                <span class="badge badge-warning">Administrator</span>
+                            </div>
+                            <div class="user-menu-items">
+                                <a href="#" class="user-menu-item">Profile</a>
+                                <a href="#" class="user-menu-item">Settings</a>
+                                <a href="#" class="user-menu-item">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- Stats -->
+                <div class="stats-grid-2" style="margin-bottom: 1.5rem;">
+                    <div class="stat-widget">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Surat Jalan</span>
+                            <span class="stat-icon">🚚</span>
+                        </div>
+                        <div class="stat-value" id="totalDeliveryNotes">0</div>
+                        <div class="stat-footer">
+                            <span class="stat-description">Surat jalan dibuat</span>
+                        </div>
+                    </div>
+                    <div class="stat-widget success">
+                        <div class="stat-header">
+                            <span class="stat-label">Delivered</span>
+                            <span class="stat-icon">✅</span>
+                        </div>
+                        <div class="stat-value" id="deliveredNotes">0</div>
+                        <div class="stat-footer">
+                            <span class="stat-description">Sudah dikirim</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="widget-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Surat Jalan</h3>
+                        <button class="btn-primary" onclick="showTypeSelectionModal()">
+                            <span>➕</span>
+                            <span>Buat Surat Jalan</span>
+                        </button>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                        <div style="display: flex; gap: 0.5rem; border-bottom: 2px solid var(--gray-200);">
+                            <button class="tab-button active" data-tab="all" onclick="switchTab('all')">
+                                <span>🚚</span>
+                                <span>Semua Surat Jalan</span>
+                            </button>
+                            <button class="tab-button" data-tab="PPN" onclick="switchTab('PPN')">
+                                <span>📘</span>
+                                <span>PPN</span>
+                            </button>
+                            <button class="tab-button" data-tab="Non-PPN" onclick="switchTab('Non-PPN')">
+                                <span>📄</span>
+                                <span>Non-PPN</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200);">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Cari nomor/customer..." id="searchInput">
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <span id="filterInfo" style="color: var(--gray-600); font-size: 0.875rem;">Menampilkan: <strong>Semua Tipe</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="card-body no-padding">
+                        <table class="filament-table">
+                            <thead>
+                                <tr>
+                                    <th>No. Surat Jalan</th>
+                                    <th>Customer</th>
+                                    <th>Tipe</th>
+                                    <th>Tanggal Kirim</th>
+                                    <th>Alamat Kirim</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deliveryNotesTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination" style="padding: 1rem 1.25rem;">
+                        <div class="pagination-info">Menampilkan <strong id="displayCount">0</strong> dari <strong id="totalCount">0</strong> entri</div>
+                        <div class="pagination-buttons">
+                            <button class="pagination-button" disabled>‹ Sebelumnya</button>
+                            <button class="pagination-button active">1</button>
+                            <button class="pagination-button" disabled>Selanjutnya ›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="detailModal" style="display: none;">
+        <div class="modal" style="max-width: 1200px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="detailModalTitle">Detail Surat Jalan</h3>
+                <button class="modal-close" onclick="closeDetailModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Informasi Surat Jalan</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">No. Surat Jalan</label>
+                                <input type="text" class="form-input" id="detailDeliveryNo" readonly style="background-color: var(--gray-100);">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tanggal Kirim</label>
+                                <input type="text" class="form-input" id="detailDeliveryDate" readonly style="background-color: var(--gray-100);">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipe</label>
+                            <input type="text" class="form-input" id="detailType" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ekspedisi</label>
+                            <input type="text" class="form-input" id="detailExpedition" readonly style="background-color: var(--gray-100);">
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Customer & Pengiriman</h4>
+                        <div class="form-group">
+                            <label class="form-label">Customer</label>
+                            <input type="text" class="form-input" id="detailCustomer" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Alamat Kirim</label>
+                            <textarea class="form-textarea" id="detailShippingAddress" readonly style="background-color: var(--gray-100); min-height: 80px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <span id="detailStatus" class="badge">Draft</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="items-section">
+                    <div class="items-header">
+                        <h4>Items Pengiriman</h4>
+                    </div>
+                    <div id="detailItems"></div>
+                </div>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Catatan Pengiriman</label>
+                        <textarea class="form-textarea" id="detailNotes" readonly style="background-color: white; min-height: 80px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeDetailModal()">Tutup</button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="pdf-preview-btn" onclick="previewSuratJalanPDF()" title="Lihat PDF">
+                        <span>📄</span>
+                        <span>Lihat PDF</span>
+                    </button>
+                    <button class="pdf-preview-btn" onclick="downloadSuratJalanPDF()" title="Download PDF" style="background: var(--success-600);">
+                        <span>💾</span>
+                        <span>Download</span>
+                    </button>
+                    <button class="btn-primary" onclick="editFromDetail()">
+                        <span>✏️</span>
+                        <span>Edit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Type Selection Modal -->
+    <div class="modal-overlay" id="typeSelectionModal" style="display: none;">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Pilih Tipe Surat Jalan</h3>
+                <button class="modal-close" onclick="closeTypeSelectionModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Pilih tipe surat jalan yang akan Anda buat:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <button class="type-selection-card" onclick="selectTypeAndCreate('PPN')">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📘</div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Surat Jalan PPN</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Kena pajak</div>
+                    </button>
+                    <button class="type-selection-card" onclick="selectTypeAndCreate('Non-PPN')">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📄</div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Surat Jalan Non-PPN</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Bebas pajak</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Modal -->
+    <div class="modal-overlay" id="modalOverlay" style="display: none;">
+        <div class="modal" style="max-width: 1200px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Buat Surat Jalan</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="deliveryNoteForm">
+                    <input type="hidden" id="deliveryNoteId">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <h4 style="margin-bottom: 1rem;">Informasi Surat Jalan</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label required">No. Surat Jalan</label>
+                                    <input type="text" class="form-input" id="deliveryNo" placeholder="SJ-001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Tgl. Pengiriman</label>
+                                    <input type="date" class="form-input" id="deliveryDate" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required">Tipe</label>
+                                <select class="form-select" id="deliveryType" required disabled style="background-color: var(--gray-100);">
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="PPN">PPN</option>
+                                    <option value="Non-PPN">Non-PPN</option>
+                                </select>
+                                <p class="form-helper" id="typeHelper" style="margin-top: 0.5rem; color: var(--success-600); font-size: 0.875rem;"></p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ekspedisi</label>
+                                <input type="text" class="form-input" id="expedition" placeholder="JNE, TIKI, dll">
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 1rem;">Customer & Pengiriman</h4>
+                            <div class="form-group">
+                                <label class="form-label required">Pilih Customer</label>
+                                <select class="form-select" id="customerId" required>
+                                    <option value="">Pilih Customer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Alamat Pengiriman</label>
+                                <textarea class="form-textarea" id="shippingAddress" rows="3" placeholder="Alamat lengkap pengiriman..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="status">
+                                    <option value="draft">Draft</option>
+                                    <option value="prepared">Prepared</option>
+                                    <option value="shipped">Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="items-section">
+                        <div class="items-header">
+                            <h4>Items Pengiriman</h4>
+                            <button type="button" class="btn-secondary btn-sm" onclick="addItem()">
+                                <span>➕</span>
+                                <span>Tambah Item</span>
+                            </button>
+                        </div>
+                        <div id="itemsContainer">
+                            <div class="item-row">
+                                <select class="form-select" name="product_id">
+                                    <option value="">Pilih Produk</option>
+                                </select>
+                                <input type="number" class="form-input" name="quantity" placeholder="Qty" min="1" value="1">
+                                <input type="text" class="form-input" name="notes" placeholder="Catatan item">
+                                <button type="button" class="btn-icon danger" onclick="removeItem(this)" title="Hapus">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--gray-50); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label">Catatan Pengiriman</label>
+                            <textarea class="form-textarea" id="notes" rows="3" placeholder="Catatan khusus untuk pengiriman..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Batal</button>
+                <button class="btn-primary" onclick="saveDeliveryNote()">
+                    <span>💾</span>
+                    <span>Simpan</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'all';
+        let selectedType = null;
+        let deliveryNotes = [
+            { id: 1, delivery_no: 'SJ-202402-001', customer: 'PT Maju Bersama', customer_id: 1, type: 'PPN', delivery_date: '2024-02-15', shipping_address: 'Jl. Sudirman No. 123, Jakarta Pusat, DKI Jakarta 10220', expedition: 'JNE', status: 'shipped', notes: 'Harap hati-hati, barang mudah pecah', items: [{ product: 'Produk A', quantity: 10, notes: 'Box besar' }] },
+            { id: 2, delivery_no: 'SJ-202402-002', customer: 'CV Berkah Jaya', customer_id: 2, type: 'Non-PPN', delivery_date: '2024-02-16', shipping_address: 'Jl. Kebon Jeruk No. 456, Jakarta Barat, DKI Jakarta 11530', expedition: 'TIKI', status: 'delivered', notes: 'Pengiriman express', items: [{ product: 'Produk B', quantity: 5, notes: 'Kemasan khusus' }] },
+            { id: 3, delivery_no: 'SJ-202402-003', customer: 'PT Global Mandiri', customer_id: 3, type: 'PPN', delivery_date: '2024-02-17', shipping_address: 'Jl. Gatot Subroto No. 789, Jakarta Selatan, DKI Jakarta 12930', expedition: 'J&T', status: 'prepared', notes: 'Siap kirim besok', items: [{ product: 'Produk C', quantity: 20, notes: 'Packing kayu' }] },
+            { id: 4, delivery_no: 'SJ-202402-004', customer: 'Toko Sejahtera', customer_id: 4, type: 'Non-PPN', delivery_date: '2024-02-18', shipping_address: 'Jl. Thamrin No. 321, Jakarta Pusat, DKI Jakarta 10350', expedition: 'SiCepat', status: 'draft', notes: 'Menunggu konfirmasi', items: [{ product: 'Produk D', quantity: 8, notes: 'Bubble wrap' }] }
+        ];
+
+        let customers = [
+            { id: 1, name: 'PT Maju Bersama', type: 'PPN', address_bill_to: 'Jl. Sudirman No. 123, Jakarta Pusat, DKI Jakarta 10220', address_ship_to: 'Jl. Sudirman No. 123, Jakarta Pusat, DKI Jakarta 10220' },
+            { id: 2, name: 'CV Berkah Jaya', type: 'Non-PPN', address_bill_to: 'Jl. Kebon Jeruk No. 456, Jakarta Barat, DKI Jakarta 11530', address_ship_to: 'Jl. Kebon Jeruk No. 456, Jakarta Barat, DKI Jakarta 11530' },
+            { id: 3, name: 'PT Global Mandiri', type: 'PPN', address_bill_to: 'Jl. Gatot Subroto No. 789, Jakarta Selatan, DKI Jakarta 12930', address_ship_to: 'Jl. Gatot Subroto No. 789, Jakarta Selatan, DKI Jakarta 12930' },
+            { id: 4, name: 'Toko Sejahtera', type: 'Non-PPN', address_bill_to: 'Jl. Thamrin No. 321, Jakarta Pusat, DKI Jakarta 10350', address_ship_to: 'Jl. Thamrin No. 321, Jakarta Pusat, DKI Jakarta 10350' },
+            { id: 5, name: 'PT Teknologi Maju', type: 'PPN', address_bill_to: 'Jl. Kuningan No. 567, Jakarta Selatan, DKI Jakarta 12940', address_ship_to: 'Jl. Kuningan No. 567, Jakarta Selatan, DKI Jakarta 12940' }
+        ];
+
+        let products = [
+            { id: 1, name: 'Produk A' },
+            { id: 2, name: 'Produk B' },
+            { id: 3, name: 'Produk C' },
+            { id: 4, name: 'Produk D' },
+            { id: 5, name: 'Produk E' }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('deliveryNotesTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = deliveryNotes;
+            if (currentTab !== 'all') {
+                filtered = deliveryNotes.filter(dn => dn.type === currentTab);
+            }
+            
+            if (searchTerm) {
+                filtered = filtered.filter(dn => 
+                    dn.delivery_no.toLowerCase().includes(searchTerm) ||
+                    dn.customer.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            document.getElementById('displayCount').textContent = filtered.length;
+            document.getElementById('totalCount').textContent = deliveryNotes.length;
+            
+            tbody.innerHTML = filtered.map(deliveryNote => `
+                <tr>
+                    <td><strong>${deliveryNote.delivery_no}</strong></td>
+                    <td>
+                        <div style="font-weight: 500;">${deliveryNote.customer}</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">${deliveryNote.expedition || '-'}</div>
+                    </td>
+                    <td>
+                        <span class="badge ${deliveryNote.type === 'PPN' ? 'info' : 'gray'}">
+                            ${deliveryNote.type === 'PPN' ? '📘 PPN' : '📄 Non-PPN'}
+                        </span>
+                    </td>
+                    <td>${new Date(deliveryNote.delivery_date).toLocaleDateString('id-ID')}</td>
+                    <td style="max-width: 200px;">
+                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${deliveryNote.shipping_address || ''}">${deliveryNote.shipping_address || '-'}</div>
+                    </td>
+                    <td>
+                        <span class="badge ${
+                            deliveryNote.status === 'delivered' ? 'success' : 
+                            deliveryNote.status === 'shipped' ? 'info' : 
+                            deliveryNote.status === 'prepared' ? 'warning' : 'gray'
+                        }">
+                            ${deliveryNote.status === 'delivered' ? '✅ Delivered' : 
+                              deliveryNote.status === 'shipped' ? '🚚 Shipped' : 
+                              deliveryNote.status === 'prepared' ? '📦 Prepared' : '📝 Draft'}
+                        </span>
+                    </td>
+                    <td class="text-right">
+                        <div class="table-actions" style="justify-content: flex-end;">
+                            <button class="btn-icon" onclick="viewDeliveryNote(${deliveryNote.id})" title="View">👁️</button>
+                            <button class="pdf-preview-btn" onclick="previewDeliveryNotePDF(${deliveryNote.id})" title="Preview PDF" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">📄</button>
+                            <button class="btn-icon" onclick="editDeliveryNote(${deliveryNote.id})" title="Edit">✏️</button>
+                            <button class="btn-icon danger" onclick="deleteDeliveryNote(${deliveryNote.id})" title="Delete">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalDeliveryNotes').textContent = deliveryNotes.length;
+            document.getElementById('deliveredNotes').textContent = deliveryNotes.filter(dn => dn.status === 'delivered').length;
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tab) btn.classList.add('active');
+            });
+            
+            const filterInfo = document.getElementById('filterInfo');
+            if (tab === 'all') filterInfo.innerHTML = 'Menampilkan: <strong>Semua Tipe</strong>';
+            else if (tab === 'PPN') filterInfo.innerHTML = 'Menampilkan: <strong>📘 PPN</strong>';
+            else if (tab === 'Non-PPN') filterInfo.innerHTML = 'Menampilkan: <strong>📄 Non-PPN</strong>';
+            
+            renderTable();
+        }
+
+        function showTypeSelectionModal() {
+            document.getElementById('typeSelectionModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('typeSelectionModal').classList.add('show'), 10);
+        }
+
+        function closeTypeSelectionModal() {
+            document.getElementById('typeSelectionModal').classList.remove('show');
+            setTimeout(() => document.getElementById('typeSelectionModal').style.display = 'none', 200);
+        }
+
+        function selectTypeAndCreate(type) {
+            selectedType = type;
+            closeTypeSelectionModal();
+            setTimeout(() => showCreateModal(), 300);
+        }
+
+        function showCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Buat Surat Jalan';
+            document.getElementById('deliveryNoteForm').reset();
+            document.getElementById('deliveryNoteId').value = '';
+            document.getElementById('status').value = 'draft';
+            document.getElementById('deliveryDate').value = new Date().toISOString().split('T')[0];
+            
+            if (selectedType) {
+                document.getElementById('deliveryType').value = selectedType;
+                document.getElementById('deliveryType').disabled = true;
+                
+                const helper = document.getElementById('typeHelper');
+                if (selectedType === 'PPN') {
+                    helper.innerHTML = '📘 Surat Jalan PPN dipilih';
+                    helper.style.color = 'var(--primary-600)';
+                } else {
+                    helper.innerHTML = '📄 Surat Jalan Non-PPN dipilih';
+                    helper.style.color = 'var(--success-600)';
+                }
+            }
+            
+            populateCustomers();
+            populateProducts();
+            
+            document.getElementById('modalOverlay').style.display = 'flex';
+            setTimeout(() => document.getElementById('modalOverlay').classList.add('show'), 10);
+        }
+
+        function populateCustomers() {
+            const select = document.getElementById('customerId');
+            select.innerHTML = '<option value="">Pilih Customer</option>';
+            customers.forEach(customer => {
+                select.innerHTML += `<option value="${customer.id}">${customer.name}</option>`;
+            });
+        }
+
+        function populateProducts() {
+            const selects = document.querySelectorAll('select[name="product_id"]');
+            selects.forEach(select => {
+                select.innerHTML = '<option value="">Pilih Produk</option>';
+                products.forEach(product => {
+                    select.innerHTML += `<option value="${product.id}">${product.name}</option>`;
+                });
+            });
+        }
+
+        function addItem() {
+            const container = document.getElementById('itemsContainer');
+            const itemRow = document.createElement('div');
+            itemRow.className = 'item-row';
+            itemRow.innerHTML = `
+                <select class="form-select" name="product_id">
+                    <option value="">Pilih Produk</option>
+                </select>
+                <input type="number" class="form-input" name="quantity" placeholder="Qty" min="1" value="1">
+                <input type="text" class="form-input" name="notes" placeholder="Catatan item">
+                <button type="button" class="btn-icon danger" onclick="removeItem(this)" title="Hapus">🗑️</button>
+            `;
+            container.appendChild(itemRow);
+            
+            const select = itemRow.querySelector('select[name="product_id"]');
+            select.innerHTML = '<option value="">Pilih Produk</option>';
+            products.forEach(product => {
+                select.innerHTML += `<option value="${product.id}">${product.name}</option>`;
+            });
+        }
+
+        function removeItem(button) {
+            button.parentElement.remove();
+        }
+
+        function viewDeliveryNote(id) {
+            const deliveryNote = deliveryNotes.find(dn => dn.id === id);
+            if (!deliveryNote) return;
+
+            document.getElementById('detailModalTitle').textContent = `Detail - ${deliveryNote.delivery_no}`;
+            document.getElementById('detailDeliveryNo').value = deliveryNote.delivery_no;
+            document.getElementById('detailDeliveryDate').value = new Date(deliveryNote.delivery_date).toLocaleDateString('id-ID');
+            document.getElementById('detailType').value = deliveryNote.type === 'PPN' ? '📘 PPN' : '📄 Non-PPN';
+            document.getElementById('detailExpedition').value = deliveryNote.expedition || '-';
+            document.getElementById('detailCustomer').value = deliveryNote.customer;
+            document.getElementById('detailShippingAddress').value = deliveryNote.shipping_address || '';
+            document.getElementById('detailNotes').value = deliveryNote.notes || '';
+            
+            const statusElement = document.getElementById('detailStatus');
+            statusElement.className = `badge ${
+                deliveryNote.status === 'delivered' ? 'success' : 
+                deliveryNote.status === 'shipped' ? 'info' : 
+                deliveryNote.status === 'prepared' ? 'warning' : 'gray'
+            }`;
+            statusElement.innerHTML = deliveryNote.status === 'delivered' ? '✅ Delivered' : 
+                                    deliveryNote.status === 'shipped' ? '🚚 Shipped' : 
+                                    deliveryNote.status === 'prepared' ? '📦 Prepared' : '📝 Draft';
+            
+            // Populate items
+            const itemsContainer = document.getElementById('detailItems');
+            itemsContainer.innerHTML = deliveryNote.items.map(item => `
+                <div class="item-row">
+                    <div style="font-weight: 500;">${item.product}</div>
+                    <div style="text-align: center;">${item.quantity}</div>
+                    <div style="color: var(--gray-600);">${item.notes || '-'}</div>
+                    <div></div>
+                </div>
+            `).join('');
+            
+            document.getElementById('detailModal').dataset.deliveryNoteId = deliveryNote.id;
+            document.getElementById('detailModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('detailModal').classList.add('show'), 10);
+        }
+
+        function previewDeliveryNotePDF(id) {
+            const deliveryNote = deliveryNotes.find(dn => dn.id === id);
+            if (!deliveryNote) {
+                alert('Data surat jalan tidak ditemukan!');
+                return;
+            }
+
+            const content = generateSuratJalanPDFContent(id);
+            if (!content) {
+                alert('Gagal membuat PDF!');
+                return;
+            }
+
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>Preview - ${deliveryNote.delivery_no}</title>
+                    <style>
+                        body { margin: 0; padding: 20px; background: #f5f5f5; }
+                        @media print { 
+                            body { background: white; } 
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="no-print" style="text-align: center; margin-bottom: 20px;">
+                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-right: 10px;">🖨️ Print</button>
+                        <button onclick="window.close()" style="background: #dc2626; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">❌ Tutup</button>
+                    </div>
+                    ${content}
+                </body>
+                </html>
+            `);
+            previewWindow.document.close();
+        }
+
+        function previewPDF() {
+            const deliveryNoteId = document.getElementById('detailModal').dataset.deliveryNoteId;
+            if (!deliveryNoteId) return;
+            previewDeliveryNotePDF(parseInt(deliveryNoteId));
+        }
+
+        function editDeliveryNote(id) {
+            alert('Fitur edit akan diimplementasikan');
+        }
+
+        function deleteDeliveryNote(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus surat jalan ini?')) {
+                const index = deliveryNotes.findIndex(dn => dn.id === id);
+                if (index !== -1) {
+                    deliveryNotes.splice(index, 1);
+                    renderTable();
+                    updateStats();
+                    alert('Surat jalan berhasil dihapus!');
+                }
+            }
+        }
+
+        function closeModal() {
+            selectedType = null;
+            document.getElementById('modalOverlay').classList.remove('show');
+            setTimeout(() => document.getElementById('modalOverlay').style.display = 'none', 200);
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('show');
+            setTimeout(() => document.getElementById('detailModal').style.display = 'none', 200);
+        }
+
+        function editFromDetail() {
+            const deliveryNoteId = document.getElementById('detailModal').dataset.deliveryNoteId;
+            closeDetailModal();
+            setTimeout(() => editDeliveryNote(parseInt(deliveryNoteId)), 300);
+        }
+
+        function saveDeliveryNote() {
+            const delivery_no = document.getElementById('deliveryNo').value;
+            const customer_id = document.getElementById('customerId').value;
+            const type = document.getElementById('deliveryType').value;
+            const delivery_date = document.getElementById('deliveryDate').value;
+
+            if (!delivery_no || !customer_id || !type || !delivery_date) {
+                alert('Data wajib harus diisi!');
+                return;
+            }
+
+            const customer = customers.find(c => c.id === parseInt(customer_id));
+            
+            // Collect items
+            const itemRows = document.querySelectorAll('#itemsContainer .item-row');
+            const items = Array.from(itemRows).map(row => {
+                const productSelect = row.querySelector('select[name="product_id"]');
+                const quantity = parseFloat(row.querySelector('input[name="quantity"]').value) || 0;
+                const notes = row.querySelector('input[name="notes"]').value;
+                const product = products.find(p => p.id === parseInt(productSelect.value));
+                
+                return {
+                    product: product ? product.name : '',
+                    quantity,
+                    notes
+                };
+            }).filter(item => item.product && item.quantity > 0);
+            
+            if (items.length === 0) {
+                alert('Minimal harus ada 1 item!');
+                return;
+            }
+
+            const deliveryNoteData = {
+                delivery_no,
+                customer: customer.name,
+                customer_id: parseInt(customer_id),
+                type,
+                delivery_date,
+                shipping_address: document.getElementById('shippingAddress').value,
+                expedition: document.getElementById('expedition').value,
+                status: document.getElementById('status').value,
+                notes: document.getElementById('notes').value,
+                items
+            };
+
+            const id = document.getElementById('deliveryNoteId').value;
+            if (id) {
+                const deliveryNote = deliveryNotes.find(dn => dn.id === parseInt(id));
+                if (deliveryNote) {
+                    Object.assign(deliveryNote, deliveryNoteData);
+                }
+                alert('Surat jalan berhasil diupdate!');
+            } else {
+                deliveryNoteData.id = Math.max(...deliveryNotes.map(dn => dn.id), 0) + 1;
+                deliveryNotes.push(deliveryNoteData);
+                alert('Surat jalan berhasil dibuat!');
+            }
+
+            closeModal();
+            renderTable();
+            updateStats();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            renderTable();
+        });
+
+        // PDF Generation Functions for Surat Jalan
+        function generateSuratJalanPDFContent(deliveryNoteId) {
+            const deliveryNote = deliveryNotes.find(dn => dn.id === parseInt(deliveryNoteId));
+            if (!deliveryNote) {
+                console.error('Delivery note not found:', deliveryNoteId);
+                return '';
+            }
+
+            const currentDate = new Date().toLocaleDateString('id-ID');
+            const deliveryDate = new Date(deliveryNote.delivery_date).toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            }).toUpperCase();
+            
+            // Get customer info
+            const customer = customers.find(c => c.id === deliveryNote.customer_id);
+            const isPPN = deliveryNote.type === 'PPN';
+            
+            // Generate different HTML based on PPN/Non-PPN
+            if (isPPN) {
+                // PPN Template - Standard Layout
+                return `
+                    <!DOCTYPE html>
+                    <html lang="id">
+                    <head>
+                        <meta charset="utf-8">
+                        <title>Surat Jalan - ${deliveryNote.delivery_no}</title>
+                        <style>
+                            @page {
+                                margin: 0;
+                                size: A4 portrait;
+                            }
+                            
+                            * {
+                                margin: 0;
+                                padding: 0;
+                                box-sizing: border-box;
+                                font-family: Arial, sans-serif;
+                            }
+
+                            body {
+                                background: white;
+                                margin: 0;
+                                padding: 1cm 1.2cm;
+                            }
+
+                            .container {
+                                width: 100%;
+                                max-width: 19cm;
+                                margin: 0 auto;
+                                padding: 0;
+                            }
+
+                            table {
+                                border-collapse: collapse;
+                            }
+
+                            /* Header Section */
+                            .header {
+                                border-bottom: 1.5px solid #000;
+                                padding: 6px 10px;
+                            }
+
+                            .header-table {
+                                width: 100%;
+                            }
+
+                            .logo-box {
+                                width: 60px;
+                                height: 60px;
+                                border: 0px solid #000;
+                                display: inline-block;
+                                text-align: center;
+                                vertical-align: middle;
+                                padding: 3px;
+                            }
+
+                            .logo-box img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: contain;
+                            }
+
+                            .company-info {
+                                font-size: 13px;
+                                line-height: 1.4;
+                                font-weight: normal;
+                            }
+
+                            .company-info strong {
+                                font-size: 22px;
+                                font-weight: 900;
+                            }
+
+                            /* Content Section */
+                            .content {
+                                padding: 10px 12px;
+                            }
+
+                            .title {
+                                text-align: right;
+                                font-size: 28px;
+                                font-weight: 900;
+                                margin: 0;
+                                letter-spacing: 5px;
+                            }
+
+                            .doc-info {
+                                font-size: 13px;
+                                margin-bottom: 8px;
+                                line-height: 1.5;
+                            }
+
+                            .doc-info table {
+                                width: 100%;
+                            }
+
+                            .doc-info td {
+                                padding: 1px 0;
+                                vertical-align: top;
+                            }
+
+                            /* Items Table */
+                            .items-table {
+                                width: 100%;
+                                margin: 8px 0;
+                                font-size: 13px;
+                                border: none;
+                            }
+
+                            .items-table th {
+                                border-top: 2px solid #000;
+                                border-bottom: 2px solid #000;
+                                border-left: none;
+                                border-right: none;
+                                padding: 8px 6px;
+                                text-align: center;
+                                font-weight: bold;
+                                font-size: 14px;
+                                background-color: #fff;
+                            }
+
+                            .items-table td {
+                                border: none;
+                                border-bottom: 1px solid #ddd;
+                                padding: 8px 6px;
+                                vertical-align: top;
+                                font-size: 13px;
+                            }
+
+                            .items-table tbody tr:last-child td {
+                                border-bottom: 2px solid #000;
+                            }
+
+                            .items-table .col-no {
+                                width: 35px;
+                                text-align: center;
+                            }
+
+                            .items-table .col-item {
+                                width: auto;
+                                text-align: left;
+                                padding-left: 5px;
+                            }
+
+                            .items-table .col-qty {
+                                width: 100px;
+                                text-align: center;
+                            }
+
+                            .items-table .col-notes {
+                                width: 150px;
+                                text-align: center;
+                            }
+
+                            /* Signature Section */
+                            .signature-section {
+                                margin-top: 20px;
+                                margin-bottom: 10px;
+                                font-size: 13px;
+                            }
+
+                            .signatures-table {
+                                width: 100%;
+                            }
+
+                            .signatures-table td {
+                                width: 50%;
+                                text-align: center;
+                                vertical-align: top;
+                                padding: 5px;
+                            }
+
+                            .signature-space {
+                                min-height: 60px;
+                                margin: 10px 0 5px 0;
+                            }
+
+                            /* Notes */
+                            .notes {
+                                font-size: 13px;
+                                margin-top: 5px;
+                                line-height: 1.4;
+                            }
+
+                            .notes strong {
+                                font-weight: bold;
+                                font-size: 14px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            
+                            <!-- Header -->
+                            <div class="header">
+                                <table class="header-table">
+                                    <tr>
+                                        <td style="width: 70px; vertical-align: middle;">
+                                            <div class="logo-box">
+                                                <div style="width: 60px; height: 60px; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #6b7280; border-radius: 4px;">AJ LOGO</div>
+                                            </div>
+                                        </td>
+                                        <td style="width: 48%; vertical-align: middle; padding-left: 8px;">
+                                            <div class="company-info">
+                                                <strong>CV. ADAM JAYA</strong><br>
+                                                Jl. Sadang, Rahayu, Kab. Bandung<br>
+                                                Jawa Barat 40218<br>
+                                                Telp: 085721322812 | Email: majter.ads@gmail.com
+                                            </div>
+                                        </td>
+                                        <td style="vertical-align: middle; text-align: right;">
+                                            <div class="title">SURAT JALAN</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="content">
+                                <!-- Document Info -->
+                                <div class="doc-info">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 55%; vertical-align: top; padding-right: 10px;">
+                                                <!-- Left Column -->
+                                                <div style="margin-bottom: 5px;">
+                                                    <strong>BANDUNG, ${deliveryDate}</strong>
+                                                </div>
+                                                <table style="width: 100%; margin-bottom: 5px;">
+                                                    <tr>
+                                                        <td style="width: 60px;">NOMOR</td>
+                                                        <td>: ${deliveryNote.delivery_no}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="width: 45%; vertical-align: top; padding-left: 10px;">
+                                                <!-- Right Column -->
+                                                <table style="width: 100%; font-size: 13px;">
+                                                    <tr>
+                                                        <td style="width: 90px; padding: 2px 0;">TO</td>
+                                                        <td style="padding: 2px 0;">: <strong>${deliveryNote.customer.toUpperCase()} (PPN)</strong></td>
+                                                    </tr>
+                                                </table>
+                                                <div style="margin-top: 5px; font-size: 13px;">
+                                                    <strong>SHIP TO :</strong> ${deliveryNote.shipping_address || '-'}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- Items Table -->
+                                <table class="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-no">NO</th>
+                                            <th class="col-item">NAMA BARANG</th>
+                                            <th class="col-qty">BANYAKNYA</th>
+                                            <th class="col-notes">KETERANGAN</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${deliveryNote.items.map((item, index) => `
+                                            <tr>
+                                                <td class="col-no">${index + 1}.</td>
+                                                <td class="col-item">${item.product.toUpperCase()}</td>
+                                                <td class="col-qty">${item.quantity.toLocaleString('id-ID')} PCS</td>
+                                                <td class="col-notes">${item.notes || ''}</td>
+                                            </tr>
+                                        `).join('')}
+                                        ${deliveryNote.items.length === 0 ? `
+                                            <tr>
+                                                <td colspan="4" style="text-align: center; padding: 15px; font-style: italic;">
+                                                    Tidak ada item
+                                                </td>
+                                            </tr>
+                                        ` : ''}
+                                    </tbody>
+                                </table>
+
+                                <!-- Signature Section -->
+                                <div class="signature-section">
+                                    <table class="signatures-table">
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <div>Yang Menyerahkan</div>
+                                                <div class="signature-space"></div>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <div>Yang Menerima</div>
+                                                <div class="signature-space"></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- Notes -->
+                                ${deliveryNote.notes ? `
+                                    <div class="notes">
+                                        <strong>Catatan:</strong> ${deliveryNote.notes}
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                        </div>
+                    </body>
+                    </html>
+                `;
+            } else {
+                // Non-PPN Template - Alternative Layout
+                return `
+                    <!DOCTYPE html>
+                    <html lang="id">
+                    <head>
+                        <meta charset="utf-8">
+                        <title>Surat Jalan - ${deliveryNote.delivery_no}</title>
+                        <style>
+                            @page {
+                                margin: 0;
+                                size: A4 portrait;
+                            }
+                            
+                            * {
+                                margin: 0;
+                                padding: 0;
+                                box-sizing: border-box;
+                                font-family: Arial, sans-serif;
+                            }
+
+                            body {
+                                background: white;
+                                margin: 0;
+                                padding: 1cm 1.2cm;
+                            }
+
+                            .container {
+                                width: 100%;
+                                max-width: 19cm;
+                                margin: 0 auto;
+                                padding: 0;
+                            }
+
+                            table {
+                                border-collapse: collapse;
+                            }
+
+                            /* Header Section - Alternative Style */
+                            .header {
+                                border-bottom: 1.5px solid #000;
+                                padding: 6px 0px 6px 0px;
+                            }
+
+                            .header-table {
+                                width: 100%;
+                            }
+
+                            .logo-box {
+                                width: 115px;
+                                height: 47px;
+                                border: 0px solid #000;
+                                display: inline-block;
+                                text-align: center;
+                                vertical-align: middle;
+                                margin-right: 8px;
+                                padding: 2px;
+                            }
+
+                            .logo-box img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: contain;
+                            }
+
+                            .title {
+                                text-align: left;
+                                font-size: 28px;
+                                font-weight: 900;
+                                margin: 0;
+                                letter-spacing: 5px;
+                            }
+
+                            .company-logo-section {
+                                text-align: left;
+                                font-size: 13px;
+                                line-height: 1.3;
+                                display: inline-block;
+                                vertical-align: middle;
+                            }
+
+                            .company-brand {
+                                font-size: 22px;
+                                font-weight: 900;
+                                letter-spacing: 2px;
+                            }
+
+                            .company-tagline {
+                                font-size: 10px;
+                                margin-top: 2px;
+                            }
+
+                            /* Content Section */
+                            .content {
+                                padding: 10px 12px;
+                            }
+
+                            .doc-info {
+                                font-size: 13px;
+                                margin-bottom: 8px;
+                                line-height: 1.5;
+                            }
+
+                            .doc-info table {
+                                width: 100%;
+                            }
+
+                            .doc-info td {
+                                padding: 1px 0;
+                                vertical-align: top;
+                            }
+
+                            /* Items Table - Alternative (Bordered) */
+                            .items-table {
+                                width: 100%;
+                                margin: 8px 0;
+                                font-size: 13px;
+                                border: 2px solid #000;
+                            }
+
+                            .items-table th {
+                                border-top: none;
+                                border-bottom: 2px solid #000;
+                                border-left: 1.5px solid #000;
+                                border-right: 1.5px solid #000;
+                                padding: 8px 6px;
+                                text-align: center;
+                                font-weight: bold;
+                                font-size: 14px;
+                                background-color: #fff;
+                            }
+
+                            .items-table td {
+                                border-left: 1.5px solid #000;
+                                border-right: 1.5px solid #000;
+                                border-bottom: 1px solid #ddd;
+                                padding: 8px 6px;
+                                vertical-align: top;
+                                font-size: 13px;
+                            }
+
+                            .items-table tbody tr:last-child td {
+                                border-bottom: none;
+                            }
+
+                            .items-table .col-no {
+                                width: 35px;
+                                text-align: center;
+                            }
+
+                            .items-table .col-item {
+                                width: auto;
+                                text-align: left;
+                                padding-left: 5px;
+                            }
+
+                            .items-table .col-qty {
+                                width: 100px;
+                                text-align: center;
+                            }
+
+                            .items-table .col-notes {
+                                width: 150px;
+                                text-align: center;
+                            }
+
+                            /* Signature Section */
+                            .signature-section {
+                                margin-top: 20px;
+                                margin-bottom: 10px;
+                                font-size: 13px;
+                            }
+
+                            .signatures-table {
+                                width: 100%;
+                            }
+
+                            .signatures-table td {
+                                width: 50%;
+                                text-align: center;
+                                vertical-align: top;
+                                padding: 5px;
+                            }
+
+                            .signature-space {
+                                min-height: 60px;
+                                margin: 10px 0 5px 0;
+                            }
+
+                            /* Notes */
+                            .notes {
+                                font-size: 13px;
+                                margin-top: 5px;
+                                line-height: 1.4;
+                            }
+
+                            .notes strong {
+                                font-weight: bold;
+                                font-size: 14px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            
+                            <!-- Header - Alternative Style -->
+                            <div class="header">
+                                <table class="header-table">
+                                    <tr>
+                                        <!-- Left: Title -->
+                                        <td style="width: 50%; vertical-align: middle; padding-left: 0;">
+                                            <div class="title">SURAT JALAN</div>
+                                        </td>
+                                        
+                                        <!-- Right: Logo + Company Brand -->
+                                        <td style="width: 50%; vertical-align: middle; text-align: right; padding-right: 0;">
+                                            <div style="display: inline-block; text-align: right;">
+                                                <div class="logo-box" style="display: inline-block; vertical-align: middle; margin-right: 8px;">
+                                                    <div style="width: 115px; height: 47px; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #6b7280; border-radius: 4px;">MAJTER LOGO</div>
+                                                </div>
+                                                <div style="display: inline-block; vertical-align: middle; height: 47px; width: 1px; background-color: #000; margin: 0 8px;"></div>
+                                                <div class="company-logo-section" style="display: inline-block; vertical-align: middle; margin-left: 8px;">
+                                                    <div class="company-brand">AJT</div>
+                                                    <div class="company-tagline">BANDUNG - JAWA BARAT 40218</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="content">
+                                <!-- Document Info -->
+                                <div class="doc-info">
+                                    <table>
+                                        <tr>
+                                            <td style="width: 55%; vertical-align: top; padding-right: 10px;">
+                                                <!-- Left Column -->
+                                                <div style="margin-bottom: 5px;">
+                                                    <strong>BANDUNG, ${deliveryDate}</strong>
+                                                </div>
+                                                <table style="width: 100%; margin-bottom: 5px;">
+                                                    <tr>
+                                                        <td style="width: 60px;">NOMOR</td>
+                                                        <td>: ${deliveryNote.delivery_no}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td style="width: 45%; vertical-align: top; padding-left: 10px;">
+                                                <!-- Right Column -->
+                                                <table style="width: 100%; font-size: 13px;">
+                                                    <tr>
+                                                        <td style="width: 90px; padding: 2px 0;">TO</td>
+                                                        <td style="padding: 2px 0;">: <strong>${deliveryNote.customer.toUpperCase()}</strong></td>
+                                                    </tr>
+                                                </table>
+                                                <div style="margin-top: 5px; font-size: 13px;">
+                                                    <strong>SHIP TO :</strong> ${deliveryNote.shipping_address || '-'}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- Items Table -->
+                                <table class="items-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-no">NO</th>
+                                            <th class="col-item">NAMA BARANG</th>
+                                            <th class="col-qty">BANYAKNYA</th>
+                                            <th class="col-notes">KETERANGAN</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${deliveryNote.items.map((item, index) => `
+                                            <tr>
+                                                <td class="col-no">${index + 1}.</td>
+                                                <td class="col-item">${item.product.toUpperCase()}</td>
+                                                <td class="col-qty">${item.quantity.toLocaleString('id-ID')} PCS</td>
+                                                <td class="col-notes">${item.notes || ''}</td>
+                                            </tr>
+                                        `).join('')}
+                                        ${deliveryNote.items.length === 0 ? `
+                                            <tr>
+                                                <td colspan="4" style="text-align: center; padding: 15px; font-style: italic;">
+                                                    Tidak ada item
+                                                </td>
+                                            </tr>
+                                        ` : ''}
+                                    </tbody>
+                                </table>
+
+                                <!-- Signature Section -->
+                                <div class="signature-section">
+                                    <table class="signatures-table">
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <div>Yang Menyerahkan</div>
+                                                <div class="signature-space"></div>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <div>Yang Menerima</div>
+                                                <div class="signature-space"></div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <!-- Notes -->
+                                ${deliveryNote.notes ? `
+                                    <div class="notes">
+                                        <strong>Catatan:</strong> ${deliveryNote.notes}
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                        </div>
+                    </body>
+                    </html>
+                `;
+            }
+        }
+
+        function previewSuratJalanPDF() {
+            const deliveryNoteId = document.getElementById('detailModal').dataset.deliveryNoteId;
+            if (!deliveryNoteId) return;
+
+            const deliveryNote = deliveryNotes.find(dn => dn.id === parseInt(deliveryNoteId));
+            if (!deliveryNote) {
+                alert('Data surat jalan tidak ditemukan!');
+                return;
+            }
+
+            const content = generateSuratJalanPDFContent(deliveryNoteId);
+            if (!content) {
+                alert('Gagal membuat PDF!');
+                return;
+            }
+
+            const previewWindow = window.open('', '_blank');
+            previewWindow.document.write(`
+                <html>
+                <head>
+                    <title>Preview - ${deliveryNote.delivery_no}</title>
+                    <style>
+                        body { margin: 0; padding: 20px; background: #f5f5f5; }
+                        @media print { 
+                            body { background: white; } 
+                            .no-print { display: none; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="no-print" style="text-align: center; margin-bottom: 20px;">
+                        <button onclick="window.print()" style="background: #059669; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-right: 10px;">🖨️ Print</button>
+                        <button onclick="window.close()" style="background: #dc2626; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">❌ Tutup</button>
+                    </div>
+                    ${content}
+                </body>
+                </html>
+            `);
+            previewWindow.document.close();
+        }
+
+        function downloadSuratJalanPDF() {
+            const deliveryNoteId = document.getElementById('detailModal').dataset.deliveryNoteId;
+            if (!deliveryNoteId) return;
+
+            const deliveryNote = deliveryNotes.find(dn => dn.id === parseInt(deliveryNoteId));
+            if (!deliveryNote) {
+                alert('Data surat jalan tidak ditemukan!');
+                return;
+            }
+
+            const content = generateSuratJalanPDFContent(deliveryNoteId);
+            if (!content) {
+                alert('Gagal membuat PDF!');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Surat Jalan - ${deliveryNote.delivery_no}</title>
+                    <style>
+                        body { margin: 0; padding: 20px; }
+                        @page { margin: 1cm; }
+                    </style>
+                </head>
+                <body>
+                    ${content}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            
+            // Auto print and suggest save as PDF
+            setTimeout(() => {
+                printWindow.print();
+                alert('Silakan pilih "Simpan sebagai PDF" atau "Microsoft Print to PDF" pada dialog print untuk menyimpan file PDF.');
+            }, 500);
+        }
+        
+        // Event listeners for closing modals
+        document.getElementById('typeSelectionModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTypeSelectionModal();
+        });
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailModal();
+        });
+    </script>
+    <script src="../../assets/js/filament-dashboard.js"></script>
+</body>
+</html>

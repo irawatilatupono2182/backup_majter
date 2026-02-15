@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles - Adam Jaya Management System</title>
+    <link rel="stylesheet" href="../../assets/css/filament-style.css">
+</head>
+<body>
+    <div class="filament-app">
+        <!-- SIDEBAR -->
+        <aside class="filament-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">Adam Jaya</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <a href="../../index.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">� Penjualan</div>
+                    <a href="customers.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Customers</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">🛒 Pembelian</div>
+                    <a href="stocks.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Master Barang/Stock</span>
+                        <span class="nav-badge badge-danger">2</span>
+                    </a>
+                    <a href="suppliers.html" class="nav-item">
+                        <span class="nav-icon">🏭</span>
+                        <span class="nav-label">Suppliers</span>
+                    </a>
+                    <a href="purchase-orders.html" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Pembelian Barang (PO)</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">📦 Master Data</div>
+                    <a href="roles.html" class="nav-item active">
+                        <span class="nav-icon">🔐</span>
+                        <span class="nav-label">Roles</span>
+                    </a>
+                    <a href="users.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Users</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="filament-main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <a href="../../index.html" class="breadcrumb-item">Dashboard</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Master Data</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Roles</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="topbar-btn">
+                        <span class="icon">🔔</span>
+                    </button>
+                </div>                <div class="topbar-right">
+                    <div class="user-menu">
+                        <button class="user-avatar">SA</button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Super Admin</div>
+                                <span class="badge badge-warning">Administrator</span>
+                            </div>
+                            <div class="user-menu-items">
+                                <a href="#" class="user-menu-item">Profile</a>
+                                <a href="#" class="user-menu-item">Settings</a>
+                                <a href="#" class="user-menu-item">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>            </header>
+
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1 class="page-title">🔐 Roles & Permissions</h1>
+                    <p class="page-description">Kelola role dan hak akses pengguna</p>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="widget-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Roles</h3>
+                        <button class="btn-primary" onclick="showCreateModal()">
+                            <span>➕</span>
+                            <span>Tambah Role</span>
+                        </button>
+                    </div>
+
+                    <div class="toolbar" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200);">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Cari role..." id="searchInput">
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <button class="btn-secondary btn-sm">
+                                <span>↻</span>
+                                <span>Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-body no-padding">
+                        <table class="filament-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Role</th>
+                                    <th>Deskripsi</th>
+                                    <th>Permissions</th>
+                                    <th>Users</th>
+                                    <th class="text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rolesTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination" style="padding: 1rem 1.25rem;">
+                        <div class="pagination-info">Menampilkan <strong>1</strong> sampai <strong>5</strong> dari <strong>5</strong> entri</div>
+                        <div class="pagination-buttons">
+                            <button class="pagination-button" disabled>‹ Sebelumnya</button>
+                            <button class="pagination-button active">1</button>
+                            <button class="pagination-button" disabled>Selanjutnya ›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Create/Edit -->
+    <div class="modal-overlay" id="modalOverlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Tambah Role</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="roleForm">
+                    <input type="hidden" id="roleId">
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Nama Role</label>
+                        <input type="text" class="form-input" id="roleName" placeholder="Contoh: Manager, Staff, Admin" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Deskripsi</label>
+                        <textarea class="form-textarea" id="roleDescription" placeholder="Deskripsi singkat role ini..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Permissions</label>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; padding: 1rem; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                                <input type="checkbox" value="view_dashboard"> View Dashboard
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                                <input type="checkbox" value="manage_users"> Manage Users
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                                <input type="checkbox" value="manage_customers"> Manage Customers
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                                <input type="checkbox" value="manage_invoices"> Manage Invoices
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                                <input type="checkbox" value="manage_stock"> Manage Stock
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem;">
+                                <input type="checkbox" value="view_reports"> View Reports
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Batal</button>
+                <button class="btn-primary" onclick="saveRole()">
+                    <span>💾</span>
+                    <span>Simpan</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/dummy-data.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.filament-sidebar').classList.toggle('open');
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('rolesTableBody');
+            const roles = window.dummyData.roles;
+            
+            tbody.innerHTML = roles.map(role => `
+                <tr>
+                    <td><strong>#${role.id}</strong></td>
+                    <td><strong>${role.name}</strong></td>
+                    <td>${role.description || '-'}</td>
+                    <td>
+                        <div style="display: flex; gap: 0.25rem; flex-wrap: wrap;">
+                            ${(role.permissions || []).slice(0, 3).map(p => 
+                                `<span class="badge gray">${p}</span>`
+                            ).join('')}
+                            ${(role.permissions || []).length > 3 ? `<span class="badge gray">+${role.permissions.length - 3}</span>` : ''}
+                        </div>
+                    </td>
+                    <td><span class="badge info">${role.users_count || 0} users</span></td>
+                    <td class="text-right">
+                        <div class="table-actions" style="justify-content: flex-end;">
+                            <button class="btn-icon" onclick="viewRole(${role.id})" title="View">
+                                👁️
+                            </button>
+                            <button class="btn-icon" onclick="editRole(${role.id})" title="Edit">
+                                ✏️
+                            </button>
+                            <button class="btn-icon danger" onclick="deleteRole(${role.id})" title="Delete">
+                                🗑️
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Tambah Role';
+            document.getElementById('roleForm').reset();
+            document.getElementById('roleId').value = '';
+            document.getElementById('modalOverlay').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('modalOverlay').classList.add('show');
+            }, 10);
+        }
+
+        function editRole(id) {
+            const role = window.dummyData.roles.find(r => r.id === id);
+            if (!role) return;
+
+            document.getElementById('modalTitle').textContent = 'Edit Role';
+            document.getElementById('roleId').value = role.id;
+            document.getElementById('roleName').value = role.name;
+            document.getElementById('roleDescription').value = role.description || '';
+            
+            document.getElementById('modalOverlay').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('modalOverlay').classList.add('show');
+            }, 10);
+        }
+
+        function viewRole(id) {
+            const role = window.dummyData.roles.find(r => r.id === id);
+            if (!role) return;
+            alert(`Role: ${role.name}\nDeskripsi: ${role.description || '-'}\nPermissions: ${(role.permissions || []).length} permissions`);
+        }
+
+        function deleteRole(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus role ini?')) {
+                const index = window.dummyData.roles.findIndex(r => r.id === id);
+                if (index !== -1) {
+                    window.dummyData.roles.splice(index, 1);
+                    renderTable();
+                    alert('Role berhasil dihapus!');
+                }
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('modalOverlay').style.display = 'none';
+            }, 200);
+        }
+
+        function saveRole() {
+            const id = document.getElementById('roleId').value;
+            const name = document.getElementById('roleName').value;
+            const description = document.getElementById('roleDescription').value;
+
+            if (!name) {
+                alert('Nama role harus diisi!');
+                return;
+            }
+
+            const permissions = Array.from(document.querySelectorAll('#roleForm input[type="checkbox"]:checked'))
+                .map(cb => cb.value);
+
+            if (id) {
+                const role = window.dummyData.roles.find(r => r.id === parseInt(id));
+                if (role) {
+                    role.name = name;
+                    role.description = description;
+                    role.permissions = permissions;
+                }
+                alert('Role berhasil diupdate!');
+            } else {
+                const newRole = {
+                    id: window.dummyData.roles.length + 1,
+                    name,
+                    description,
+                    permissions,
+                    users_count: 0
+                };
+                window.dummyData.roles.push(newRole);
+                alert('Role berhasil ditambahkan!');
+            }
+
+            closeModal();
+            renderTable();
+        }
+
+        // Search
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#rolesTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+        });
+
+        // Close modal on overlay click
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+    <script src="../../assets/js/filament-dashboard.js"></script>
+</body>
+</html>

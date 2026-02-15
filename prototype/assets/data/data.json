@@ -1,0 +1,21 @@
+{
+  "customers": [
+    {"id": 1, "code": "CST-001", "name": "PT Maju Bersama", "type": "Perusahaan", "phone": "021-5551234", "creditLimit": 100000000, "currentBalance": 25000000, "status": "Aktif"},
+    {"id": 2, "code": "CST-002", "name": "CV Sejahtera Abadi", "type": "Perusahaan", "phone": "021-5559876", "creditLimit": 75000000, "currentBalance": 15000000, "status": "Aktif"},
+    {"id": 3, "code": "CST-003", "name": "Toko Jaya Sentosa", "type": "Toko", "phone": "021-4445678", "creditLimit": 50000000, "currentBalance": 30000000, "status": "Aktif"}
+  ],
+  "suppliers": [
+    {"id": 1, "code": "SUP-001", "name": "PT Supplier Utama", "type": "Lokal", "paymentTerm": "NET 30", "currentPayable": 45000000, "status": "Aktif"},
+    {"id": 2, "code": "SUP-002", "name": "CV Mitra Import", "type": "Import", "paymentTerm": "NET 45", "currentPayable": 120000000, "status": "Aktif"}
+  ],
+  "invoices": [
+    {"id": 1, "invoiceNo": "INV-2026-001", "customerName": "PT Maju Bersama", "date": "2026-02-01", "dueDate": "2026-03-01", "amount": 25000000, "paid": 10000000, "remaining": 15000000, "status": "Belum Lunas", "ppn": true},
+    {"id": 2, "invoiceNo": "INV-2026-002", "customerName": "CV Sejahtera Abadi", "date": "2026-02-03", "dueDate": "2026-03-03", "amount": 18500000, "paid": 18500000, "remaining": 0, "status": "Lunas", "ppn": true}
+  ],
+  "users": [
+    {"id": 1, "name": "Admin Utama", "email": "admin@adamjaya.com", "role": "Super Admin", "status": "Aktif", "lastLogin": "2026-02-15 09:30:00"},
+    {"id": 2, "name": "Manajer Penjualan", "email": "sales@adamjaya.com", "role": "Sales Manager", "status": "Aktif", "lastLogin": "2026-02-15 08:15:00"}
+  ],
+  "dashboardStats": {
+    "totalRevenue": 285000000,
+    "totalOrders": 156,

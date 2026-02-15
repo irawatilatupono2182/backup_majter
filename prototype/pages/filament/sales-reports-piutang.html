@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 Piutang Usaha - Adam Jaya</title>
+    <link rel="stylesheet" href="../../assets/css/filament-style.css">
+</head>
+<body>
+    <div class="filament-app">
+        <!-- SIDEBAR (sama seperti sales-reports.html) -->
+        <aside class="filament-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">Adam Jaya</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <a href="../../index.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">💼 Penjualan</div>
+                    <a href="customers.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Customers</span>
+                    </a>
+                    <a href="price-quotations.html" class="nav-item">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-label">Surat Penawaran</span>
+                    </a>
+                    <a href="delivery-notes.html" class="nav-item">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-label">Surat Jalan</span>
+                    </a>
+                    <a href="invoices.html" class="nav-item">
+                        <span class="nav-icon">💰</span>
+                        <span class="nav-label">Invoice</span>
+                    </a>
+                    <a href="nota-menyusuls.html" class="nav-item">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-label">Nota Menyusul</span>
+                    </a>
+                    <a href="keterangan-lains.html" class="nav-item">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-label">Keterangan Lain</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">🛒 Pembelian</div>
+                    <a href="stocks.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Master Barang/Stock</span>
+                    </a>
+                    <a href="suppliers.html" class="nav-item">
+                        <span class="nav-icon">🏭</span>
+                        <span class="nav-label">Suppliers</span>
+                    </a>
+                    <a href="purchase-orders.html" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Pembelian Barang (PO)</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">📈 Laporan</div>
+                    <a href="sales-reports.html" class="nav-item active">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Laporan Penjualan</span>
+                    </a>
+                    <a href="purchase-reports.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Laporan Pembelian</span>
+                    </a>
+                    <a href="inventory-reports.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Laporan Inventory</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="filament-main">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <a href="../../index.html" class="breadcrumb-item">Dashboard</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Laporan</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <a href="sales-reports.html" class="breadcrumb-item">Laporan Penjualan</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Piutang Usaha</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-menu">
+                        <button class="user-avatar">SA</button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Super Admin</div>
+                                <span class="badge badge-warning">Administrator</span>
+                            </div>
+                            <div class="user-menu-items">
+                                <a href="#" class="user-menu-item">Profile</a>
+                                <a href="#" class="user-menu-item">Settings</a>
+                                <a href="#" class="user-menu-item">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Header Actions -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <h1 class="page-title" style="margin: 0;">💰 Piutang Usaha - Tagihan Belum Lunas</h1>
+                        <p class="page-description" style="margin-top: 0.25rem;">Monitor dan kelola piutang dari customer. Prioritas: Overdue → Due Today → Upcoming</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="sales-reports.html" class="btn-secondary" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📊</span>
+                            <span>Laporan Penjualan</span>
+                            <span class="badge badge-primary" style="margin-left: 0.25rem;">6</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Table Widget -->
+                <div class="widget-card">
+                    <!-- Toolbar -->
+                    <div class="toolbar" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200);">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Cari nomor invoice atau customer..." id="searchInput">
+                            </div>
+                        </div>
+                        <div class="toolbar-right" style="display: flex; gap: 0.5rem;">
+                            <button class="btn-secondary btn-sm" onclick="toggleFilters()">
+                                <span>🔽</span>
+                                <span>Filter</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Panel -->
+                    <div id="filterPanel" style="display: none; padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Filter Prioritas</label>
+                                <select class="form-select" id="filterUrgency">
+                                    <option value="">Semua</option>
+                                    <option value="overdue">🔴 Overdue (Terlambat)</option>
+                                    <option value="today">🟡 Due Today (Hari Ini)</option>
+                                    <option value="this_week">🟢 This Week (7 Hari)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Jenis Invoice</label>
+                                <select class="form-select" id="filterType">
+                                    <option value="">Semua</option>
+                                    <option value="PPN">PPN</option>
+                                    <option value="Non-PPN">Non-PPN</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Customer</label>
+                                <select class="form-select" id="filterCustomer">
+                                    <option value="">Semua Customer</option>
+                                    <option value="1">PT Maju Bersama</option>
+                                    <option value="2">CV Berkah Jaya</option>
+                                    <option value="3">PT Global Mandiri</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <button class="btn-primary btn-sm" onclick="applyFilters()">Terapkan Filter</button>
+                            <button class="btn-secondary btn-sm" onclick="resetFilters()">Reset</button>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="card-body no-padding">
+                        <table class="filament-table">
+                            <thead>
+                                <tr>
+                                    <th>Prioritas</th>
+                                    <th>No. Invoice</th>
+                                    <th>Customer</th>
+                                    <th>Jenis</th>
+                                    <th>Tgl. Invoice</th>
+                                    <th>Jatuh Tempo</th>
+                                    <th>Hari Terlambat</th>
+                                    <th style="text-align: right;">Total</th>
+                                    <th style="text-align: right;">Terbayar</th>
+                                    <th style="text-align: right;">Sisa</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="piutangTableBody">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" style="padding: 1rem 1.25rem;">
+                        <div class="pagination-info">Menampilkan <strong id="displayCount">0</strong> dari <strong id="totalCount">0</strong> entri</div>
+                        <div class="pagination-buttons">
+                            <button class="pagination-button" disabled>‹ Sebelumnya</button>
+                            <button class="pagination-button active">1</button>
+                            <button class="pagination-button" disabled>Selanjutnya ›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Dummy data - piutang yang belum lunas saja
+        const piutangData = [
+            { 
+                id: 3, 
+                invoice_no: 'INV-202402-003', 
+                customer: 'PT Global Mandiri', 
+                type: 'PPN', 
+                invoice_date: '2024-01-17', 
+                due_date: '2024-02-10', 
+                status: 'Overdue',
+                total: 3330000,
+                paid: 0,
+                remaining: 3330000,
+                urgency: 'overdue',
+                days_overdue: 5
+            },
+            { 
+                id: 4, 
+                invoice_no: 'INV-202402-004', 
+                customer: 'Toko Sejahtera', 
+                type: 'Non-PPN', 
+                invoice_date: '2024-02-18', 
+                due_date: '2024-02-25', 
+                status: 'Unpaid',
+                total: 800000,
+                paid: 0,
+                remaining: 800000,
+                urgency: 'this_week',
+                days_overdue: 0
+            },
+            { 
+                id: 5, 
+                invoice_no: 'INV-202402-005', 
+                customer: 'PT Teknologi Maju', 
+                type: 'PPN', 
+                invoice_date: '2024-02-19', 
+                due_date: '2024-03-20', 
+                status: 'Partial',
+                total: 1942500,
+                paid: 500000,
+                remaining: 1442500,
+                urgency: 'normal',
+                days_overdue: 0
+            },
+        ];
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+        }
+
+        function getUrgencyBadge(urgency, days) {
+            if (urgency === 'overdue') {
+                return `<span class="badge badge-danger" style="font-weight: bold;">🔴 ${days} hari terlambat</span>`;
+            } else if (urgency === 'today') {
+                return '<span class="badge badge-warning" style="font-weight: bold;">🟡 Jatuh tempo HARI INI</span>';
+            } else if (urgency === 'this_week') {
+                return '<span class="badge badge-info" style="font-weight: bold;">🟢 7 hari lagi</span>';
+            } else {
+                return '<span class="badge badge-success">✅ Normal</span>';
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('piutangTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = piutangData;
+            
+            // Apply search
+            if (searchTerm) {
+                filtered = filtered.filter(item => 
+                    item.invoice_no.toLowerCase().includes(searchTerm) ||
+                    item.customer.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            document.getElementById('displayCount').textContent = filtered.length;
+            document.getElementById('totalCount').textContent = piutangData.length;
+            
+            tbody.innerHTML = filtered.map(item => `
+                <tr>
+                    <td>${getUrgencyBadge(item.urgency, item.days_overdue)}</td>
+                    <td><strong>${item.invoice_no}</strong></td>
+                    <td>
+                        <div style="font-weight: 500;">${item.customer}</div>
+                    </td>
+                    <td>
+                        <span class="badge ${item.type === 'PPN' ? 'success' : 'warning'}">
+                            ${item.type}
+                        </span>
+                    </td>
+                    <td>${new Date(item.invoice_date).toLocaleDateString('id-ID')}</td>
+                    <td style="${item.urgency === 'overdue' ? 'color: var(--danger-600); font-weight: bold;' : ''}">
+                        ${new Date(item.due_date).toLocaleDateString('id-ID')}
+                    </td>
+                    <td>
+                        ${item.days_overdue > 0 ? 
+                            `<span style="color: var(--danger-600); font-weight: bold;">${item.days_overdue} hari</span>` : 
+                            '-'}
+                    </td>
+                    <td style="text-align: right;">${formatCurrency(item.total)}</td>
+                    <td style="text-align: right;">${formatCurrency(item.paid)}</td>
+                    <td style="text-align: right; font-weight: bold; color: var(--danger-600);">
+                        ${formatCurrency(item.remaining)}
+                    </td>
+                    <td>
+                        <span class="badge ${
+                            item.status === 'Overdue' ? 'danger' : 
+                            item.status === 'Partial' ? 'info' : 'warning'
+                        }">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td class="text-right">
+                        <div class="table-actions" style="justify-content: flex-end;">
+                            <button class="btn-icon" onclick="viewDetails(${item.id})" title="View">👁️</button>
+                            <button class="btn-icon success" onclick="recordPayment(${item.id})" title="Catat Pembayaran">💰</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleFilters() {
+            const panel = document.getElementById('filterPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function applyFilters() {
+            alert('Filter akan diterapkan (belum diimplementasi)');
+        }
+
+        function resetFilters() {
+            document.getElementById('filterUrgency').value = '';
+            document.getElementById('filterType').value = '';
+            document.getElementById('filterCustomer').value = '';
+        }
+
+        function viewDetails(id) {
+            alert('View details untuk ID: ' + id);
+        }
+
+        function recordPayment(id) {
+            alert('Catat pembayaran untuk invoice ID: ' + id);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.filament-sidebar');
+            const mainContent = document.querySelector('.filament-main');
+            sidebar.classList.toggle('collapsed');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                mainContent.style.marginLeft = '70px';
+            } else {
+                mainContent.style.marginLeft = '280px';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+        });
+    </script>
+</body>
+</html>

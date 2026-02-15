@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Dashboard - Adam Jaya Management System</title>
+    <link rel="stylesheet" href="assets/css/filament-style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="filament-app">
+        <!-- SIDEBAR -->
+        <aside class="filament-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">Adam Jaya</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <!-- Dashboard -->
+                <div class="nav-group">
+                    <a href="index.html" class="nav-item active">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+                
+                <!-- Master Data -->
+                <!-- <div class="nav-group">
+                    <div class="nav-group-label">📦 Master Data</div>
+                    <a href="pages/filament/companies.html" class="nav-item">
+                        <span class="nav-icon">🏢</span>
+                        <span class="nav-label">Perusahaan</span>
+                    </a>
+                    <a href="pages/filament/roles.html" class="nav-item">
+                        <span class="nav-icon">🔐</span>
+                        <span class="nav-label">Roles</span>
+                    </a>
+                    <a href="pages/filament/users.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Users</span>
+                    </a>
+                </div> -->
+                
+                <!-- Penjualan -->
+                <div class="nav-group">
+                    <div class="nav-group-label">💼 Penjualan</div>
+                    <a href="pages/filament/customers.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Customers</span>
+                    </a>
+                    <a href="pages/filament/price-quotations.html" class="nav-item">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-label">Surat Penawaran</span>
+                    </a>
+                    <a href="pages/filament/delivery-notes.html" class="nav-item">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-label">Surat Jalan (SJ)</span>
+                        <span class="nav-badge badge-warning">5</span>
+                    </a>
+                    <a href="pages/filament/invoices.html" class="nav-item">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-label">Invoice </span>
+                        <span class="nav-badge badge-warning">3</span>
+                    </a>
+                    <a href="pages/filament/nota-menyusul.html" class="nav-item">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-label">Nota Menyusul</span>
+                    </a>
+                    <a href="pages/filament/keterangan-lain.html" class="nav-item">
+                        <span class="nav-icon">📌</span>
+                        <span class="nav-label">Keterangan Lain</span>
+                    </a>
+                </div>
+                
+                <!-- Pembelian -->
+                <div class="nav-group">
+                    <div class="nav-group-label">🛒 Pembelian</div>
+                    <a href="pages/filament/stocks.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Master Barang/Stock</span>
+                        <span class="nav-badge badge-danger">2</span>
+                    </a>
+                    <a href="pages/filament/suppliers.html" class="nav-item">
+                        <span class="nav-icon">🏭</span>
+                        <span class="nav-label">Suppliers</span>
+                    </a>
+                    <a href="pages/filament/purchase-orders.html" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Pembelian Barang (PO)</span>
+                    </a>
+                </div>
+                
+                <!-- Keuangan -->
+                <!-- <div class="nav-group">
+                    <div class="nav-group-label">💰 Keuangan</div>
+                    <a href="pages/filament/payable-payments.html" class="nav-item">
+                        <span class="nav-icon">💳</span>
+                        <span class="nav-label">Pembayaran Hutang</span>
+                    </a>
+                </div> -->
+                
+                <!-- Laporan -->
+                <div class="nav-group">
+                    <div class="nav-group-label">📈 Laporan</div>
+                    <a href="pages/filament/sales-reports.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Laporan Penjualan</span>
+                    </a>
+                    <a href="pages/filament/purchase-reports.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Laporan Pembelian</span>
+                    </a>
+                    <!-- <a href="pages/filament/receivables.html" class="nav-item">
+                        <span class="nav-icon">💵</span>
+                        <span class="nav-label">Piutang Usaha (AR)</span>
+                        <span class="nav-badge badge-danger">3</span>
+                    </a> -->
+                    <a href="pages/filament/inventory-reports.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Laporan Inventory</span>
+                    </a>
+                    <!-- <a href="pages/filament/payables.html" class="nav-item">
+                        <span class="nav-icon">💳</span>
+                        <span class="nav-label">Hutang (Payables)</span>
+                    </a> -->
+                </div>
+                
+                <!-- Pengaturan -->
+                <!-- <div class="nav-group">
+                    <div class="nav-group-label">⚙️ Pengaturan</div>
+                    <a href="pages/filament/data-import.html" class="nav-item">
+                        <span class="nav-icon">📥</span>
+                        <span class="nav-label">Import Data</span>
+                    </a>
+                </div> -->
+                
+                <!-- Notifikasi -->
+                <!-- <div class="nav-group">
+                    <div class="nav-group-label">🔔 Notifikasi</div>
+                    <a href="pages/filament/notifications.html" class="nav-item">
+                        <span class="nav-icon">🔔</span>
+                        <span class="nav-label">Notifikasi Jatuh Tempo</span>
+                        <span class="nav-badge badge-danger">12</span>
+                    </a>
+                </div> -->
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="filament-main">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-item">Dashboard</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="topbar-btn" title="Notifikasi">
+                        <span class="icon">🔔</span>
+                        <span class="badge-dot"></span>
+                    </button>
+                    <button class="topbar-btn" title="Pengaturan">
+                        <span class="icon">⚙️</span>
+                    </button>
+                    
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <button class="user-avatar">SA</button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Super Admin</div>
+                                <span class="badge badge-warning">Administrator</span>
+                            </div>
+                            <div class="user-menu-items">
+                                <a href="#" class="user-menu-item">
+                                    <span style="margin-right: 0.5rem;">👤</span>
+                                    Profile
+                                </a>
+                                <a href="#" class="user-menu-item">
+                                    <span style="margin-right: 0.5rem;">⚙️</span>
+                                    Settings
+                                </a>
+                                <a href="#" class="user-menu-item">
+                                    <span style="margin-right: 0.5rem;">🚪</span>
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1 class="page-title">📊 Dashboard - Monitoring Bisnis</h1>
+                    <p class="page-description">Overview performa bisnis dan KPI utama</p>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="page-content">
+                <!-- SECTION 1: KPI Utama -->
+                <!-- <div class="widgets-section">
+                    <div class="stats-grid-4">
+                        <div class="stat-widget">
+                            <div class="stat-header">
+                                <span class="stat-label">Total Revenue</span>
+                                <span class="stat-icon">💰</span>
+                            </div>
+                            <div class="stat-value">Rp 2.450.000.000</div>
+                            <div class="stat-footer">
+                                <span class="stat-change positive">+12.5%</span>
+                                <span class="stat-description">vs bulan lalu</span>
+                            </div>
+                            <div class="stat-chart">
+                                <canvas id="revenueSparkline" height="40"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="stat-widget">
+                            <div class="stat-header">
+                                <span class="stat-label">Total Orders</span>
+                                <span class="stat-icon">📦</span>
+                            </div>
+                            <div class="stat-value">156</div>
+                            <div class="stat-footer">
+                                <span class="stat-change positive">+8.3%</span>
+                                <span class="stat-description">Bulan ini</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-widget">
+                            <div class="stat-header">
+                                <span class="stat-label">Active Customers</span>
+                                <span class="stat-icon">👥</span>
+                            </div>
+                            <div class="stat-value">89</div>
+                            <div class="stat-footer">
+                                <span class="stat-change positive">+5.2%</span>
+                                <span class="stat-description">Active</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-widget alert">
+                            <div class="stat-header">
+                                <span class="stat-label">Pending Invoices</span>
+                                <span class="stat-icon">⚠️</span>
+                            </div>
+                            <div class="stat-value">45</div>
+                            <div class="stat-footer">
+                                <span class="stat-change negative">3 overdue</span>
+                                <span class="stat-description">Perlu tindak lanjut</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- SECTION 2: Keuangan -->
+                <!-- <div class="widgets-section">
+                    <h2 class="section-title">💰 Finance Metrics</h2>
+                    <div class="stats-grid-3">
+                        <div class="stat-widget clickable">
+                            <div class="stat-header">
+                                <span class="stat-label">📈 Total Piutang</span>
+                            </div>
+                            <div class="stat-value text-warning">Rp 850.000.000</div>
+                            <div class="stat-footer">
+                                <span class="stat-description">Belum dibayar oleh customer</span>
+                            </div>
+                            <div class="stat-chart">
+                                <canvas id="piutangChart" height="40"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="stat-widget alert clickable">
+                            <div class="stat-header">
+                                <span class="stat-label">🔴 Piutang Jatuh Tempo</span>
+                            </div>
+                            <div class="stat-value text-danger">Rp 120.000.000</div>
+                            <div class="stat-footer">
+                                <span class="stat-description">3 invoice terlambat → URGENT!</span>
+                            </div>
+                        </div>
+
+                        <div class="stat-widget success">
+                            <div class="stat-header">
+                                <span class="stat-label">💵 Pembayaran Diterima</span>
+                            </div>
+                            <div class="stat-value text-success">Rp 380.000.000</div>
+                            <div class="stat-footer">
+                                <span class="stat-description">Total cash in bulan ini</span>
+                            </div>
+                            <div class="stat-chart">
+                                <canvas id="paymentChart" height="40"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- SECTION 3: Charts -->
+                <!-- <div class="widgets-section">
+                    <div class="grid-2">
+                        <div class="widget-card">
+                            <div class="card-header">
+                                <h3 class="card-title">📊 Sales Revenue Trend</h3>
+                                <div class="card-actions">
+                                    <button class="btn-secondary btn-sm">Export</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesRevenueChart" height="250"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="widget-card">
+                            <div class="card-header">
+                                <h3 class="card-title">⏰ Aging Analysis - Piutang</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="agingAnalysisChart" height="250"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <!-- SECTION 4: Tables -->
+                <!-- <div class="widgets-section">
+                    <div class="grid-2">
+                        <div class="widget-card">
+                            <div class="card-header">
+                                <h3 class="card-title">👥 Top 5 Customers</h3>
+                            </div>
+                            <div class="card-body">
+                                <table class="filament-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th class="text-right">Revenue</th>
+                                            <th class="text-right">Orders</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="topCustomersTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="widget-card">
+                            <div class="card-header">
+                                <h3 class="card-title">🚚 Surat Jalan Terbaru</h3>
+                            </div>
+                            <div class="card-body">
+                                <table class="filament-table">
+                                    <thead>
+                                        <tr>
+                                            <th>No. SJ</th>
+                                            <th>Customer</th>
+                                            <th>Tanggal</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentSJTable">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>  -->
+
+                <!-- SECTION 5: Inventory Alerts -->
+                <!-- <div class="widgets-section">
+                    <div class="widget-card alert">
+                        <div class="card-header">
+                            <h3 class="card-title">⚠️ Inventory Alerts</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert-list">
+                                <div class="alert-item">
+                                    <span class="alert-icon">🔴</span>
+                                    <div class="alert-content">
+                                        <strong>2 items</strong> stock rendah - Perlu re-order segera
+                                    </div>
+                                    <button class="btn-link">Lihat Detail →</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/js/dummy-data.js"></script>
+    <script src="assets/js/filament-dashboard.js"></script>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.filament-sidebar');
+            const mainContent = document.querySelector('.filament-main');
+            sidebar.classList.toggle('collapsed');
+            
+            // Update main content margin
+            if (sidebar.classList.contains('collapsed')) {
+                mainContent.style.marginLeft = '70px';
+            } else {
+                mainContent.style.marginLeft = '280px';
+            }
+        }
+
+        function toggleUserMenu() {
+            alert('User menu:\n- Profile Settings\n- Change Password\n- Logout');
+        }
+
+        // Show user info on larger screens
+        window.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth >= 1024) {
+                const userInfoDesktop = document.querySelector('.user-info-desktop');
+                if (userInfoDesktop) {
+                    userInfoDesktop.style.display = 'flex';
+                }
+            }
+        });
+
+        window.addEventListener('resize', function() {
+            const userInfoDesktop = document.querySelector('.user-info-desktop');
+            if (!userInfoDesktop) return;
+            
+            if (window.innerWidth >= 1024) {
+                userInfoDesktop.style.display = 'flex';
+            } else {
+                userInfoDesktop.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

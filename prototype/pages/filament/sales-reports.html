@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Laporan Penjualan - Adam Jaya</title>
+    <link rel="stylesheet" href="../../assets/css/filament-style.css">
+</head>
+<body>
+    <div class="filament-app">
+        <!-- SIDEBAR (sama seperti file lain) -->
+        <aside class="filament-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">Adam Jaya</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <a href="../../index.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">💼 Penjualan</div>
+                    <a href="customers.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Customers</span>
+                    </a>
+                    <a href="price-quotations.html" class="nav-item">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-label">Surat Penawaran</span>
+                    </a>
+                    <a href="delivery-notes.html" class="nav-item">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-label">Surat Jalan</span>
+                    </a>
+                    <a href="invoices.html" class="nav-item">
+                        <span class="nav-icon">💰</span>
+                        <span class="nav-label">Invoice</span>
+                    </a>
+                    <a href="nota-menyusuls.html" class="nav-item">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-label">Nota Menyusul</span>
+                    </a>
+                    <a href="keterangan-lains.html" class="nav-item">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-label">Keterangan Lain</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">🛒 Pembelian</div>
+                    <a href="stocks.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Master Barang/Stock</span>
+                    </a>
+                    <a href="suppliers.html" class="nav-item">
+                        <span class="nav-icon">🏭</span>
+                        <span class="nav-label">Suppliers</span>
+                    </a>
+                    <a href="purchase-orders.html" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Pembelian Barang (PO)</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">📈 Laporan</div>
+                    <a href="sales-reports.html" class="nav-item active">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Laporan Penjualan</span>
+                    </a>
+                    <a href="purchase-reports.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Laporan Pembelian</span>
+                    </a>
+                    <a href="inventory-reports.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Laporan Inventory</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="filament-main">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <a href="../../index.html" class="breadcrumb-item">Dashboard</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Laporan</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Laporan Penjualan</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-menu">
+                        <button class="user-avatar">SA</button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Super Admin</div>
+                                <span class="badge badge-warning">Administrator</span>
+                            </div>
+                            <div class="user-menu-items">
+                                <a href="#" class="user-menu-item">Profile</a>
+                                <a href="#" class="user-menu-item">Settings</a>
+                                <a href="#" class="user-menu-item">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Header Actions -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <h1 class="page-title" style="margin: 0;">📊 Laporan Penjualan</h1>
+                        <p class="page-description" style="margin-top: 0.25rem;">Laporan penjualan dan revenue</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="sales-reports-piutang.html" class="btn-secondary" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>💰</span>
+                            <span>Piutang Usaha</span>
+                            <span class="badge badge-warning" style="margin-left: 0.25rem;">3</span>
+                        </a>
+                        <a href="nota-menyusuls.html" class="btn-secondary" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📝</span>
+                            <span>Nota Menyusul</span>
+                            <span class="badge badge-info" style="margin-left: 0.25rem;">2</span>
+                        </a>
+                        <a href="keterangan-lains.html" class="btn-secondary" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📋</span>
+                            <span>Keterangan Lain</span>
+                            <span class="badge badge-gray" style="margin-left: 0.25rem;">1</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Table Widget -->
+                <div class="widget-card">
+                    <!-- Tabs -->
+                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                        <div style="display: flex; gap: 0.5rem; border-bottom: 2px solid var(--gray-200);">
+                            <button class="tab-button active" data-tab="all" onclick="switchTab('all')">
+                                <span>📄</span>
+                                <span>Semua Invoice</span>
+                                <span class="badge badge-gray" style="margin-left: 0.5rem;">6</span>
+                            </button>
+                            <button class="tab-button" data-tab="ppn" onclick="switchTab('ppn')">
+                                <span>✅</span>
+                                <span>Invoice PPN</span>
+                                <span class="badge badge-success" style="margin-left: 0.5rem;">4</span>
+                            </button>
+                            <button class="tab-button" data-tab="non-ppn" onclick="switchTab('non-ppn')">
+                                <span>❌</span>
+                                <span>Invoice Non-PPN</span>
+                                <span class="badge badge-gray" style="margin-left: 0.5rem;">2</span>
+                            </button>
+                            <button class="tab-button" data-tab="unpaid" onclick="switchTab('unpaid')">
+                                <span>⏳</span>
+                                <span>Belum Lunas</span>
+                                <span class="badge badge-warning" style="margin-left: 0.5rem;">2</span>
+                            </button>
+                            <button class="tab-button" data-tab="overdue" onclick="switchTab('overdue')">
+                                <span>🚨</span>
+                                <span>Jatuh Tempo</span>
+                                <span class="badge badge-danger" style="margin-left: 0.5rem;">1</span>
+                            </button>
+                            <button class="tab-button" data-tab="paid" onclick="switchTab('paid')">
+                                <span>✔️</span>
+                                <span>Lunas</span>
+                                <span class="badge badge-success" style="margin-left: 0.5rem;">3</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar -->
+                    <div class="toolbar" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200);">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Cari nomor invoice atau customer..." id="searchInput">
+                            </div>
+                        </div>
+                        <div class="toolbar-right" style="display: flex; gap: 0.5rem;">
+                            <button class="btn-secondary btn-sm" onclick="toggleFilters()">
+                                <span>🔽</span>
+                                <span>Filter</span>
+                            </button>
+                            <button class="btn-success btn-sm" onclick="exportExcel()">
+                                <span>📥</span>
+                                <span>Export Excel</span>
+                            </button>
+                            <button class="btn-secondary btn-sm" onclick="printSummary()">
+                                <span>🖨️</span>
+                                <span>Print Summary</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Panel -->
+                    <div id="filterPanel" style="display: none; padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Dari Tanggal</label>
+                                <input type="date" class="form-input" id="filterDateFrom">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Sampai Tanggal</label>
+                                <input type="date" class="form-input" id="filterDateUntil">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="filterStatus">
+                                    <option value="">Semua Status</option>
+                                    <option value="Unpaid">Belum Lunas</option>
+                                    <option value="Partial">Sebagian</option>
+                                    <option value="Paid">Lunas</option>
+                                    <option value="Overdue">Jatuh Tempo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Jenis Customer</label>
+                                <select class="form-select" id="filterPPN">
+                                    <option value="">Semua Customer</option>
+                                    <option value="1">Customer PPN</option>
+                                    <option value="0">Customer Non-PPN</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <button class="btn-primary btn-sm" onclick="applyFilters()">Terapkan Filter</button>
+                            <button class="btn-secondary btn-sm" onclick="resetFilters()">Reset</button>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="card-body no-padding">
+                        <table class="filament-table">
+                            <thead>
+                                <tr>
+                                    <th>Tanggal</th>
+                                    <th>Nomor Invoice</th>
+                                    <th>Customer</th>
+                                    <th>PPN Customer</th>
+                                    <th style="text-align: right;">Subtotal</th>
+                                    <th style="text-align: right;">PPN</th>
+                                    <th style="text-align: right;">Grand Total</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                            <tfoot style="background: var(--gray-50); font-weight: bold;">
+                                <tr>
+                                    <td colspan="4" style="text-align: right; padding-right: 1rem;">TOTAL:</td>
+                                    <td style="text-align: right;" id="totalSubtotal">Rp 0</td>
+                                    <td style="text-align: right;" id="totalPPN">Rp 0</td>
+                                    <td style="text-align: right;" id="totalGrandTotal">Rp 0</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" style="padding: 1rem 1.25rem;">
+                        <div class="pagination-info">Menampilkan <strong id="displayCount">0</strong> dari <strong id="totalCount">0</strong> entri</div>
+                        <div class="pagination-buttons">
+                            <button class="pagination-button" disabled>‹ Sebelumnya</button>
+                            <button class="pagination-button active">1</button>
+                            <button class="pagination-button" disabled>Selanjutnya ›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        .tab-button {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all 0.2s;
+            margin-bottom: -2px;
+        }
+        .tab-button:hover {
+            color: var(--primary-600);
+            background: var(--gray-100);
+        }
+        .tab-button.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-600);
+            background: white;
+        }
+    </style>
+
+    <script>
+        let currentTab = 'all';
+        
+        // Dummy data
+        const salesData = [
+            { id: 1, date: '2024-02-15', invoice_no: 'INV-202402-001', customer: 'PT Maju Bersama', is_ppn: true, subtotal: 2500000, ppn: 275000, grand_total: 2775000, status: 'Paid' },
+            { id: 2, date: '2024-02-16', invoice_no: 'INV-202402-002', customer: 'CV Berkah Jaya', is_ppn: false, subtotal: 1200000, ppn: 0, grand_total: 1200000, status: 'Paid' },
+            { id: 3, date: '2024-01-17', invoice_no: 'INV-202402-003', customer: 'PT Global Mandiri', is_ppn: true, subtotal: 3000000, ppn: 330000, grand_total: 3330000, status: 'Overdue' },
+            { id: 4, date: '2024-02-18', invoice_no: 'INV-202402-004', customer: 'Toko Sejahtera', is_ppn: false, subtotal: 800000, ppn: 0, grand_total: 800000, status: 'Unpaid' },
+            { id: 5, date: '2024-02-19', invoice_no: 'INV-202402-005', customer: 'PT Teknologi Maju', is_ppn: true, subtotal: 1750000, ppn: 192500, grand_total: 1942500, status: 'Partial' },
+            { id: 6, date: '2024-02-20', invoice_no: 'INV-202402-006', customer: 'PT Maju Bersama', is_ppn: true, subtotal: 1500000, ppn: 165000, grand_total: 1665000, status: 'Paid' },
+        ];
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('reportsTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = salesData;
+            
+            // Apply tab filter
+            if (currentTab === 'ppn') {
+                filtered = filtered.filter(item => item.is_ppn);
+            } else if (currentTab === 'non-ppn') {
+                filtered = filtered.filter(item => !item.is_ppn);
+            } else if (currentTab === 'unpaid') {
+                filtered = filtered.filter(item => item.status === 'Unpaid' || item.status === 'Partial');
+            } else if (currentTab === 'overdue') {
+                filtered = filtered.filter(item => item.status === 'Overdue');
+            } else if (currentTab === 'paid') {
+                filtered = filtered.filter(item => item.status === 'Paid');
+            }
+            
+            // Apply search
+            if (searchTerm) {
+                filtered = filtered.filter(item => 
+                    item.invoice_no.toLowerCase().includes(searchTerm) ||
+                    item.customer.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            document.getElementById('displayCount').textContent = filtered.length;
+            document.getElementById('totalCount').textContent = salesData.length;
+            
+            // Calculate totals
+            const totals = filtered.reduce((acc, item) => {
+                acc.subtotal += item.subtotal;
+                acc.ppn += item.ppn;
+                acc.grandTotal += item.grand_total;
+                return acc;
+            }, { subtotal: 0, ppn: 0, grandTotal: 0 });
+            
+            document.getElementById('totalSubtotal').textContent = formatCurrency(totals.subtotal);
+            document.getElementById('totalPPN').textContent = formatCurrency(totals.ppn);
+            document.getElementById('totalGrandTotal').textContent = formatCurrency(totals.grandTotal);
+            
+            tbody.innerHTML = filtered.map(item => `
+                <tr>
+                    <td>${new Date(item.date).toLocaleDateString('id-ID')}</td>
+                    <td><strong>${item.invoice_no}</strong></td>
+                    <td>
+                        <div style="font-weight: 500;">${item.customer}</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">${item.is_ppn ? '✅ PPN' : '❌ Non-PPN'}</div>
+                    </td>
+                    <td>
+                        <span class="badge ${item.is_ppn ? 'success' : 'gray'}">
+                            ${item.is_ppn ? '✅ Ya' : '❌ Tidak'}
+                        </span>
+                    </td>
+                    <td style="text-align: right;">${formatCurrency(item.subtotal)}</td>
+                    <td style="text-align: right;">${formatCurrency(item.ppn)}</td>
+                    <td style="text-align: right;"><strong>${formatCurrency(item.grand_total)}</strong></td>
+                    <td>
+                        <span class="badge ${
+                            item.status === 'Paid' ? 'success' : 
+                            item.status === 'Partial' ? 'info' :
+                            item.status === 'Overdue' ? 'danger' : 'warning'
+                        }">
+                            ${item.status === 'Paid' ? 'Lunas' : 
+                              item.status === 'Partial' ? 'Sebagian' :
+                              item.status === 'Overdue' ? 'Jatuh Tempo' : 'Belum Lunas'}
+                        </span>
+                    </td>
+                    <td class="text-right">
+                        <div class="table-actions" style="justify-content: flex-end;">
+                            <button class="btn-icon" onclick="viewDetails(${item.id})" title="View">👁️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tab) btn.classList.add('active');
+            });
+            renderTable();
+        }
+
+        function toggleFilters() {
+            const panel = document.getElementById('filterPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function applyFilters() {
+            alert('Filter akan diterapkan (belum diimplementasi)');
+        }
+
+        function resetFilters() {
+            document.getElementById('filterDateFrom').value = '';
+            document.getElementById('filterDateUntil').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterPPN').value = '';
+        }
+
+        function exportExcel() {
+            alert('Export ke Excel (belum diimplementasi)');
+        }
+
+        function printSummary() {
+            alert('Print Summary (belum diimplementasi)');
+        }
+
+        function viewDetails(id) {
+            alert('View details untuk ID: ' + id);
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.filament-sidebar');
+            const mainContent = document.querySelector('.filament-main');
+            sidebar.classList.toggle('collapsed');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                mainContent.style.marginLeft = '70px';
+            } else {
+                mainContent.style.marginLeft = '280px';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+        });
+    </script>
+</body>
+</html>

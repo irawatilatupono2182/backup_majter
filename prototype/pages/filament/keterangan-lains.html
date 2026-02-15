@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📄 Keterangan Lain - Adam Jaya</title>
+    <link rel="stylesheet" href="../../assets/css/filament-style.css">
+    <style>
+        .tab-button {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all 0.2s;
+            margin-bottom: -2px;
+        }
+        .tab-button:hover {
+            color: var(--primary-600);
+            background: var(--gray-100);
+        }
+        .tab-button.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-600);
+            background: white;
+        }
+        .type-selection-card {
+            padding: 2rem 1.5rem;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .type-selection-card:hover {
+            border-color: var(--primary-600);
+            background: var(--primary-50);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        .document-preview {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 150px;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="filament-app">
+        <aside class="filament-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">Adam Jaya</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <a href="../../index.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">💼 Penjualan</div>
+                    <a href="customers.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Customers</span>
+                    </a>
+                    <a href="price-quotations.html" class="nav-item">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-label">Surat Penawaran</span>
+                    </a>
+                    <a href="delivery-notes.html" class="nav-item">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-label">Surat Jalan</span>
+                    </a>
+                    <a href="invoices.html" class="nav-item">
+                        <span class="nav-icon">💰</span>
+                        <span class="nav-label">Invoice</span>
+                    </a>
+                    <a href="nota-menyusuls.html" class="nav-item">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-label">Nota Menyusul</span>
+                    </a>
+                    <a href="keterangan-lains.html" class="nav-item active">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-label">Keterangan Lain</span>
+                        <span class="nav-badge badge-primary">3</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">🛒 Pembelian</div>
+                    <a href="stocks.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Master Barang/Stock</span>
+                    </a>
+                    <a href="suppliers.html" class="nav-item">
+                        <span class="nav-icon">🏭</span>
+                        <span class="nav-label">Suppliers</span>
+                    </a>
+                    <a href="purchase-orders.html" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Pembelian Barang (PO)</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="filament-main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <a href="../../index.html" class="breadcrumb-item">Dashboard</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Penjualan</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Keterangan Lain</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-menu">
+                        <button class="user-avatar">SA</button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Super Admin</div>
+                                <span class="badge badge-warning">Administrator</span>
+                            </div>
+                            <div class="user-menu-items">
+                                <a href="#" class="user-menu-item">Profile</a>
+                                <a href="#" class="user-menu-item">Settings</a>
+                                <a href="#" class="user-menu-item">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- Stats -->
+                <div class="stats-grid-3" style="margin-bottom: 1.5rem;">
+                    <div class="stat-widget">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Keterangan</span>
+                            <span class="stat-icon">📄</span>
+                        </div>
+                        <div class="stat-value" id="totalDocuments">0</div>
+                        <div class="stat-footer">
+                            <span class="stat-description">Dokumen dibuat</span>
+                        </div>
+                    </div>
+                    <div class="stat-widget info">
+                        <div class="stat-header">
+                            <span class="stat-label">Dokumen PPN</span>
+                            <span class="stat-icon">📘</span>
+                        </div>
+                        <div class="stat-value" id="ppnDocuments">0</div>
+                        <div class="stat-footer">
+                            <span class="stat-description">Keterangan PPN</span>
+                        </div>
+                    </div>
+                    <div class="stat-widget secondary">
+                        <div class="stat-header">
+                            <span class="stat-label">Non-PPN</span>
+                            <span class="stat-icon">📑</span>
+                        </div>
+                        <div class="stat-value" id="nonPpnDocuments">0</div>
+                        <div class="stat-footer">
+                            <span class="stat-description">Keterangan Non-PPN</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="widget-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Keterangan Lain</h3>
+                        <button class="btn-primary" onclick="showTypeSelectionModal()">
+                            <span>➕</span>
+                            <span>Buat Keterangan</span>
+                        </button>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                        <div style="display: flex; gap: 0.5rem; border-bottom: 2px solid var(--gray-200);">
+                            <button class="tab-button active" data-tab="all" onclick="switchTab('all')">
+                                <span>📄</span>
+                                <span>Semua Keterangan</span>
+                            </button>
+                            <button class="tab-button" data-tab="PPN" onclick="switchTab('PPN')">
+                                <span>📘</span>
+                                <span>PPN</span>
+                            </button>
+                            <button class="tab-button" data-tab="Non-PPN" onclick="switchTab('Non-PPN')">
+                                <span>📑</span>
+                                <span>Non-PPN</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200);">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Cari nomor/judul/customer..." id="searchInput">
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <span id="filterInfo" style="color: var(--gray-600); font-size: 0.875rem;">Menampilkan: <strong>Semua Tipe</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="card-body no-padding">
+                        <table class="filament-table">
+                            <thead>
+                                <tr>
+                                    <th>No. Keterangan</th>
+                                    <th>Customer</th>
+                                    <th>Tipe</th>
+                                    <th>Kategori</th>
+                                    <th>Tanggal</th>
+                                    <th>Judul</th>
+                                    <th class="text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documentsTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination" style="padding: 1rem 1.25rem;">
+                        <div class="pagination-info">Menampilkan <strong id="displayCount">0</strong> dari <strong id="totalCount">0</strong> entri</div>
+                        <div class="pagination-buttons">
+                            <button class="pagination-button" disabled>‹ Sebelumnya</button>
+                            <button class="pagination-button active">1</button>
+                            <button class="pagination-button" disabled>Selanjutnya ›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="detailModal" style="display: none;">
+        <div class="modal" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="detailModalTitle">Detail Keterangan</h3>
+                <button class="modal-close" onclick="closeDetailModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Informasi Dokumen</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">No. Keterangan</label>
+                                <input type="text" class="form-input" id="detailDocNo" readonly style="background-color: var(--gray-100);">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Tanggal</label>
+                                <input type="text" class="form-input" id="detailDate" readonly style="background-color: var(--gray-100);">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Tipe</label>
+                                <input type="text" class="form-input" id="detailType" readonly style="background-color: var(--gray-100);">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Kategori</label>
+                                <input type="text" class="form-input" id="detailCategory" readonly style="background-color: var(--gray-100);">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Customer & Referensi</h4>
+                        <div class="form-group">
+                            <label class="form-label">Customer</label>
+                            <input type="text" class="form-input" id="detailCustomer" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Kontak Person</label>
+                            <input type="text" class="form-input" id="detailContactPerson" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Referensi Dokumen</label>
+                            <input type="text" class="form-input" id="detailReference" readonly style="background-color: var(--gray-100);">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="margin-bottom: 1rem;">Konten Keterangan</h4>
+                    <div class="form-group">
+                        <label class="form-label">Judul</label>
+                        <input type="text" class="form-input" id="detailTitle" readonly style="background-color: var(--gray-100);">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Isi Keterangan</label>
+                        <textarea class="form-textarea" id="detailContent" readonly style="background-color: var(--gray-100); min-height: 150px;"></textarea>
+                    </div>
+                </div>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 1rem;">Preview Dokumen</h4>
+                    <div class="document-preview" id="documentPreview">
+                        <!-- Preview content will be dynamically generated here -->
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label class="form-label">Catatan Internal</label>
+                        <textarea class="form-textarea" id="detailNotes" readonly style="background-color: white; min-height: 80px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeDetailModal()">Tutup</button>
+                <button class="btn-danger" onclick="printDocument()">
+                    <span>🖨️</span>
+                    <span>Print</span>
+                </button>
+                <button class="btn-primary" onclick="editFromDetail()">
+                    <span>✏️</span>
+                    <span>Edit</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Type Selection Modal -->
+    <div class="modal-overlay" id="typeSelectionModal" style="display: none;">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Pilih Tipe Keterangan</h3>
+                <button class="modal-close" onclick="closeTypeSelectionModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Pilih tipe keterangan yang akan Anda buat:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <button class="type-selection-card" onclick="selectTypeAndCreate('PPN')">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📘</div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Keterangan PPN</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Dokumen dengan pajak</div>
+                    </button>
+                    <button class="type-selection-card" onclick="selectTypeAndCreate('Non-PPN')">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📑</div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Keterangan Non-PPN</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Dokumen bebas pajak</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Modal -->
+    <div class="modal-overlay" id="modalOverlay" style="display: none;">
+        <div class="modal" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Buat Keterangan</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="documentForm">
+                    <input type="hidden" id="documentId">
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <h4 style="margin-bottom: 1rem;">Informasi Dokumen</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label required">No. Keterangan</label>
+                                    <input type="text" class="form-input" id="docNo" placeholder="KL-001" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Tanggal</label>
+                                    <input type="date" class="form-input" id="docDate" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required">Tipe</label>
+                                <select class="form-select" id="docType" required disabled style="background-color: var(--gray-100);">
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="PPN">PPN</option>
+                                    <option value="Non-PPN">Non-PPN</option>
+                                </select>
+                                <p class="form-helper" id="typeHelper" style="margin-top: 0.5rem; color: var(--success-600); font-size: 0.875rem;"></p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required">Kategori</label>
+                                <select class="form-select" id="category" required>
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="Kebijakan">📋 Kebijakan</option>
+                                    <option value="Prosedur">⚙️ Prosedur</option>
+                                    <option value="Peraturan">📊 Peraturan</option>
+                                    <option value="Informasi">ℹ️ Informasi</option>
+                                    <option value="Komunikasi">💬 Komunikasi</option>
+                                    <option value="Lainnya">📄 Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 1rem;">Customer & Referensi</h4>
+                            <div class="form-group">
+                                <label class="form-label required">Pilih Customer</label>
+                                <select class="form-select" id="customerId" required>
+                                    <option value="">Pilih Customer</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Referensi Dokumen</label>
+                                <input type="text" class="form-input" id="reference" placeholder="INV-001, PO-002, dll">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Berlaku Hingga</label>
+                                <input type="date" class="form-input" id="validUntil">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem;">Konten Keterangan</h4>
+                        <div class="form-group">
+                            <label class="form-label required">Judul</label>
+                            <input type="text" class="form-input" id="title" placeholder="Judul keterangan" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Isi Keterangan</label>
+                            <textarea class="form-textarea" id="content" rows="6" placeholder="Isi lengkap keterangan..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div style="background: var(--gray-50); padding: 1rem; border-radius: 0.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Catatan Internal</label>
+                            <textarea class="form-textarea" id="notes" rows="3" placeholder="Catatan untuk internal use..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Batal</button>
+                <button class="btn-primary" onclick="saveDocument()">
+                    <span>💾</span>
+                    <span>Simpan</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'all';
+        let selectedType = null;
+        let documents = [
+            { id: 1, doc_no: 'KL-001', customer: 'PT Maju Bersama', customer_id: 1, contact_person: 'Budi Santoso', type: 'PPN', category: 'Kebijakan', date: '2024-01-10', title: 'Kebijakan Diskon Khusus Q1 2024', content: 'Dengan ini kami informasikan bahwa untuk periode Q1 2024, PT Maju Bersama mendapat kebijakan diskon khusus sebesar 3% untuk semua pembelian dengan nilai minimal Rp 50.000.000. Kebijakan ini berlaku mulai tanggal 1 Februari 2024 hingga 31 Maret 2024.', reference: 'MOU-001', valid_until: '2024-03-31', notes: 'Sudah disetujui direktur' },
+            { id: 2, doc_no: 'KL-002', customer: 'CV Berkah Jaya', customer_id: 2, contact_person: 'Siti Nurhaliza', type: 'Non-PPN', category: 'Prosedur', date: '2024-01-15', title: 'Prosedur Pengiriman Khusus Area Terpencil', content: 'Untuk pengiriman ke area terpencil khususnya daerah CV Berkah Jaya, diperlukan prosedur khusus: 1) Konfirmasi ketersediaan akses jalan, 2) Koordinasi dengan ekspedisi lokal, 3) Pemberitahuan 3 hari sebelum pengiriman, 4) Backup plan jika cuaca tidak mendukung.', reference: 'SJ-002', valid_until: null, notes: 'Koordinasi dengan bagian logistik' },
+            { id: 3, doc_no: 'KL-003', customer: 'PT Global Mandiri', customer_id: 3, contact_person: 'Ahmad Rahman', type: 'PPN', category: 'Informasi', date: '2024-01-20', title: 'Informasi Perubahan Harga Produk Series A', content: 'Bersama ini kami sampaikan informasi perubahan harga untuk produk Series A efektif mulai 1 Februari 2024. Kenaikan harga berkisar 5-7% mengikuti kenaikan bahan baku global. Detail harga terbaru akan dikirimkan melalui price list terpisah.', reference: 'PRICE-001', valid_until: '2024-12-31', notes: 'Koordinasi dengan tim sales' }
+        ];
+
+        let customers = [
+            { id: 1, name: 'PT Maju Bersama', contact_person: 'Budi Santoso', type: 'PPN' },
+            { id: 2, name: 'CV Berkah Jaya', contact_person: 'Siti Nurhaliza', type: 'Non-PPN' },
+            { id: 3, name: 'PT Global Mandiri', contact_person: 'Ahmad Rahman', type: 'PPN' },
+            { id: 4, name: 'Toko Sejahtera', contact_person: 'Dewi Sartika', type: 'Non-PPN' },
+            { id: 5, name: 'PT Teknologi Maju', contact_person: 'Rizky Pratama', type: 'PPN' }
+        ];
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'Kebijakan': '📋',
+                'Prosedur': '⚙️', 
+                'Peraturan': '📊',
+                'Informasi': 'ℹ️',
+                'Komunikasi': '💬',
+                'Lainnya': '📄'
+            };
+            return icons[category] || '📄';
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                'Kebijakan': 'info',
+                'Prosedur': 'warning', 
+                'Peraturan': 'danger',
+                'Informasi': 'success',
+                'Komunikasi': 'primary',
+                'Lainnya': 'gray'
+            };
+            return colors[category] || 'gray';
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('documentsTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = documents;
+            if (currentTab !== 'all') {
+                filtered = documents.filter(doc => doc.type === currentTab);
+            }
+            
+            if (searchTerm) {
+                filtered = filtered.filter(doc => 
+                    doc.doc_no.toLowerCase().includes(searchTerm) ||
+                    doc.customer.toLowerCase().includes(searchTerm) ||
+                    doc.title.toLowerCase().includes(searchTerm) ||
+                    doc.category.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            document.getElementById('displayCount').textContent = filtered.length;
+            document.getElementById('totalCount').textContent = documents.length;
+            
+            tbody.innerHTML = filtered.map(doc => `
+                <tr>
+                    <td><strong>${doc.doc_no}</strong></td>
+                    <td>
+                        <div style="font-weight: 500;">${doc.customer}</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">${doc.contact_person}</div>
+                    </td>
+                    <td>
+                        <span class="badge ${doc.type === 'PPN' ? 'info' : 'gray'}">
+                            ${doc.type === 'PPN' ? '📘 PPN' : '📑 Non-PPN'}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge ${getCategoryColor(doc.category)}">
+                            ${getCategoryIcon(doc.category)} ${doc.category}
+                        </span>
+                    </td>
+                    <td>${new Date(doc.date).toLocaleDateString('id-ID')}</td>
+                    <td style="max-width: 250px;">
+                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${doc.title}">${doc.title}</div>
+                        ${doc.valid_until ? `<div style="font-size: 0.75rem; color: var(--warning-600);">Berlaku hingga: ${new Date(doc.valid_until).toLocaleDateString('id-ID')}</div>` : ''}
+                    </td>
+                    <td class="text-right">
+                        <div class="table-actions" style="justify-content: flex-end;">
+                            <button class="btn-icon" onclick="viewDocument(${doc.id})" title="View">👁️</button>
+                            <button class="btn-icon" onclick="editDocument(${doc.id})" title="Edit">✏️</button>
+                            <button class="btn-icon danger" onclick="deleteDocument(${doc.id})" title="Delete">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalDocuments').textContent = documents.length;
+            document.getElementById('ppnDocuments').textContent = documents.filter(doc => doc.type === 'PPN').length;
+            document.getElementById('nonPpnDocuments').textContent = documents.filter(doc => doc.type === 'Non-PPN').length;
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tab) btn.classList.add('active');
+            });
+            
+            const filterInfo = document.getElementById('filterInfo');
+            if (tab === 'all') filterInfo.innerHTML = 'Menampilkan: <strong>Semua Tipe</strong>';
+            else if (tab === 'PPN') filterInfo.innerHTML = 'Menampilkan: <strong>📘 PPN</strong>';
+            else if (tab === 'Non-PPN') filterInfo.innerHTML = 'Menampilkan: <strong>📑 Non-PPN</strong>';
+            
+            renderTable();
+        }
+
+        function showTypeSelectionModal() {
+            document.getElementById('typeSelectionModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('typeSelectionModal').classList.add('show'), 10);
+        }
+
+        function closeTypeSelectionModal() {
+            document.getElementById('typeSelectionModal').classList.remove('show');
+            setTimeout(() => document.getElementById('typeSelectionModal').style.display = 'none', 200);
+        }
+
+        function selectTypeAndCreate(type) {
+            selectedType = type;
+            closeTypeSelectionModal();
+            setTimeout(() => showCreateModal(), 300);
+        }
+
+        function showCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Buat Keterangan';
+            document.getElementById('documentForm').reset();
+            document.getElementById('documentId').value = '';
+            document.getElementById('docDate').value = new Date().toISOString().split('T')[0];
+            
+            if (selectedType) {
+                document.getElementById('docType').value = selectedType;
+                document.getElementById('docType').disabled = true;
+                
+                const helper = document.getElementById('typeHelper');
+                if (selectedType === 'PPN') {
+                    helper.innerHTML = '📘 Keterangan PPN dipilih';
+                    helper.style.color = 'var(--primary-600)';
+                } else {
+                    helper.innerHTML = '📑 Keterangan Non-PPN dipilih';
+                    helper.style.color = 'var(--success-600)';
+                }
+            }
+            
+            populateCustomers();
+            
+            document.getElementById('modalOverlay').style.display = 'flex';
+            setTimeout(() => document.getElementById('modalOverlay').classList.add('show'), 10);
+        }
+
+        function populateCustomers() {
+            const select = document.getElementById('customerId');
+            select.innerHTML = '<option value="">Pilih Customer</option>';
+            customers.forEach(customer => {
+                select.innerHTML += `<option value="${customer.id}">${customer.name} - ${customer.contact_person}</option>`;
+            });
+        }
+
+        function generateDocumentPreview(doc) {
+            const validUntilText = doc.valid_until ? `<p style="margin-bottom: 0.5rem;"><strong>Berlaku hingga:</strong> ${new Date(doc.valid_until).toLocaleDateString('id-ID')}</p>` : '';
+            
+            return `
+                <div style="text-align: center; margin-bottom: 1rem;">
+                    <h3 style="margin: 0; color: var(--primary-600);">KETERANGAN ${doc.type}</h3>
+                    <div style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.25rem;">No. ${doc.doc_no} • ${new Date(doc.date).toLocaleDateString('id-ID')}</div>
+                </div>
+                <div style="border-bottom: 1px solid var(--gray-300); margin-bottom: 1rem; padding-bottom: 1rem;">
+                    <p style="margin-bottom: 0.5rem;"><strong>Kepada:</strong> ${doc.customer}</p>
+                    <p style="margin-bottom: 0.5rem;"><strong>Kontak Person:</strong> ${doc.contact_person}</p>
+                    <p style="margin-bottom: 0.5rem;"><strong>Kategori:</strong> ${getCategoryIcon(doc.category)} ${doc.category}</p>
+                    ${doc.reference ? `<p style="margin-bottom: 0.5rem;"><strong>Referensi:</strong> ${doc.reference}</p>` : ''}
+                    ${validUntilText}
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--gray-800);">${doc.title}</h4>
+                    <div style="line-height: 1.6; text-align: justify;">${doc.content}</div>
+                </div>
+                <div style="border-top: 1px solid var(--gray-300); padding-top: 1rem; text-align: right;">
+                    <div style="font-size: 0.875rem; color: var(--gray-600);">
+                        PT Adam Jaya<br>
+                        Tanggal: ${new Date(doc.date).toLocaleDateString('id-ID')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function viewDocument(id) {
+            const doc = documents.find(d => d.id === id);
+            if (!doc) return;
+
+            document.getElementById('detailModalTitle').textContent = `Detail - ${doc.doc_no}`;
+            document.getElementById('detailDocNo').value = doc.doc_no;
+            document.getElementById('detailDate').value = new Date(doc.date).toLocaleDateString('id-ID');
+            document.getElementById('detailType').value = doc.type === 'PPN' ? '📘 PPN' : '📑 Non-PPN';
+            document.getElementById('detailCategory').value = `${getCategoryIcon(doc.category)} ${doc.category}`;
+            document.getElementById('detailCustomer').value = doc.customer;
+            document.getElementById('detailContactPerson').value = doc.contact_person;
+            document.getElementById('detailReference').value = doc.reference || '-';
+            document.getElementById('detailTitle').value = doc.title;
+            document.getElementById('detailContent').value = doc.content;
+            document.getElementById('detailNotes').value = doc.notes || '';
+            
+            // Generate document preview
+            document.getElementById('documentPreview').innerHTML = generateDocumentPreview(doc);
+            
+            document.getElementById('detailModal').dataset.documentId = doc.id;
+            document.getElementById('detailModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('detailModal').classList.add('show'), 10);
+        }
+
+        function editDocument(id) {
+            alert('Fitur edit akan diimplementasikan');
+        }
+
+        function deleteDocument(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus keterangan ini?')) {
+                const index = documents.findIndex(d => d.id === id);
+                if (index !== -1) {
+                    documents.splice(index, 1);
+                    renderTable();
+                    updateStats();
+                    alert('Keterangan berhasil dihapus!');
+                }
+            }
+        }
+
+        function printDocument() {
+            const documentId = document.getElementById('detailModal').dataset.documentId;
+            const doc = documents.find(d => d.id === parseInt(documentId));
+            if (!doc) return;
+            
+            // Create a new window for printing
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Print - ${doc.doc_no}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+                        h3 { color: #059669; }
+                        .header { text-align: center; margin-bottom: 20px; }
+                        .content { margin: 20px 0; }
+                        .footer { text-align: right; margin-top: 30px; border-top: 1px solid #ccc; padding-top: 20px; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    ${generateDocumentPreview(doc)}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function closeModal() {
+            selectedType = null;
+            document.getElementById('modalOverlay').classList.remove('show');
+            setTimeout(() => document.getElementById('modalOverlay').style.display = 'none', 200);
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('show');
+            setTimeout(() => document.getElementById('detailModal').style.display = 'none', 200);
+        }
+
+        function editFromDetail() {
+            const documentId = document.getElementById('detailModal').dataset.documentId;
+            closeDetailModal();
+            setTimeout(() => editDocument(parseInt(documentId)), 300);
+        }
+
+        function saveDocument() {
+            const doc_no = document.getElementById('docNo').value;
+            const customer_id = document.getElementById('customerId').value;
+            const type = document.getElementById('docType').value;
+            const category = document.getElementById('category').value;
+            const date = document.getElementById('docDate').value;
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            if (!doc_no || !customer_id || !type || !category || !date || !title || !content) {
+                alert('Data wajib harus diisi!');
+                return;
+            }
+
+            const customer = customers.find(c => c.id === parseInt(customer_id));
+
+            const documentData = {
+                doc_no,
+                customer: customer.name,
+                customer_id: parseInt(customer_id),
+                contact_person: customer.contact_person,
+                type,
+                category,
+                date,
+                title,
+                content,
+                reference: document.getElementById('reference').value,
+                valid_until: document.getElementById('validUntil').value || null,
+                notes: document.getElementById('notes').value
+            };
+
+            const id = document.getElementById('documentId').value;
+            if (id) {
+                const doc = documents.find(d => d.id === parseInt(id));
+                if (doc) {
+                    Object.assign(doc, documentData);
+                }
+                alert('Keterangan berhasil diupdate!');
+            } else {
+                documentData.id = Math.max(...documents.map(d => d.id), 0) + 1;
+                documents.push(documentData);
+                alert('Keterangan berhasil dibuat!');
+            }
+
+            closeModal();
+            renderTable();
+            updateStats();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            renderTable();
+        });
+        
+        // Event listeners for closing modals
+        document.getElementById('typeSelectionModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTypeSelectionModal();
+        });
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailModal();
+        });
+    </script>
+    <script src="../../assets/js/filament-dashboard.js"></script>
+</body>
+</html>

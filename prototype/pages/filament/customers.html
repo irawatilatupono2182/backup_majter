@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👥 Customers - Adam Jaya</title>
+    <link rel="stylesheet" href="../../assets/css/filament-style.css">
+    <style>
+        .tab-button {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all 0.2s;
+            margin-bottom: -2px;
+        }
+        .tab-button:hover {
+            color: var(--primary-600);
+            background: var(--gray-100);
+        }
+        .tab-button.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-600);
+            background: white;
+        }
+        .type-selection-card {
+            padding: 2rem 1.5rem;
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .type-selection-card:hover {
+            border-color: var(--primary-600);
+            background: var(--primary-50);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="filament-app">
+        <aside class="filament-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">Adam Jaya</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <a href="../../index.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">💼 Penjualan</div>
+                    <a href="customers.html" class="nav-item active">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Customers</span>
+                        <span class="nav-badge badge-success">5</span>
+                    </a>
+                    <a href="price-quotations.html" class="nav-item">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-label">Surat Penawaran</span>
+                    </a>
+                    <a href="delivery-notes.html" class="nav-item">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-label">Surat Jalan</span>
+                    </a>
+                    <a href="invoices.html" class="nav-item">
+                        <span class="nav-icon">💰</span>
+                        <span class="nav-label">Invoice</span>
+                    </a>
+                    <a href="nota-menyusuls.html" class="nav-item">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-label">Nota Menyusul</span>
+                    </a>
+                    <a href="keterangan-lains.html" class="nav-item">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-label">Keterangan Lain</span>
+                    </a>
+                </div>
+                
+                <div class="nav-group">
+                    <div class="nav-group-label">🛒 Pembelian</div>
+                    <a href="stocks.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Master Barang/Stock</span>
+                    </a>
+                    <a href="suppliers.html" class="nav-item">
+                        <span class="nav-icon">🏭</span>
+                        <span class="nav-label">Suppliers</span>
+                    </a>
+                    <a href="purchase-orders.html" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Pembelian Barang (PO)</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="filament-main">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <a href="../../index.html" class="breadcrumb-item">Dashboard</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Penjualan</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Customers</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-menu">
+                        <button class="user-avatar">SA</button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Super Admin</div>
+                                <span class="badge badge-warning">Administrator</span>
+                            </div>
+                            <div class="user-menu-items">
+                                <a href="#" class="user-menu-item">Profile</a>
+                                <a href="#" class="user-menu-item">Settings</a>
+                                <a href="#" class="user-menu-item">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- Stats -->
+                <div class="stats-grid-2" style="margin-bottom: 1.5rem;">
+                    <div class="stat-widget">
+                        <div class="stat-header">
+                            <span class="stat-label">Total Customers</span>
+                            <span class="stat-icon">👥</span>
+                        </div>
+                        <div class="stat-value" id="totalCustomers">0</div>
+                        <div class="stat-footer">
+                            <span class="stat-description">Total customers</span>
+                        </div>
+                    </div>
+                    <div class="stat-widget success">
+                        <div class="stat-header">
+                            <span class="stat-label">Active Customers</span>
+                            <span class="stat-icon">✅</span>
+                        </div>
+                        <div class="stat-value" id="activeCustomers">0</div>
+                        <div class="stat-footer">
+                            <span class="stat-description">Customers aktif</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="widget-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daftar Customer</h3>
+                        <button class="btn-primary" onclick="showTypeSelectionModal()">
+                            <span>➕</span>
+                            <span>Tambah Customer</span>
+                        </button>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                        <div style="display: flex; gap: 0.5rem; border-bottom: 2px solid var(--gray-200);">
+                            <button class="tab-button active" data-tab="all" onclick="switchTab('all')">
+                                <span>👥</span>
+                                <span>Semua Customer</span>
+                            </button>
+                            <button class="tab-button" data-tab="PPN" onclick="switchTab('PPN')">
+                                <span>📘</span>
+                                <span>Customer PPN</span>
+                            </button>
+                            <button class="tab-button" data-tab="Non-PPN" onclick="switchTab('Non-PPN')">
+                                <span>📄</span>
+                                <span>Customer Non-PPN</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200);">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Cari customer..." id="searchInput">
+                            </div>
+                        </div>
+                        <div class="toolbar-right">
+                            <span id="filterInfo" style="color: var(--gray-600); font-size: 0.875rem;">Menampilkan: <strong>Semua Tipe</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="card-body no-padding">
+                        <table class="filament-table">
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Nama Customer</th>
+                                    <th>Tipe</th>
+                                    <th>Kontak</th>
+                                    <th>Alamat</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customersTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination" style="padding: 1rem 1.25rem;">
+                        <div class="pagination-info">Menampilkan <strong id="displayCount">0</strong> dari <strong id="totalCount">0</strong> entri</div>
+                        <div class="pagination-buttons">
+                            <button class="pagination-button" disabled>‹ Sebelumnya</button>
+                            <button class="pagination-button active">1</button>
+                            <button class="pagination-button" disabled>Selanjutnya ›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal-overlay" id="detailModal" style="display: none;">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="detailModalTitle">Detail Customer</h3>
+                <button class="modal-close" onclick="closeDetailModal()">×</button>
+            </div>
+            <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem; color: var(--gray-800); border-bottom: 1px solid var(--gray-200); padding-bottom: 0.5rem;">Informasi Customer</h4>
+                        <div class="form-group">
+                            <label class="form-label">Kode Customer</label>
+                            <input type="text" class="form-input" id="detailCustomerCode" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nama Customer</label>
+                            <input type="text" class="form-input" id="detailCustomerName" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contact Person (U.P.)</label>
+                            <input type="text" class="form-input" id="detailContactPerson" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipe Customer</label>
+                            <span id="detailType" class="badge">PPN</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Status Aktif</label>
+                            <span id="detailStatus" class="badge">Aktif</span>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem; color: var(--gray-800); border-bottom: 1px solid var(--gray-200); padding-bottom: 0.5rem;">Kontak & Administrasi</h4>
+                        <div class="form-group">
+                            <label class="form-label">Telepon</label>
+                            <input type="text" class="form-input" id="detailPhone" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-input" id="detailEmail" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">NPWP</label>
+                            <input type="text" class="form-input" id="detailNpwp" readonly style="background-color: var(--gray-100);">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jadwal Kontra Bon</label>
+                            <input type="text" class="form-input" id="detailBillingSchedule" readonly style="background-color: var(--gray-100);">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--gray-50); padding: 1rem; border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: var(--gray-800);">Alamat</h4>
+                    <div class="form-group">
+                        <label class="form-label">Alamat Kirim (SHIP TO)</label>
+                        <textarea class="form-textarea" id="detailAddressShipTo" readonly style="background-color: white; min-height: 80px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alamat Tagihan (BILL TO)</label>
+                        <textarea class="form-textarea" id="detailAddressBillTo" readonly style="background-color: white; min-height: 80px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kota</label>
+                        <input type="text" class="form-input" id="detailCity" readonly style="background-color: white;">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeDetailModal()">Tutup</button>
+                <button class="btn-primary" onclick="editFromDetail()">
+                    <span>✏️</span>
+                    <span>Edit Customer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Type Selection Modal -->
+    <div class="modal-overlay" id="typeSelectionModal" style="display: none;">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Pilih Tipe Customer</h3>
+                <button class="modal-close" onclick="closeTypeSelectionModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 1.5rem; color: var(--gray-600);">Pilih tipe customer yang akan Anda tambahkan:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <button class="type-selection-card" onclick="selectTypeAndCreate('PPN')">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📘</div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Customer PPN</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Kena pajak</div>
+                    </button>
+                    <button class="type-selection-card" onclick="selectTypeAndCreate('Non-PPN')">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">📄</div>
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Customer Non-PPN</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Bebas pajak</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Form Modal -->
+    <div class="modal-overlay" id="modalOverlay" style="display: none;">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Tambah Customer</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="customerForm">
+                    <input type="hidden" id="customerId">
+                    
+                    <!-- Informasi Customer Section -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--gray-800); border-bottom: 1px solid var(--gray-200); padding-bottom: 0.5rem;">Informasi Customer</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label required">Kode Customer</label>
+                                <input type="text" class="form-input" id="customerCode" placeholder="CUST001" maxlength="50" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label required">Tipe Customer</label>
+                                <select class="form-select" id="customerType" required disabled style="background-color: var(--gray-100);">
+                                    <option value="">Pilih Tipe</option>
+                                    <option value="PPN">PPN</option>
+                                    <option value="Non-PPN">Non-PPN</option>
+                                </select>
+                                <p class="form-helper" id="typeHelper" style="margin-top: 0.5rem; color: var(--success-600); font-size: 0.875rem;"></p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Nama Customer</label>
+                            <input type="text" class="form-input" id="customerName" placeholder="PT Contoh Customer" maxlength="255" required>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Contact Person (U.P.)</label>
+                                <input type="text" class="form-input" id="contactPerson" placeholder="Nama kontak person" maxlength="100">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Status Aktif</label>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" id="isActive" class="form-checkbox" checked>
+                                    <span style="font-size: 0.875rem; color: var(--gray-600);">Customer aktif</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alamat Section -->
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--gray-800); border-bottom: 1px solid var(--gray-200); padding-bottom: 0.5rem;">Alamat</h4>
+                        <div class="form-group">
+                            <label class="form-label required">Alamat Kirim (SHIP TO)</label>
+                            <textarea class="form-textarea" id="addressShipTo" rows="3" placeholder="Alamat lengkap untuk pengiriman barang..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Alamat Tagihan (BILL TO)</label>
+                            <textarea class="form-textarea" id="addressBillTo" rows="3" placeholder="Alamat untuk pengiriman invoice..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Kota</label>
+                            <input type="text" class="form-input" id="city" placeholder="BANDUNG" maxlength="100">
+                            <p style="font-size: 0.75rem; color: var(--gray-500); margin-top: 0.25rem;">Kota customer, akan muncul di Surat Jalan</p>
+                        </div>
+                    </div>
+
+                    <!-- Kontak & Administrasi Section -->
+                    <div style="background: var(--gray-50); padding: 1rem; border-radius: 0.5rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--gray-800);">Kontak & Administrasi</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Telepon</label>
+                                <input type="tel" class="form-input" id="phone" placeholder="021-1234567" maxlength="30">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" id="email" placeholder="customer@email.com" maxlength="100">
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">NPWP</label>
+                                <input type="text" class="form-input" id="npwp" placeholder="1234567890123456" maxlength="30">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Jadwal Kontra Bon</label>
+                                <input type="text" class="form-input" id="billingSchedule" placeholder="Setiap tgl 5, Minggu ke-2" maxlength="100">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Batal</button>
+                <button class="btn-primary" onclick="saveCustomer()">
+                    <span>💾</span>
+                    <span>Simpan</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'all';
+        let selectedType = null;
+        let customers = [
+            { 
+                id: 1, 
+                customer_code: 'CUST001', 
+                name: 'PT Maju Bersama', 
+                type: 'PPN', 
+                contact_person: 'Budi Santoso', 
+                phone: '021-1234567', 
+                email: 'budi@majubersama.com', 
+                address_ship_to: 'Jl. Sudirman No. 123\nJakarta Pusat, DKI Jakarta\n10110', 
+                address_bill_to: 'Jl. Sudirman No. 123\nJakarta Pusat, DKI Jakarta\n10110',
+                city: 'JAKARTA', 
+                npwp: '01.234.567.8-901.000',
+                billing_schedule: 'Setiap tanggal 5', 
+                is_active: true 
+            },
+            { 
+                id: 2, 
+                customer_code: 'CUST002', 
+                name: 'CV Berkah Jaya', 
+                type: 'Non-PPN', 
+                contact_person: 'Siti Nurhaliza', 
+                phone: '021-7654321', 
+                email: 'siti@berkahjaya.com', 
+                address_ship_to: 'Jl. Thamrin No. 456\nJakarta Pusat, DKI Jakarta\n10350',
+                address_bill_to: '', 
+                city: 'JAKARTA',
+                npwp: '',
+                billing_schedule: 'Minggu kedua setiap bulan', 
+                is_active: true 
+            },
+            { 
+                id: 3, 
+                customer_code: 'CUST003', 
+                name: 'PT Global Mandiri', 
+                type: 'PPN', 
+                contact_person: 'Ahmad Rahman', 
+                phone: '021-9876543', 
+                email: 'ahmad@globalmandiri.com', 
+                address_ship_to: 'Jl. Gatot Subroto No. 789\nJakarta Selatan, DKI Jakarta\n12930',
+                address_bill_to: 'Jl. Kuningan No. 100\nJakarta Selatan, DKI Jakarta\n12940', 
+                city: 'JAKARTA',
+                npwp: '02.345.678.9-012.000',
+                billing_schedule: 'Setiap tanggal 15', 
+                is_active: true 
+            },
+            { 
+                id: 4, 
+                customer_code: 'CUST004', 
+                name: 'Toko Sejahtera', 
+                type: 'Non-PPN', 
+                contact_person: 'Dewi Sartika', 
+                phone: '021-5555555', 
+                email: 'dewi@tokosejahtera.com', 
+                address_ship_to: 'Jl. Kebon Jeruk No. 321\nJakarta Barat, DKI Jakarta\n11530',
+                address_bill_to: '', 
+                city: 'JAKARTA',
+                npwp: '',
+                billing_schedule: '', 
+                is_active: false 
+            },
+            { 
+                id: 5, 
+                customer_code: 'CUST005', 
+                name: 'PT Teknologi Maju', 
+                type: 'PPN', 
+                contact_person: 'Rizky Pratama', 
+                phone: '021-8888888', 
+                email: 'rizky@teknologimaju.com', 
+                address_ship_to: 'Jl. Casablanca No. 654\nJakarta Selatan, DKI Jakarta\n12870',
+                address_bill_to: 'Jl. Casablanca No. 654\nJakarta Selatan, DKI Jakarta\n12870', 
+                city: 'JAKARTA',
+                npwp: '03.456.789.0-123.000',
+                billing_schedule: 'Setiap akhir bulan', 
+                is_active: true 
+            }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('customersTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = customers;
+            if (currentTab !== 'all') {
+                filtered = customers.filter(c => c.type === currentTab);
+            }
+            
+            if (searchTerm) {
+                filtered = filtered.filter(c => 
+                    c.customer_code.toLowerCase().includes(searchTerm) ||
+                    c.name.toLowerCase().includes(searchTerm) ||
+                    (c.contact_person && c.contact_person.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            document.getElementById('displayCount').textContent = filtered.length;
+            document.getElementById('totalCount').textContent = customers.length;
+            
+            tbody.innerHTML = filtered.map(customer => `
+                <tr>
+                    <td><strong>${customer.customer_code}</strong></td>
+                    <td><strong>${customer.name}</strong></td>
+                    <td>
+                        <span class="badge ${customer.type === 'PPN' ? 'info' : 'gray'}">
+                            ${customer.type === 'PPN' ? '📘 PPN' : '📄 Non-PPN'}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="font-weight: 500;">${customer.contact_person || '-'}</div>
+                        ${customer.phone ? `<div style="font-size: 0.875rem; color: var(--gray-600);">${customer.phone}</div>` : ''}
+                    </td>
+                    <td style="max-width: 200px;">
+                        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${customer.address || ''}">${customer.address || '-'}</div>
+                        ${customer.city ? `<div style="font-size: 0.875rem; color: var(--gray-600);">${customer.city}</div>` : ''}
+                    </td>
+                    <td>
+                        ${customer.is_active ? 
+                            '<span class="badge success">✓ Aktif</span>' : 
+                            '<span class="badge danger">✗ Non-Aktif</span>'}
+                    </td>
+                    <td class="text-right">
+                        <div class="table-actions" style="justify-content: flex-end;">
+                            <button class="btn-icon" onclick="viewCustomer(${customer.id})" title="View">👁️</button>
+                            <button class="btn-icon" onclick="editCustomer(${customer.id})" title="Edit">✏️</button>
+                            <button class="btn-icon danger" onclick="deleteCustomer(${customer.id})" title="Delete">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalCustomers').textContent = customers.length;
+            document.getElementById('activeCustomers').textContent = customers.filter(c => c.is_active).length;
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.tab === tab) btn.classList.add('active');
+            });
+            
+            const filterInfo = document.getElementById('filterInfo');
+            if (tab === 'all') filterInfo.innerHTML = 'Menampilkan: <strong>Semua Tipe</strong>';
+            else if (tab === 'PPN') filterInfo.innerHTML = 'Menampilkan: <strong>📘 Customer PPN</strong>';
+            else if (tab === 'Non-PPN') filterInfo.innerHTML = 'Menampilkan: <strong>📄 Customer Non-PPN</strong>';
+            
+            renderTable();
+        }
+
+        function showTypeSelectionModal() {
+            document.getElementById('typeSelectionModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('typeSelectionModal').classList.add('show'), 10);
+        }
+
+        function closeTypeSelectionModal() {
+            document.getElementById('typeSelectionModal').classList.remove('show');
+            setTimeout(() => document.getElementById('typeSelectionModal').style.display = 'none', 200);
+        }
+
+        function selectTypeAndCreate(type) {
+            selectedType = type;
+            closeTypeSelectionModal();
+            setTimeout(() => showCreateModal(), 300);
+        }
+
+        function showCreateModal() {
+            document.getElementById('modalTitle').textContent = 'Tambah Customer';
+            document.getElementById('customerForm').reset();
+            document.getElementById('customerId').value = '';
+            document.getElementById('isActive').checked = true;
+            
+            if (selectedType) {
+                document.getElementById('customerType').value = selectedType;
+                document.getElementById('customerType').disabled = true;
+                
+                const helper = document.getElementById('typeHelper');
+                if (selectedType === 'PPN') {
+                    helper.innerHTML = '📘 Customer PPN dipilih';
+                    helper.style.color = 'var(--primary-600)';
+                } else {
+                    helper.innerHTML = '📄 Customer Non-PPN dipilih';
+                    helper.style.color = 'var(--success-600)';
+                }
+            }
+            
+            document.getElementById('modalOverlay').style.display = 'flex';
+            setTimeout(() => document.getElementById('modalOverlay').classList.add('show'), 10);
+        }
+
+        function editCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+
+            selectedType = customer.type;
+            document.getElementById('modalTitle').textContent = 'Edit Customer';
+            document.getElementById('customerId').value = customer.id;
+            document.getElementById('customerCode').value = customer.customer_code;
+            document.getElementById('customerName').value = customer.name;
+            document.getElementById('customerType').value = customer.type;
+            document.getElementById('customerType').disabled = true;
+            document.getElementById('contactPerson').value = customer.contact_person || '';
+            document.getElementById('phone').value = customer.phone || '';
+            document.getElementById('email').value = customer.email || '';
+            document.getElementById('addressShipTo').value = customer.address_ship_to || '';
+            document.getElementById('addressBillTo').value = customer.address_bill_to || '';
+            document.getElementById('city').value = customer.city || '';
+            document.getElementById('npwp').value = customer.npwp || '';
+            document.getElementById('billingSchedule').value = customer.billing_schedule || '';
+            document.getElementById('isActive').checked = customer.is_active;
+            
+            const helper = document.getElementById('typeHelper');
+            if (customer.type === 'PPN') {
+                helper.innerHTML = '📘 Customer PPN';
+                helper.style.color = 'var(--primary-600)';
+            } else {
+                helper.innerHTML = '📄 Customer Non-PPN';
+                helper.style.color = 'var(--success-600)';
+            }
+            
+            document.getElementById('modalOverlay').style.display = 'flex';
+            setTimeout(() => document.getElementById('modalOverlay').classList.add('show'), 10);
+        }
+
+        function viewCustomer(id) {
+            const customer = customers.find(c => c.id === id);
+            if (!customer) return;
+
+            document.getElementById('detailModalTitle').textContent = `Detail Customer - ${customer.name}`;
+            document.getElementById('detailCustomerCode').value = customer.customer_code;
+            document.getElementById('detailCustomerName').value = customer.name;
+            document.getElementById('detailContactPerson').value = customer.contact_person || '-';
+            document.getElementById('detailPhone').value = customer.phone || '-';
+            document.getElementById('detailEmail').value = customer.email || '-';
+            document.getElementById('detailNpwp').value = customer.npwp || '-';
+            document.getElementById('detailBillingSchedule').value = customer.billing_schedule || '-';
+            document.getElementById('detailAddressShipTo').value = customer.address_ship_to || '-';
+            document.getElementById('detailAddressBillTo').value = customer.address_bill_to || '-';
+            document.getElementById('detailCity').value = customer.city || '-';
+            
+            const typeElement = document.getElementById('detailType');
+            if (customer.type === 'PPN') {
+                typeElement.className = 'badge info';
+                typeElement.innerHTML = '📘 PPN';
+            } else {
+                typeElement.className = 'badge gray';
+                typeElement.innerHTML = '📄 Non-PPN';
+            }
+            
+            const statusElement = document.getElementById('detailStatus');
+            if (customer.is_active) {
+                statusElement.className = 'badge success';
+                statusElement.innerHTML = '✓ Aktif';
+            } else {
+                statusElement.className = 'badge danger';
+                statusElement.innerHTML = '✗ Non-Aktif';
+            }
+            
+            document.getElementById('detailModal').dataset.customerId = customer.id;
+            document.getElementById('detailModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('detailModal').classList.add('show'), 10);
+        }
+
+        function deleteCustomer(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus customer ini?')) {
+                const index = customers.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    customers.splice(index, 1);
+                    renderTable();
+                    updateStats();
+                    alert('Customer berhasil dihapus!');
+                }
+            }
+        }
+
+        function closeModal() {
+            selectedType = null;
+            document.getElementById('modalOverlay').classList.remove('show');
+            setTimeout(() => document.getElementById('modalOverlay').style.display = 'none', 200);
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('show');
+            setTimeout(() => document.getElementById('detailModal').style.display = 'none', 200);
+        }
+
+        function editFromDetail() {
+            const customerId = document.getElementById('detailModal').dataset.customerId;
+            closeDetailModal();
+            setTimeout(() => editCustomer(parseInt(customerId)), 300);
+        }
+
+        function saveCustomer() {
+            const id = document.getElementById('customerId').value;
+            const customer_code = document.getElementById('customerCode').value;
+            const customer_name = document.getElementById('customerName').value;
+            const customer_type = document.getElementById('customerType').value;
+            const address_ship_to = document.getElementById('addressShipTo').value;
+
+            if (!customer_code || !customer_name || !customer_type || !address_ship_to) {
+                alert('Data wajib (kode, nama, tipe, alamat kirim) harus diisi!');
+                return;
+            }
+
+            const customerData = {
+                customer_code,
+                name: customer_name,
+                type: customer_type,
+                contact_person: document.getElementById('contactPerson').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                address_ship_to: address_ship_to,
+                address_bill_to: document.getElementById('addressBillTo').value,
+                city: document.getElementById('city').value,
+                npwp: document.getElementById('npwp').value,
+                billing_schedule: document.getElementById('billingSchedule').value,
+                is_active: document.getElementById('isActive').checked
+            };
+
+            if (id) {
+                const customer = customers.find(c => c.id === parseInt(id));
+                if (customer) {
+                    Object.assign(customer, customerData);
+                }
+                alert('Customer berhasil diupdate!');
+            } else {
+                customerData.id = Math.max(...customers.map(c => c.id), 0) + 1;
+                customers.push(customerData);
+                alert('Customer berhasil ditambahkan!');
+            }
+
+            closeModal();
+            renderTable();
+            updateStats();
+        }
+
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStats();
+            renderTable();
+        });
+        
+        document.getElementById('typeSelectionModal').addEventListener('click', function(e) {
+            if (e.target === this) closeTypeSelectionModal();
+        });
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.getElementById('detailModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDetailModal();
+        });
+    </script>
+    <script src="../../assets/js/filament-dashboard.js"></script>
+</body>
+</html>

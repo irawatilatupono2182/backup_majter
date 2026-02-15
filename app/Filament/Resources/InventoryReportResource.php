@@ -89,7 +89,6 @@ class InventoryReportResource extends Resource
                        "**Status Stok:** " .
                        "Total: " . number_format($totalStock, 0) . " unit | " .
                        "Tersedia: " . number_format($totalAvailable, 0) . " unit | " .
-                       "Direservasi: " . number_format($totalReserved, 0) . " unit\n\n" .
                        "**Pergerakan Barang:** " .
                        "Masuk: " . number_format($totalStockIn, 0) . " unit | " .
                        "Keluar: " . number_format($totalStockOut, 0) . " unit\n\n" .
