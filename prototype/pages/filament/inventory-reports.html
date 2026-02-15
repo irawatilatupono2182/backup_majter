@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📦 Laporan Inventory - Adam Jaya</title>
+    <link rel="stylesheet" href="../../assets/css/filament-style.css">
+</head>
+<body>
+    <div class="filament-app">
+        <!-- SIDEBAR -->
+        <aside class="filament-sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📦</span>
+                    <span class="logo-text">Adam Jaya</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <a href="../../index.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">💼 Penjualan</div>
+                    <a href="customers.html" class="nav-item">
+                        <span class="nav-icon">👥</span>
+                        <span class="nav-label">Customers</span>
+                    </a>
+                    <a href="price-quotations.html" class="nav-item">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-label">Surat Penawaran</span>
+                    </a>
+                    <a href="delivery-notes.html" class="nav-item">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-label">Surat Jalan</span>
+                        <span class="nav-badge badge-warning">5</span>
+                    </a>
+                    <a href="invoices.html" class="nav-item">
+                        <span class="nav-icon">💰</span>
+                        <span class="nav-label">Invoice</span>
+                        <span class="nav-badge badge-warning">3</span>
+                    </a>
+                    <a href="nota-menyusuls.html" class="nav-item">
+                        <span class="nav-icon">📝</span>
+                        <span class="nav-label">Nota Menyusul</span>
+                    </a>
+                    <a href="keterangan-lains.html" class="nav-item">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-label">Keterangan Lain</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">🛒 Pembelian</div>
+                    <a href="stocks.html" class="nav-item">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Master Barang/Stock</span>
+                        <span class="nav-badge badge-danger">2</span>
+                    </a>
+                    <a href="suppliers.html" class="nav-item">
+                        <span class="nav-icon">🏭</span>
+                        <span class="nav-label">Suppliers</span>
+                    </a>
+                    <a href="purchase-orders.html" class="nav-item">
+                        <span class="nav-icon">🛍️</span>
+                        <span class="nav-label">Pembelian Barang (PO)</span>
+                    </a>
+                </div>
+                <div class="nav-group">
+                    <div class="nav-group-label">📈 Laporan</div>
+                    <a href="sales-reports.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Laporan Penjualan</span>
+                    </a>
+                    <a href="purchase-reports.html" class="nav-item">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-label">Laporan Pembelian</span>
+                    </a>
+                    <a href="inventory-reports.html" class="nav-item active">
+                        <span class="nav-icon">📦</span>
+                        <span class="nav-label">Laporan Inventory</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="filament-main">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <div class="breadcrumb">
+                        <a href="../../index.html" class="breadcrumb-item">Dashboard</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Laporan</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-item">Inventory</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="user-menu">
+                        <button class="user-avatar">SA</button>
+                        <div class="user-dropdown">
+                            <div class="user-info">
+                                <div class="user-name">Super Admin</div>
+                                <span class="badge badge-warning">Administrator</span>
+                            </div>
+                            <div class="user-menu-items">
+                                <a href="#" class="user-menu-item">Profile</a>
+                                <a href="#" class="user-menu-item">Settings</a>
+                                <a href="#" class="user-menu-item">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Header Actions -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <h1 class="page-title" style="margin: 0;">📦 Laporan Inventory - Stock Summary</h1>
+                        <p class="page-description" style="margin-top: 0.25rem;">Monitor stock barang secara real-time dengan pelacakan batch, minimum stock, dan expiry date. <strong style="color: var(--warning-600);">📋 Reserved</strong> = Stock yang sudah di-booking untuk order tapi belum keluar dari gudang.</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-success btn-sm" onclick="exportData()">
+                            <span>📥</span>
+                            <span>Export Excel</span>
+                        </button>
+                        <button class="btn-secondary btn-sm" onclick="printReport()">
+                            <span>🖨️</span>
+                            <span>Print Summary</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Table Widget -->
+                <div class="widget-card">
+                    <!-- Toolbar -->
+                    <div class="toolbar" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200);">
+                        <div class="toolbar-left">
+                            <div class="search-box">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" class="search-input" placeholder="Cari nama atau kode barang..." id="searchInput">
+                            </div>
+                        </div>
+                        <div class="toolbar-right" style="display: flex; gap: 0.5rem;">
+                            <button class="btn-secondary btn-sm" onclick="toggleFilters()">
+                                <span>🔽</span>
+                                <span>Filter</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Panel -->
+                    <div id="filterPanel" style="display: none; padding: 1rem 1.25rem; border-bottom: 1px solid var(--gray-200); background: var(--gray-50);">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div class="form-group">
+                                <label class="form-label">Status Stock</label>
+                                <select class="form-select" id="filterStatus">
+                                    <option value="">Semua Status</option>
+                                    <option value="normal">✅ Normal</option>
+                                    <option value="low_stock">⚠️ Low Stock</option>
+                                    <option value="near_expiry">🟡 Near Expiry</option>
+                                    <option value="expired">🔴 Expired</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Lokasi Gudang</label>
+                                <select class="form-select" id="filterLocation">
+                                    <option value="">Semua Lokasi</option>
+                                    <option value="Gudang A">Gudang A</option>
+                                    <option value="Gudang B">Gudang B</option>
+                                    <option value="Gudang C">Gudang C</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Kategori Barang</label>
+                                <select class="form-select" id="filterCategory">
+                                    <option value="">Semua Kategori</option>
+                                    <option value="Bahan Baku">Bahan Baku</option>
+                                    <option value="Produk Jadi">Produk Jadi</option>
+                                    <option value="Spare Parts">Spare Parts</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <button class="btn-primary btn-sm" onclick="applyFilters()">Terapkan Filter</button>
+                            <button class="btn-secondary btn-sm" onclick="resetFilters()">Reset</button>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab('all')">
+                            <span>📦 All Stock</span>
+                            <span class="badge badge-gray" id="badgeAll">8</span>
+                        </button>
+                        <button class="tab" onclick="switchTab('normal')">
+                            <span>✅ Normal</span>
+                            <span class="badge badge-success" id="badgeNormal">5</span>
+                        </button>
+                        <button class="tab" onclick="switchTab('low_stock')">
+                            <span>⚠️ Low Stock</span>
+                            <span class="badge badge-warning" id="badgeLow">2</span>
+                        </button>
+                        <button class="tab" onclick="switchTab('near_expiry')">
+                            <span>🟡 Near Expiry</span>
+                            <span class="badge badge-warning" id="badgeNearExpiry">1</span>
+                        </button>
+                        <button class="tab" onclick="switchTab('expired')">
+                            <span>🔴 Expired</span>
+                            <span class="badge badge-danger" id="badgeExpired">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="card-body no-padding">
+                        <table class="filament-table">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 250px;">Kode & Nama Barang</th>
+                                    <th style="min-width: 130px;">Batch/LOT</th>
+                                    <th>Lokasi</th>
+                                    <th style="text-align: right; min-width: 150px;">
+                                        <div>Stock Tersedia</div>
+                                        <div style="font-size: 0.7rem; font-weight: normal; color: var(--gray-500);">(dari total)</div>
+                                    </th>
+                                    <th style="text-align: right;">Min. Stock</th>
+                                    <th style="text-align: right; min-width: 130px;">Nilai Total</th>
+                                    <th style="min-width: 120px;">Expiry Date</th>
+                                    <th style="min-width: 120px;">Status</th>
+                                    <th class="text-right" style="min-width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                            <tfoot style="background: var(--gray-50); font-weight: bold;">
+                                <tr>
+                                    <td colspan="5" style="text-align: right; padding-right: 1rem;">TOTAL NILAI INVENTORY:</td>
+                                    <td style="text-align: right; color: var(--success-600); font-size: 1.1rem;" id="footerTotalValue">Rp 0</td>
+                                    <td colspan="3"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" style="padding: 1rem 1.25rem;">
+                        <div class="pagination-info">Menampilkan <strong id="displayCount">0</strong> dari <strong id="totalCount">0</strong> entri</div>
+                        <div class="pagination-buttons">
+                            <button class="pagination-button" disabled>‹ Sebelumnya</button>
+                            <button class="pagination-button active">1</button>
+                            <button class="pagination-button" disabled>Selanjutnya ›</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        /* Custom styling for inventory report */
+        .filament-table th {
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+        
+        .filament-table td {
+            vertical-align: middle;
+        }
+        
+        .inventory-warning-row {
+            background-color: #fff3cd !important;
+            border-left: 3px solid #ffc107;
+        }
+        
+        /* Improve table readability */
+        .filament-table tbody tr:hover {
+            background-color: var(--gray-50);
+        }
+        
+        .filament-table tbody tr:hover.inventory-warning-row {
+            background-color: #ffe69c !important;
+        }
+
+        .badge {
+            white-space: nowrap;
+        }
+
+        /* Tab styling improvements */
+        .tabs {
+            display: flex;
+            gap: 0;
+            background: var(--gray-50);
+            border-bottom: 2px solid var(--gray-200);
+            padding: 0 1rem;
+        }
+
+        .tab {
+            padding: 0.875rem 1.25rem;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all 0.2s ease;
+            margin-bottom: -2px;
+            position: relative;
+        }
+        
+        .tab:hover {
+            color: var(--primary-600);
+            background: var(--gray-100);
+        }
+        
+        .tab.active {
+            color: var(--primary-600);
+            border-bottom-color: var(--primary-600);
+            background: white;
+            font-weight: 600;
+        }
+
+        .tab span:first-child {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+
+    <script>
+        let currentTab = 'all';
+
+        // Dummy data
+        const inventoryData = [
+            { 
+                id: 1, 
+                code: 'BRG-001', 
+                name: 'Bahan Baku Steel Plate A36', 
+                batch: 'BATCH-2024-001',
+                location: 'Gudang A',
+                qty_total: 500,
+                qty_reserved: 50,
+                qty_available: 450,
+                min_stock: 100,
+                unit: 'KG',
+                stock_in: 500,
+                stock_out: 0,
+                unit_cost: 15000,
+                total_value: 7500000,
+                expiry_date: '2025-12-31',
+                status: 'normal',
+                category: 'Bahan Baku'
+            },
+            { 
+                id: 2, 
+                code: 'BRG-002', 
+                name: 'Produk Jadi - Panel Listrik Type A', 
+                batch: 'BATCH-2024-002',
+                location: 'Gudang B',
+                qty_total: 25,
+                qty_reserved: 5,
+                qty_available: 20,
+                min_stock: 30,
+                unit: 'PCS',
+                stock_in: 30,
+                stock_out: 5,
+                unit_cost: 450000,
+                total_value: 11250000,
+                expiry_date: null,
+                status: 'low_stock',
+                category: 'Produk Jadi'
+            },
+            { 
+                id: 3, 
+                code: 'BRG-003', 
+                name: 'Spare Part - Motor Listrik 5HP', 
+                batch: 'BATCH-2023-015',
+                location: 'Gudang C',
+                qty_total: 8,
+                qty_reserved: 2,
+                qty_available: 6,
+                min_stock: 5,
+                unit: 'UNIT',
+                stock_in: 10,
+                stock_out: 2,
+                unit_cost: 3500000,
+                total_value: 28000000,
+                expiry_date: null,
+                status: 'normal',
+                category: 'Spare Parts'
+            },
+            { 
+                id: 4, 
+                code: 'BRG-004', 
+                name: 'Bahan Kimia - Thinner Excellent', 
+                batch: 'BATCH-2024-008',
+                location: 'Gudang A',
+                qty_total: 50,
+                qty_reserved: 0,
+                qty_available: 50,
+                min_stock: 20,
+                unit: 'LITER',
+                stock_in: 50,
+                stock_out: 0,
+                unit_cost: 45000,
+                total_value: 2250000,
+                expiry_date: '2024-03-15',
+                status: 'near_expiry',
+                category: 'Bahan Baku'
+            },
+            { 
+                id: 5, 
+                code: 'BRG-005', 
+                name: 'Kabel NYM 3x2.5mm', 
+                batch: 'BATCH-2024-010',
+                location: 'Gudang B',
+                qty_total: 1500,
+                qty_reserved: 200,
+                qty_available: 1300,
+                min_stock: 500,
+                unit: 'METER',
+                stock_in: 2000,
+                stock_out: 500,
+                unit_cost: 12500,
+                total_value: 18750000,
+                expiry_date: null,
+                status: 'normal',
+                category: 'Bahan Baku'
+            },
+            { 
+                id: 6, 
+                code: 'BRG-006', 
+                name: 'Produk Jadi - MCB 2P 16A', 
+                batch: 'BATCH-2024-012',
+                location: 'Gudang B',
+                qty_total: 200,
+                qty_reserved: 50,
+                qty_available: 150,
+                min_stock: 100,
+                unit: 'PCS',
+                stock_in: 250,
+                stock_out: 50,
+                unit_cost: 85000,
+                total_value: 17000000,
+                expiry_date: null,
+                status: 'normal',
+                category: 'Produk Jadi'
+            },
+            { 
+                id: 7, 
+                code: 'BRG-007', 
+                name: 'Baut M10x50 Stainless', 
+                batch: 'BATCH-2024-003',
+                location: 'Gudang C',
+                qty_total: 5000,
+                qty_reserved: 500,
+                qty_available: 4500,
+                min_stock: 1000,
+                unit: 'PCS',
+                stock_in: 5000,
+                stock_out: 0,
+                unit_cost: 2500,
+                total_value: 12500000,
+                expiry_date: null,
+                status: 'normal',
+                category: 'Spare Parts'
+            },
+            { 
+                id: 8, 
+                code: 'BRG-008', 
+                name: 'Cat Epoxy High Quality', 
+                batch: 'BATCH-2023-020',
+                location: 'Gudang A',
+                qty_total: 15,
+                qty_reserved: 0,
+                qty_available: 15,
+                min_stock: 20,
+                unit: 'LITER',
+                stock_in: 30,
+                stock_out: 15,
+                unit_cost: 125000,
+                total_value: 1875000,
+                expiry_date: null,
+                status: 'low_stock',
+                category: 'Bahan Baku'
+            },
+        ];
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+        }
+
+        function getStatusBadge(status, qtyAvailable, minStock, expiryDate) {
+            // Check expiry first
+            if (expiryDate) {
+                const expiry = new Date(expiryDate);
+                const now = new Date();
+                const diffDays = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays < 0) {
+                    return '<span class="badge badge-danger" style="font-weight: bold;">🔴 Expired</span>';
+                } else if (diffDays <= 30) {
+                    return `<span class="badge badge-warning" style="font-weight: bold;">🟡 Expiring Soon</span>`;
+                }
+            }
+
+            // Then check stock level
+            if (qtyAvailable < minStock) {
+                return '<span class="badge badge-warning" style="font-weight: bold;">⚠️ Low Stock</span>';
+            }
+
+            return '<span class="badge badge-success">✅ Normal</span>';
+        }
+
+        function getExpiryDisplay(expiryDate) {
+            if (!expiryDate) {
+                return '<span style="color: var(--gray-500);">-</span>';
+            }
+
+            const expiry = new Date(expiryDate);
+            const now = new Date();
+            const diffDays = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) {
+                return `<span style="color: var(--danger-600); font-weight: bold;">${expiry.toLocaleDateString('id-ID')} (EXPIRED)</span>`;
+            } else if (diffDays <= 30) {
+                return `<span style="color: var(--warning-600); font-weight: bold;">${expiry.toLocaleDateString('id-ID')} (${diffDays} hari lagi)</span>`;
+            } else {
+                return `<span>${expiry.toLocaleDateString('id-ID')}</span>`;
+            }
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab UI - find and update active class
+            document.querySelectorAll('.tab').forEach(t => {
+                t.classList.remove('active');
+                // Check if this tab button is for the current tab
+                const tabName = t.getAttribute('onclick').match(/switchTab\('(.+?)'\)/)[1];
+                if (tabName === tab) {
+                    t.classList.add('active');
+                }
+            });
+            
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('inventoryTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = inventoryData;
+            
+            // Apply tab filter
+            if (currentTab !== 'all') {
+                filtered = filtered.filter(item => item.status === currentTab);
+            }
+            
+            // Apply search
+            if (searchTerm) {
+                filtered = filtered.filter(item => 
+                    item.code.toLowerCase().includes(searchTerm) ||
+                    item.name.toLowerCase().includes(searchTerm) ||
+                    item.batch.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Update counts
+            document.getElementById('displayCount').textContent = filtered.length;
+            document.getElementById('totalCount').textContent = inventoryData.length;
+            
+            // Update badge counts
+            document.getElementById('badgeAll').textContent = inventoryData.length;
+            document.getElementById('badgeNormal').textContent = inventoryData.filter(i => i.status === 'normal').length;
+            document.getElementById('badgeLow').textContent = inventoryData.filter(i => i.status === 'low_stock').length;
+            document.getElementById('badgeNearExpiry').textContent = inventoryData.filter(i => i.status === 'near_expiry').length;
+            document.getElementById('badgeExpired').textContent = inventoryData.filter(i => i.status === 'expired').length;
+
+            // Calculate total value
+            const totalValue = filtered.reduce((sum, item) => sum + item.total_value, 0);
+            document.getElementById('footerTotalValue').textContent = formatCurrency(totalValue);
+            
+            tbody.innerHTML = filtered.map(item => `
+                <tr class="${item.qty_available < item.min_stock ? 'inventory-warning-row' : ''}">
+                    <td>
+                        <div style="font-weight: 600; color: var(--gray-900); font-size: 0.8rem;">${item.code}</div>
+                        <div style="font-weight: 500; margin-top: 0.25rem; font-size: 0.95rem;">${item.name}</div>
+                        <div style="font-size: 0.72rem; color: var(--gray-600); margin-top: 0.2rem;">${item.category}</div>
+                    </td>
+                    <td><span class="badge badge-gray">${item.batch}</span></td>
+                    <td>${item.location}</td>
+                    <td style="text-align: right;">
+                        <div style="font-weight: bold; font-size: 1.1rem; color: ${item.qty_available < item.min_stock ? 'var(--danger-600)' : 'var(--success-600)'};">
+                            ${item.qty_available.toLocaleString('id-ID')} ${item.unit}
+                        </div>
+                        <div style="font-size: 0.72rem; color: var(--gray-500); margin-top: 0.25rem;">
+                            dari ${item.qty_total.toLocaleString('id-ID')} ${item.unit}
+                        </div>
+                        ${item.qty_reserved > 0 ? `<div style="font-size: 0.7rem; color: var(--warning-600); margin-top: 0.2rem; font-weight: 500;">📋 ${item.qty_reserved} reserved</div>` : ''}
+                    </td>
+                    <td style="text-align: right; color: var(--gray-600); font-size: 0.9rem;">${item.min_stock} ${item.unit}</td>
+                    <td style="text-align: right; font-weight: bold;">${formatCurrency(item.total_value)}</td>
+                    <td>${getExpiryDisplay(item.expiry_date)}</td>
+                    <td>${getStatusBadge(item.status, item.qty_available, item.min_stock, item.expiry_date)}</td>
+                    <td class="text-right">
+                        <div class="table-actions" style="justify-content: flex-end;">
+                            <button class="btn-icon" onclick="viewDetails(${item.id})" title="View Details">👁️</button>
+                            <button class="btn-icon" onclick="viewHistory(${item.id})" title="Stock History">📊</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleFilters() {
+            const panel = document.getElementById('filterPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function applyFilters() {
+            alert('Filter akan diterapkan (belum diimplementasi)');
+        }
+
+        function resetFilters() {
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterLocation').value = '';
+            document.getElementById('filterCategory').value = '';
+        }
+
+        function exportData() {
+            alert('Export data inventory ke Excel');
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        function viewDetails(id) {
+            const item = inventoryData.find(i => i.id === id);
+            if (item) {
+                alert(`Detail Stock:\n\nKode: ${item.code}\nNama: ${item.name}\nBatch: ${item.batch}\nLokasi: ${item.location}\n\nStock Total: ${item.qty_total} ${item.unit}\nReserved: ${item.qty_reserved} ${item.unit}\nAvailable: ${item.qty_available} ${item.unit}\nMin. Stock: ${item.min_stock} ${item.unit}\n\nUnit Cost: ${formatCurrency(item.unit_cost)}\nTotal Value: ${formatCurrency(item.total_value)}\n\nStatus: ${item.status}`);
+            }
+        }
+
+        function viewHistory(id) {
+            const item = inventoryData.find(i => i.id === id);
+            if (item) {
+                alert(`Stock Movement History:\n\n${item.name}\n\nStock In: ${item.stock_in} ${item.unit}\nStock Out: ${item.stock_out} ${item.unit}\nCurrent: ${item.qty_available} ${item.unit}\n\n(Riwayat lengkap akan ditampilkan di halaman detail)`);
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.filament-sidebar');
+            const mainContent = document.querySelector('.filament-main');
+            sidebar.classList.toggle('collapsed');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                mainContent.style.marginLeft = '70px';
+            } else {
+                mainContent.style.marginLeft = '280px';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', renderTable);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable();
+        });
+    </script>
+</body>
+</html>
