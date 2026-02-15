@@ -72,7 +72,7 @@ https://irawatilatupono2182.github.io/backup_majter/
 ```
 
 **Cara Kerja:**
-- Setiap kali ada perubahan di folder `prototype/` yang dipush ke branch `main` atau `master`, GitHub Actions akan otomatis deploy ulang ke GitHub Pages
+- Setiap kali ada perubahan di folder `prototype/` yang dipush ke branch default (`main`), GitHub Actions akan otomatis deploy ulang ke GitHub Pages
 - Workflow GitHub Actions ada di `.github/workflows/deploy-prototype.yml`
 - Semua file HTML, CSS, JS, dan assets di folder prototype akan dipublikasikan
 

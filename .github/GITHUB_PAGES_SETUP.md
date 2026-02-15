@@ -2,7 +2,7 @@
 
 ## Automated Deployment
 
-GitHub Pages deployment untuk folder `prototype/` sudah dikonfigurasi menggunakan GitHub Actions. Workflow akan otomatis berjalan setiap kali ada perubahan di folder `prototype/` yang dipush ke branch `main`.
+GitHub Pages deployment untuk folder `prototype/` sudah dikonfigurasi menggunakan GitHub Actions. Workflow akan otomatis berjalan setiap kali ada perubahan di folder `prototype/` yang dipush ke branch default repository (`main` atau `master`).
 
 ## Manual Configuration Required
 
@@ -29,7 +29,7 @@ Untuk mengaktifkan GitHub Pages, repository owner perlu melakukan konfigurasi di
 File workflow ada di: `.github/workflows/deploy-prototype.yml`
 
 ### Triggers:
-- **Automatic**: Setiap push ke branch `main` yang mengubah file di `prototype/**`
+- **Automatic**: Setiap push ke branch default repository (`main` atau `master`) yang mengubah file di `prototype/**`
 - **Manual**: Bisa di-trigger manual dari tab "Actions" di GitHub
 
 ### Apa yang Di-deploy:
@@ -71,7 +71,7 @@ Setelah workflow selesai berjalan:
 Untuk update konten di GitHub Pages:
 
 1. Edit file di folder `prototype/`
-2. Commit dan push ke branch `main`
+2. Commit dan push ke branch default repository (`main` atau `master`)
 3. Workflow akan otomatis berjalan
 4. Dalam beberapa menit, perubahan akan live di GitHub Pages
 
